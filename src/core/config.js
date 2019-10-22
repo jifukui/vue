@@ -1,4 +1,5 @@
 /* @flow */
+/**\vue-master\src\core\config.js */
 /**导入no,noop,indentity
  * no:无论传入什么参数总是返回否
  * noop:不做任何有效的处理
@@ -36,7 +37,7 @@ export type Config =
   // legacy
   _lifecycleHooks: Array<string>;
 };
-/**配置默认的信息 */
+/**默认导出 */
 export default ({
   /**
    * Option merge strategies (used in core/util/options)
@@ -122,3 +123,4 @@ export default ({
    */
   _lifecycleHooks: LIFECYCLE_HOOKS
 }: Config)
+/**end \vue-master\src\core\config.js */

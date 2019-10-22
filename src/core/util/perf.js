@@ -1,11 +1,14 @@
+/**这个应该主要是调试性能使用的吧 */
 import { inBrowser } from './env'
 
 export let mark
 export let measure
 /**根据开发模式进行处理 */
+/**对于设置的开发环境不是生产环境的处理 */
 if (process.env.NODE_ENV !== 'production') 
 {
-  const perf = inBrowser && window.performance
+  /**设置perf的值为window的performance */
+  const perf = inBrowser && window.performance;
   /* istanbul ignore if */
   if (
     perf &&
@@ -25,3 +28,4 @@ if (process.env.NODE_ENV !== 'production')
     }
   }
 }
+/**end vue-master\src\core\util\env.js主要是判断寄主环境 */

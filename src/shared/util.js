@@ -1,33 +1,33 @@
 /* @flow */
-
+/**\vue-master\src\shared\util */
 // these helpers produces better vm code in JS engines due to their
 // explicitness and function inlining
-/**判断传入的类型（支持任意类型）是否未定义或者是为空 
- * checks为flow中的谓词函数
-*/
+/**这个文件定义了很多接口程序
+ * 这里的程序大多使用了%checks用于将函数作为谓词函数即函数的主体是一个表达式，不支持局部变量的声明
+ */
+
+/**这个函数用于判断传入对象类型是否是未定义或者是null */
 export function isUndef (v: any): boolean %checks 
 {
   return v === undefined || v === null
 }
-
+/**判断传入的对象是否定义过 */
 export function isDef (v: any): boolean %checks 
 {
   return v !== undefined && v !== null
 }
-
+/**判断出入的对象的值是否为真 */
 export function isTrue (v: any): boolean %checks 
 {
   return v === true
 }
-
+/**判断传入对象的值是否为假 */
 export function isFalse (v: any): boolean %checks 
 {
   return v === false
 }
 
-/**
- * Check if value is primitive
- */
+/**检测传入对象的类型是否为字符串、数值或者是布尔型数据 */
 export function isPrimitive (value: any): boolean %checks 
 {
   return (
@@ -37,10 +37,8 @@ export function isPrimitive (value: any): boolean %checks
   )
 }
 
-/**
- * Quick object check - this is primarily used to tell
- * Objects from primitive values when we know the value
- * is a JSON-compliant type.
+/**判断传入的数据的类型是否为对象型且不为null
+ * mixed表示支持传入任何类型
  */
 export function isObject (obj: mixed): boolean %checks 
 {
@@ -50,38 +48,37 @@ export function isObject (obj: mixed): boolean %checks
 /**
  * Get the raw type string of a value e.g. [object Object]
  */
+/**设置_toString为返回对象的字符串形式 */
 const _toString = Object.prototype.toString
 
+/**返回对象的类型 */
 export function toRawType (value: any): string 
 {
   return _toString.call(value).slice(8, -1)
 }
 
-/**
- * Strict object type check. Only returns true
- * for plain JavaScript objects.
- */
+/**判断传入的数据的类型是否是对象 */
 export function isPlainObject (obj: any): boolean 
 {
   return _toString.call(obj) === '[object Object]'
 }
-
+/**判断传入对象的类型是否是正则表达式 */
 export function isRegExp (v: any): boolean 
 {
   return _toString.call(v) === '[object RegExp]'
 }
 
-/**
- * Check if val is a valid array index.
- */
+/**判断传入的数据是否是有效的数组索引值 */
 export function isValidArrayIndex (val: any): boolean 
 {
   const n = parseFloat(String(val))
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
-/**
- * Convert a value to a string that is actually rendered.
+/**将任意类型转换为字符串形式
+ * 如果是null类型输出空字符串
+ * 如果是对象类型转换为缩进为2个空格的字符串
+ * 其他类型调用string类型输出其值
  */
 export function toString (val: any): string 
 {
@@ -92,26 +89,24 @@ export function toString (val: any): string
       : String(val)
 }
 
-/**
- * Convert a input value to a number for persistence.
- * If the conversion fails, return original string.
+/**将字符串转换为数字
+ * 如果传入的字符串无法转换为数字返回此字符串，反之返回其数值
  */
 export function toNumber (val: string): number | string {
   const n = parseFloat(val)
   return isNaN(n) ? val : n
 }
 
-/**
- * Make a map and return a function for checking if a key
- * is in that map.
- */
+/**将传入的字符串转换为判断对象中是否存在此属性 */
 export function makeMap (
   str: string,
   expectsLowerCase?: boolean
-): (key: string) => true | void {
+): (key: string) => true | void 
+{
   const map = Object.create(null)
   const list: Array<string> = str.split(',')
-  for (let i = 0; i < list.length; i++) {
+  for (let i = 0; i < list.length; i++) 
+  {
     map[list[i]] = true
   }
   return expectsLowerCase
@@ -119,72 +114,68 @@ export function makeMap (
     : val => map[val]
 }
 
-/**
- * Check if a tag is a built-in tag.
- */
+
 export const isBuiltInTag = makeMap('slot,component', true)
 
-/**
- * Check if a attribute is a reserved attribute.
- */
+
 export const isReservedAttribute = makeMap('key,ref,slot,slot-scope,is')
 
-/**
- * Remove an item from an array
- */
-export function remove (arr: Array<any>, item: any): Array<any> | void {
-  if (arr.length) {
+/**移除数组中指定位置的值 */
+export function remove (arr: Array<any>, item: any): Array<any> | void 
+{
+  if (arr.length) 
+  {
     const index = arr.indexOf(item)
-    if (index > -1) {
+    if (index > -1) 
+    {
       return arr.splice(index, 1)
     }
   }
 }
 
-/**
- * Check whether the object has the property.
- */
+/**hasOwnProperty 对象原型链是否具有指定的函数 */
 const hasOwnProperty = Object.prototype.hasOwnProperty
-export function hasOwn (obj: Object | Array<*>, key: string): boolean {
+/**判断对象或者是数组是否具有指定的属性 */
+export function hasOwn (obj: Object | Array<*>, key: string): boolean 
+{
   return hasOwnProperty.call(obj, key)
 }
 
-/**
- * Create a cached version of a pure function.
+/**使用闭包
+ * 在cache对象中添加属性
  */
-export function cached<F: Function> (fn: F): F {
+export function cached<F: Function> (fn: F): F 
+{
   const cache = Object.create(null)
-  return (function cachedFn (str: string) {
+  return (function cachedFn (str: string) 
+  {
     const hit = cache[str]
     return hit || (cache[str] = fn(str))
   }: any)
 }
 
-/**
- * Camelize a hyphen-delimited string.
- */
-const camelizeRE = /-(\w)/g
+
+/**下面这部分用于设置对象对应属性的属性值 */
+const camelizeRE = /-(\w)/g;
 export const camelize = cached((str: string): string => {
   return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
 })
 
-/**
- * Capitalize a string.
- */
+/**这部分将传入的字符串 */
 export const capitalize = cached((str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 })
 
-/**
- * Hyphenate a camelCase string.
- */
+/**将字符串中的单词除首字符后面的字符转换为小写形式 */
 const hyphenateRE = /\B([A-Z])/g
 export const hyphenate = cached((str: string): string => {
   return str.replace(hyphenateRE, '-$1').toLowerCase()
 })
 
-/**
- * Simple bind, faster than native
+/**bind函数的简单的实现版本，返回bind函数
+ * 如果参数的个数大于1使用apply传入对象和参数数组
+ * 如果参数的个数为1调用call传入对象和一个参数值
+ * 如果参数的个数为0调用call传入对象
  */
 export function bind (fn: Function, ctx: Object): Function {
   function boundFn (a) {
@@ -200,14 +191,13 @@ export function bind (fn: Function, ctx: Object): Function {
   return boundFn
 }
 
-/**
- * Convert an Array-like object to a real Array.
- */
+/**将从数组转换为从start到末尾位置的数组 */
 export function toArray (list: any, start?: number): Array<any> {
   start = start || 0
   let i = list.length - start
   const ret: Array<any> = new Array(i)
-  while (i--) {
+  while (i--) 
+  {
     ret[i] = list[i + start]
   }
   return ret
@@ -346,3 +336,4 @@ export function once (fn: Function): Function
     }
   }
 }
+/**end \vue-master\src\shared\util */

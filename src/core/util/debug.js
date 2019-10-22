@@ -7,34 +7,47 @@ export let warn = noop
 export let tip = noop
 export let generateComponentTrace = (noop: any) // work around flow check
 export let formatComponentName = (noop: any)
-
-if (process.env.NODE_ENV !== 'production') {
+/**如果开发环境不是生产模式的处理 */
+if (process.env.NODE_ENV !== 'production') 
+{
+  /**判断是否有定义console */
   const hasConsole = typeof console !== 'undefined'
+  /** */
   const classifyRE = /(?:^|[-_])(\w)/g
   const classify = str => str
     .replace(classifyRE, c => c.toUpperCase())
     .replace(/[-_]/g, '')
-
-  warn = (msg, vm) => {
+  /**警告函数 */
+  warn = (msg, vm) => 
+  {
     const trace = vm ? generateComponentTrace(vm) : ''
-
-    if (config.warnHandler) {
+    /**对于有警告处理函数的处理，使用警告处理函数 */
+    if (config.warnHandler) 
+    {
       config.warnHandler.call(null, msg, vm, trace)
-    } else if (hasConsole && (!config.silent)) {
+    } 
+    /**对于没有警告处理函数的处理使用控制台输出 */
+    else if (hasConsole && (!config.silent)) 
+    {
       console.error(`[Vue warn]: ${msg}${trace}`)
     }
   }
-
-  tip = (msg, vm) => {
-    if (hasConsole && (!config.silent)) {
+  /**提示函数的实现 */
+  tip = (msg, vm) => 
+  {
+    if (hasConsole && (!config.silent)) 
+    {
       console.warn(`[Vue tip]: ${msg}` + (
         vm ? generateComponentTrace(vm) : ''
       ))
     }
   }
-
-  formatComponentName = (vm, includeFile) => {
-    if (vm.$root === vm) {
+  /**格式化组件名称函数 */
+  formatComponentName = (vm, includeFile) => 
+  {
+    /**对于是根组件的处理 */
+    if (vm.$root === vm) 
+    {
       return '<Root>'
     }
     const options = typeof vm === 'function' && vm.cid != null
@@ -44,7 +57,8 @@ if (process.env.NODE_ENV !== 'production') {
         : vm || {}
     let name = options.name || options._componentTag
     const file = options.__file
-    if (!name && file) {
+    if (!name && file) 
+    {
       const match = file.match(/([^/\\]+)\.vue$/)
       name = match && match[1]
     }
@@ -54,8 +68,9 @@ if (process.env.NODE_ENV !== 'production') {
       (file && includeFile !== false ? ` at ${file}` : '')
     )
   }
-
-  const repeat = (str, n) => {
+  /**重复函数的实现，将字符串重复多次 */
+  const repeat = (str, n) => 
+  {
     let res = ''
     while (n) {
       if (n % 2 === 1) res += str
@@ -64,23 +79,33 @@ if (process.env.NODE_ENV !== 'production') {
     }
     return res
   }
-
-  generateComponentTrace = vm => {
-    if (vm._isVue && vm.$parent) {
+  /**产生组件追踪 */
+  generateComponentTrace = vm => 
+  {
+    /**对于组件是 */
+    if (vm._isVue && vm.$parent) 
+    {
       const tree = []
       let currentRecursiveSequence = 0
-      while (vm) {
-        if (tree.length > 0) {
+      while (vm) 
+      {
+        /**对于树的长度大于0的处理 */
+        if (tree.length > 0) 
+        {
           const last = tree[tree.length - 1]
-          if (last.constructor === vm.constructor) {
+          if (last.constructor === vm.constructor) 
+          {
             currentRecursiveSequence++
             vm = vm.$parent
             continue
-          } else if (currentRecursiveSequence > 0) {
+          } 
+          else if (currentRecursiveSequence > 0) 
+          {
             tree[tree.length - 1] = [last, currentRecursiveSequence]
             currentRecursiveSequence = 0
           }
         }
+        /**向树中添加对象并设置vm为当前vm的父对象 */
         tree.push(vm)
         vm = vm.$parent
       }
@@ -93,7 +118,9 @@ if (process.env.NODE_ENV !== 'production') {
             : formatComponentName(vm)
         }`)
         .join('\n')
-    } else {
+    } 
+    else 
+    {
       return `\n\n(found in ${formatComponentName(vm)})`
     }
   }

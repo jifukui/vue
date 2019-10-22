@@ -4,13 +4,15 @@
  */
 
 import { def } from '../util/index'
-
+/**设置arrayProto的值为数组构造函数的原型 */
 const arrayProto = Array.prototype
+/** */
 export const arrayMethods = Object.create(arrayProto)
 
 /**
  * Intercept mutating methods and emit events
  */
+/**数组方法的实现 */
 ;[
   'push',
   'pop',
@@ -39,7 +41,10 @@ export const arrayMethods = Object.create(arrayProto)
         inserted = args.slice(2)
         break
     }
-    if (inserted) ob.observeArray(inserted)
+    if (inserted) 
+    {
+      ob.observeArray(inserted)
+    }
     // notify change
     ob.dep.notify()
     return result

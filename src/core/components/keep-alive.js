@@ -9,7 +9,7 @@ function getComponentName (opts: ?VNodeComponentOptions): ?string
 {
   return opts && (opts.Ctor.options.name || opts.tag)
 }
-/** */
+/**检测是否匹配 */
 function matches (pattern: string | RegExp | Array<string>, name: string): boolean 
 {
   if (Array.isArray(pattern)) 
@@ -27,7 +27,7 @@ function matches (pattern: string | RegExp | Array<string>, name: string): boole
   /* istanbul ignore next */
   return false
 }
-
+/** */
 function pruneCache (keepAliveInstance: any, filter: Function) 
 {
   const { cache, keys, _vnode } = keepAliveInstance
@@ -50,9 +50,11 @@ function pruneCacheEntry (
   key: string,
   keys: Array<string>,
   current?: VNode
-) {
+) 
+{
   const cached = cache[key]
-  if (cached && cached !== current) {
+  if (cached && cached !== current) 
+  {
     cached.componentInstance.$destroy()
   }
   cache[key] = null
@@ -61,7 +63,8 @@ function pruneCacheEntry (
 
 const patternTypes: Array<Function> = [String, RegExp, Array]
 
-export default {
+export default 
+{
   name: 'keep-alive',
   abstract: true,
 
@@ -71,13 +74,16 @@ export default {
     max: [String, Number]
   },
 
-  created () {
+  created () 
+  {
     this.cache = Object.create(null)
     this.keys = []
   },
 
-  destroyed () {
-    for (const key in this.cache) {
+  destroyed () 
+  {
+    for (const key in this.cache) 
+    {
       pruneCacheEntry(this.cache, key, this.keys)
     }
   },
@@ -88,7 +94,8 @@ export default {
     {
       pruneCache(this, name => matches(val, name))
     },
-    exclude (val: string | RegExp | Array<string>) {
+    exclude (val: string | RegExp | Array<string>) 
+    {
       pruneCache(this, name => !matches(val, name))
     }
   },

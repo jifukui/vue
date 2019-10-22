@@ -3,6 +3,28 @@
  * 下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型
  * tag的类型可以是string或者是void
  * data的类型可以是VNodeData或者是void
+ * children：
+ * text：
+ * elm:
+ * ns:
+ * context：
+ * key：
+ * componentOptions：
+ * componentInstance：
+ * parent
+ * raw：
+ * isStatic：
+ * isRootInsert
+ * isComment
+ * isCloned
+ * isOnce
+ * asyncFactory
+ * asyncMeta
+ * isAsyncPlaceholder
+ * ssrContext
+ * functionalContext
+ * functionalOptions
+ * functionalScopeId
 */
 export default class VNode {
   /**标签 */
@@ -77,19 +99,22 @@ export default class VNode {
 
   // DEPRECATED: alias for componentInstance for backwards compat.
   /* istanbul ignore next */
-  get child (): Component | void {
+  get child (): Component | void 
+  {
     return this.componentInstance
   }
 }
 /**创建一个空的虚拟节点 */
-export const createEmptyVNode = (text: string = '') => {
+export const createEmptyVNode = (text: string = '') => 
+{
   const node = new VNode()
   node.text = text
   node.isComment = true
   return node
 }
 /**创建一个文本节点 */
-export function createTextVNode (val: string | number) {
+export function createTextVNode (val: string | number) 
+{
   return new VNode(undefined, undefined, undefined, String(val))
 }
 
@@ -97,7 +122,10 @@ export function createTextVNode (val: string | number) {
 // used for static nodes and slot nodes because they may be reused across
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
-/**节点复制 */
+/**节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
+ * vnode:
+ * deep:是否深度拷贝
+ */
 export function cloneVNode (vnode: VNode, deep?: boolean): VNode {
   const cloned = new VNode(
     vnode.tag,
@@ -114,16 +142,19 @@ export function cloneVNode (vnode: VNode, deep?: boolean): VNode {
   cloned.key = vnode.key
   cloned.isComment = vnode.isComment
   cloned.isCloned = true
-  if (deep && vnode.children) {
+  if (deep && vnode.children) 
+  {
     cloned.children = cloneVNodes(vnode.children)
   }
   return cloned
 }
-/**将一个节点数组 */
-export function cloneVNodes (vnodes: Array<VNode>, deep?: boolean): Array<VNode> {
+/**将一个节点数组进行拷贝 */
+export function cloneVNodes (vnodes: Array<VNode>, deep?: boolean): Array<VNode> 
+{
   const len = vnodes.length
   const res = new Array(len)
-  for (let i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) 
+  {
     res[i] = cloneVNode(vnodes[i], deep)
   }
   return res

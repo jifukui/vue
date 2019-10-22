@@ -34,12 +34,15 @@ const sharedPropertyDefinition = {
   get: noop,
   set: noop
 }
-
-export function proxy (target: Object, sourceKey: string, key: string) {
-  sharedPropertyDefinition.get = function proxyGetter () {
+/** */
+export function proxy (target: Object, sourceKey: string, key: string) 
+{
+  sharedPropertyDefinition.get = function proxyGetter () 
+  {
     return this[sourceKey][key]
   }
-  sharedPropertyDefinition.set = function proxySetter (val) {
+  sharedPropertyDefinition.set = function proxySetter (val) 
+  {
     this[sourceKey][key] = val
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
@@ -148,34 +151,52 @@ function initData (vm: Component) {
   // observe data
   observe(data, true /* asRootData */)
 }
-
-function getData (data: Function, vm: Component): any {
-  try {
+/**获取数据
+ * data:为函数
+ * vm:为组件
+ * 如果正常返回调用函数的返回值
+ * 反之返回空对象
+ */
+function getData (data: Function, vm: Component): any 
+{
+  try 
+  {
     return data.call(vm, vm)
-  } catch (e) {
+  } 
+  catch (e) 
+  {
     handleError(e, vm, `data()`)
     return {}
   }
 }
-
+/**设置组件的监测器操作 */
 const computedWatcherOptions = { lazy: true }
-
-function initComputed (vm: Component, computed: Object) {
+/**初始化计算
+ * vm:为组件
+ * computer：
+ * 
+ */
+function initComputed (vm: Component, computed: Object) 
+{
   const watchers = vm._computedWatchers = Object.create(null)
   // computed properties are just getters during SSR
+  /**此值获取是否是服务器端渲染 */
   const isSSR = isServerRendering()
 
-  for (const key in computed) {
+  for (const key in computed) 
+  {
     const userDef = computed[key]
     const getter = typeof userDef === 'function' ? userDef : userDef.get
-    if (process.env.NODE_ENV !== 'production' && getter == null) {
+    if (process.env.NODE_ENV !== 'production' && getter == null) 
+    {
       warn(
         `Getter is missing for computed property "${key}".`,
         vm
       )
     }
 
-    if (!isSSR) {
+    if (!isSSR) 
+    {
       // create internal watcher for the computed property.
       watchers[key] = new Watcher(
         vm,
@@ -188,18 +209,24 @@ function initComputed (vm: Component, computed: Object) {
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
     // at instantiation here.
-    if (!(key in vm)) {
+    if (!(key in vm)) 
+    {
       defineComputed(vm, key, userDef)
-    } else if (process.env.NODE_ENV !== 'production') {
-      if (key in vm.$data) {
+    } 
+    else if (process.env.NODE_ENV !== 'production') 
+    {
+      if (key in vm.$data) 
+      {
         warn(`The computed property "${key}" is already defined in data.`, vm)
-      } else if (vm.$options.props && key in vm.$options.props) {
+      } 
+      else if (vm.$options.props && key in vm.$options.props) 
+      {
         warn(`The computed property "${key}" is already defined as a prop.`, vm)
       }
     }
   }
 }
-
+/**定义计算 */
 export function defineComputed (
   target: any,
   key: string,
@@ -232,7 +259,7 @@ export function defineComputed (
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
-
+/**创建计算的获取器 */
 function createComputedGetter (key) {
   return function computedGetter () {
     const watcher = this._computedWatchers && this._computedWatchers[key]
@@ -247,8 +274,9 @@ function createComputedGetter (key) {
     }
   }
 }
-
-function initMethods (vm: Component, methods: Object) {
+/**初始化方法 */
+function initMethods (vm: Component, methods: Object) 
+{
   const props = vm.$options.props
   for (const key in methods) {
     if (process.env.NODE_ENV !== 'production') {
@@ -275,8 +303,9 @@ function initMethods (vm: Component, methods: Object) {
     vm[key] = methods[key] == null ? noop : bind(methods[key], vm)
   }
 }
-
-function initWatch (vm: Component, watch: Object) {
+/**初始化监测 */
+function initWatch (vm: Component, watch: Object) 
+{
   for (const key in watch) {
     const handler = watch[key]
     if (Array.isArray(handler)) {
@@ -288,7 +317,7 @@ function initWatch (vm: Component, watch: Object) {
     }
   }
 }
-
+/**创建计算机 */
 function createWatcher (
   vm: Component,
   keyOrFn: string | Function,
@@ -304,7 +333,7 @@ function createWatcher (
   }
   return vm.$watch(keyOrFn, handler, options)
 }
-
+/** */
 export function stateMixin (Vue: Class<Component>) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up

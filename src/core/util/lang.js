@@ -1,4 +1,5 @@
 /* @flow */
+/**\vue-master\src\core\util\lan.js */
 /**创建一个不允许改变的空的对象 */
 export const emptyObject = Object.freeze({})
 
@@ -15,6 +16,7 @@ export function isReserved (str: string): boolean
 /**
  * Define a property.
  * 定义对象的属性
+ * 值为传入的值，可写可枚举
  */
 export function def (obj: Object, key: string, val: any, enumerable?: boolean) 
 {
@@ -29,14 +31,21 @@ export function def (obj: Object, key: string, val: any, enumerable?: boolean)
 /**
  * Parse simple path.
  */
-const bailRE = /[^\w.$]/
+/**判断字符是否只有数组字母下划线 */
+const bailRE = /[^\w.$]/;
 export function parsePath (path: string): any 
 {
+  /**如果包含非法字符返回 */
   if (bailRE.test(path)) 
   {
     return
   }
-  const segments = path.split('.')
+  /**将字符串以点号分隔 */
+  const segments = path.split('.');
+  /**返回处理函数
+   * 如果传入的对象为否直接退出
+   * 反之返回重新定义的结构体
+   */
   return function (obj) 
   {
     for (let i = 0; i < segments.length; i++) 
@@ -50,3 +59,4 @@ export function parsePath (path: string): any
     return obj
   }
 }
+/**end \vue-master\src\core\util\lang.js */

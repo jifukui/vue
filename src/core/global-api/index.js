@@ -1,5 +1,6 @@
 /* @flow */
-
+/**vue-master\src\core\global-api */
+/**导出默认的配置 */
 import config from '../config'
 import { initUse } from './use'
 import { initMixin } from './mixin'
@@ -17,22 +18,28 @@ import {
   defineReactive
 } from '../util/index'
 
-export function initGlobalAPI (Vue: GlobalAPI) {
+/** 初始化全局API */
+export function initGlobalAPI (Vue: GlobalAPI) 
+{
   // config
   const configDef = {}
   configDef.get = () => config
-  if (process.env.NODE_ENV !== 'production') {
+  /**对于开发环境为production的处理其实没有什么作用 */
+  if (process.env.NODE_ENV !== 'production') 
+  {
     configDef.set = () => {
       warn(
         'Do not replace the Vue.config object, set individual fields instead.'
       )
     }
   }
+  /**定义Vue的config属性为默认的configDef属性 */
   Object.defineProperty(Vue, 'config', configDef)
 
   // exposed util methods.
   // NOTE: these are not considered part of the public API - avoid relying on
   // them unless you are aware of the risk.
+  /**设置Vue的util属性 */
   Vue.util = {
     warn,
     extend,
@@ -60,3 +67,4 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   initExtend(Vue)
   initAssetRegisters(Vue)
 }
+/**end vue-master\src\core\global-api */
