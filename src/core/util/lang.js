@@ -17,6 +17,9 @@ export function isReserved (str: string): boolean
  * Define a property.
  * 定义对象的属性
  * 值为传入的值，可写可枚举
+ * obj:对象
+ * key:属性
+ * enumerable:可枚举属性
  */
 export function def (obj: Object, key: string, val: any, enumerable?: boolean) 
 {

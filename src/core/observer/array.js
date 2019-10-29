@@ -6,7 +6,7 @@
 import { def } from '../util/index'
 /**设置arrayProto的值为数组构造函数的原型 */
 const arrayProto = Array.prototype
-/** */
+/**数组的实现 */
 export const arrayMethods = Object.create(arrayProto)
 
 /**

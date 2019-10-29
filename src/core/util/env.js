@@ -55,7 +55,7 @@ if (inBrowser)
 // this needs to be lazy-evaled because vue may be required before
 // vue-server-renderer can set VUE_ENV
 let _isServer
-/**服务器端渲染的处理
+/**判断是否是服务器端渲染
  * 设置_isServer属性的值
  */
 export const isServerRendering = () => 

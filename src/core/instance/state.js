@@ -34,7 +34,12 @@ const sharedPropertyDefinition = {
   get: noop,
   set: noop
 }
-/** */
+/**创建代理函数
+ * target：
+ * sourcekey:
+ * key:
+ * 设置对象target对象key属性的值和获取与设置函数
+ */
 export function proxy (target: Object, sourceKey: string, key: string) 
 {
   sharedPropertyDefinition.get = function proxyGetter () 
@@ -47,46 +52,86 @@ export function proxy (target: Object, sourceKey: string, key: string)
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
-
-export function initState (vm: Component) {
+/**初始化对象的状态
+ * vm：组件对象
+ * 如果组件对象具有props属性初始化props
+ * 如果组件对象有methods对象初始化methods
+ * 如果组件对象有data属性初始化data,反之调用observe函数
+ * 如果组件对象具有computed属性初始化计算
+ * 如果组件对象具有watch属性初始化watch
+ */
+export function initState (vm: Component) 
+{
   vm._watchers = []
   const opts = vm.$options
-  if (opts.props) initProps(vm, opts.props)
-  if (opts.methods) initMethods(vm, opts.methods)
-  if (opts.data) {
+  if (opts.props) 
+  {
+    initProps(vm, opts.props)
+  }
+  if (opts.methods) 
+  {
+    initMethods(vm, opts.methods)
+  }
+  if (opts.data) 
+  {
     initData(vm)
-  } else {
+  } 
+  else 
+  {
     observe(vm._data = {}, true /* asRootData */)
   }
-  if (opts.computed) initComputed(vm, opts.computed)
-  if (opts.watch && opts.watch !== nativeWatch) {
+  if (opts.computed) 
+  {
+    initComputed(vm, opts.computed)
+  }
+  if (opts.watch && opts.watch !== nativeWatch) 
+  {
     initWatch(vm, opts.watch)
   }
 }
-
-function initProps (vm: Component, propsOptions: Object) {
+/**初始化props
+ * vm：组件对象
+ * propsOptions：
+ * 获取组件中的propsData的数据，设置props变量
+ */
+function initProps (vm: Component, propsOptions: Object) 
+{
+  /**propsData变量存储当前组件中$options.propsData属性的值如果不存在为空对象 */
   const propsData = vm.$options.propsData || {}
+  /**props变量用于存储props属性 */
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
+  /**keys变量存储传入对象的属性值 */
   const keys = vm.$options._propKeys = []
+  /**isRoot变量存储是否是根组件 */
   const isRoot = !vm.$parent
   // root instance props should be converted
+  /**设置发布器的状态 */
   observerState.shouldConvert = isRoot
-  for (const key in propsOptions) {
+  /**将传入对象中的属性值添加至keys数组中
+   * 判断value值是否是合法的props
+   * 为此props对象添加发布处理
+   * 如果这个属性不在组件对象中为组件添加此属性
+   * 设置发布器的状态值为真
+   */
+  for (const key in propsOptions) 
+  {
     keys.push(key)
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production') 
+    {
       const hyphenatedKey = hyphenate(key)
-      if (isReservedAttribute(hyphenatedKey) ||
-          config.isReservedAttr(hyphenatedKey)) {
+      if (isReservedAttribute(hyphenatedKey) ||config.isReservedAttr(hyphenatedKey)) 
+      {
         warn(
           `"${hyphenatedKey}" is a reserved attribute and cannot be used as component prop.`,
           vm
         )
       }
-      defineReactive(props, key, value, () => {
+      defineReactive(props, key, value, () => 
+      {
         if (vm.$parent && !isUpdatingChildComponent) {
           warn(
             `Avoid mutating a prop directly since the value will be ` +
@@ -97,25 +142,35 @@ function initProps (vm: Component, propsOptions: Object) {
           )
         }
       })
-    } else {
+    } 
+    else 
+    {
       defineReactive(props, key, value)
     }
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
-    if (!(key in vm)) {
+    if (!(key in vm)) 
+    {
       proxy(vm, `_props`, key)
     }
   }
   observerState.shouldConvert = true
 }
-
-function initData (vm: Component) {
+/**初始化数据
+ * vm：组件对象
+ */
+function initData (vm: Component) 
+{
+  /**data变量存储组件对象的数据 */
   let data = vm.$options.data
+  /**设置data值 */
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
-  if (!isPlainObject(data)) {
+  /**如果data为不可扩展对象的处理设置data的值为空对象 */
+  if (!isPlainObject(data)) 
+  {
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
       'data functions should return an object:\n' +
@@ -124,27 +179,39 @@ function initData (vm: Component) {
     )
   }
   // proxy data on instance
+  /**
+   * 设置keys的值为对象的键值
+   * 设置props的值
+   * 设置methods的值
+   */
   const keys = Object.keys(data)
   const props = vm.$options.props
   const methods = vm.$options.methods
   let i = keys.length
-  while (i--) {
+  /**循环获取data数据中的值需要保证data中的数据和props中的数据不冲突 */
+  while (i--) 
+  {
     const key = keys[i]
-    if (process.env.NODE_ENV !== 'production') {
-      if (methods && hasOwn(methods, key)) {
+    if (process.env.NODE_ENV !== 'production') 
+    {
+      if (methods && hasOwn(methods, key)) 
+      {
         warn(
           `Method "${key}" has already been defined as a data property.`,
           vm
         )
       }
     }
-    if (props && hasOwn(props, key)) {
+    if (props && hasOwn(props, key)) 
+    {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
-    } else if (!isReserved(key)) {
+    } 
+    else if (!isReserved(key)) 
+    {
       proxy(vm, `_data`, key)
     }
   }
@@ -171,9 +238,9 @@ function getData (data: Function, vm: Component): any
 }
 /**设置组件的监测器操作 */
 const computedWatcherOptions = { lazy: true }
-/**初始化计算
+/**初始化计算器
  * vm:为组件
- * computer：
+ * computer：计算对象
  * 
  */
 function initComputed (vm: Component, computed: Object) 
@@ -226,19 +293,35 @@ function initComputed (vm: Component, computed: Object)
     }
   }
 }
-/**定义计算 */
+/**定义计算
+ * target：目标
+ * key:属性
+ * userDef:用户定义
+ */
 export function defineComputed (
   target: any,
   key: string,
   userDef: Object | Function
-) {
+) 
+{
+  /**获取是否是服务器端进行渲染 */
   const shouldCache = !isServerRendering()
-  if (typeof userDef === 'function') {
+  /**如果用户定义是函数的处理
+   * 如果不是服务器端渲染设置访问函数 createComputedGetter函数
+   * 如果是服务器端渲染为设置访问函数为用户定义的函数
+   * 设置设置属性为空
+   * 如果用户定义不是函数
+   * 如果用户定义的get属性是否存在
+   */
+  if (typeof userDef === 'function') 
+  {
     sharedPropertyDefinition.get = shouldCache
       ? createComputedGetter(key)
       : userDef
     sharedPropertyDefinition.set = noop
-  } else {
+  } 
+  else 
+  {
     sharedPropertyDefinition.get = userDef.get
       ? shouldCache && userDef.cache !== false
         ? createComputedGetter(key)
@@ -248,9 +331,10 @@ export function defineComputed (
       ? userDef.set
       : noop
   }
-  if (process.env.NODE_ENV !== 'production' &&
-      sharedPropertyDefinition.set === noop) {
-    sharedPropertyDefinition.set = function () {
+  if (process.env.NODE_ENV !== 'production' &&sharedPropertyDefinition.set === noop) 
+  {
+    sharedPropertyDefinition.set = function () 
+    {
       warn(
         `Computed property "${key}" was assigned to but it has no setter.`,
         this
@@ -259,41 +343,62 @@ export function defineComputed (
   }
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
-/**创建计算的获取器 */
-function createComputedGetter (key) {
-  return function computedGetter () {
+/**创建计算的获取器的获取方法
+ * key:
+ * 返回对应属性的访问方法
+ * 设置watch的值为对象的计算监视器
+ * 如果存在如果监视器的状态为脏调用监视器的计算函数
+ * 如果依赖的target属性存在调用监视器的depend函数
+ * 返回监视器的值
+ */
+function createComputedGetter (key) 
+{
+  return function computedGetter () 
+  {
     const watcher = this._computedWatchers && this._computedWatchers[key]
-    if (watcher) {
-      if (watcher.dirty) {
+    if (watcher) 
+    {
+      if (watcher.dirty) 
+      {
         watcher.evaluate()
       }
-      if (Dep.target) {
+      if (Dep.target) 
+      {
         watcher.depend()
       }
       return watcher.value
     }
   }
 }
-/**初始化方法 */
+/**初始化方法
+ * vm：组件对象
+ * methods：对象
+ * 获取所有method对象中的数据
+ */
 function initMethods (vm: Component, methods: Object) 
 {
   const props = vm.$options.props
-  for (const key in methods) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (methods[key] == null) {
+  for (const key in methods) 
+  {
+    if (process.env.NODE_ENV !== 'production') 
+    {
+      if (methods[key] == null) 
+      {
         warn(
           `Method "${key}" has an undefined value in the component definition. ` +
           `Did you reference the function correctly?`,
           vm
         )
       }
-      if (props && hasOwn(props, key)) {
+      if (props && hasOwn(props, key)) 
+      {
         warn(
           `Method "${key}" has already been defined as a prop.`,
           vm
         )
       }
-      if ((key in vm) && isReserved(key)) {
+      if ((key in vm) && isReserved(key)) 
+      {
         warn(
           `Method "${key}" conflicts with an existing Vue instance method. ` +
           `Avoid defining component methods that start with _ or $.`
@@ -303,79 +408,124 @@ function initMethods (vm: Component, methods: Object)
     vm[key] = methods[key] == null ? noop : bind(methods[key], vm)
   }
 }
-/**初始化监测 */
+/**初始化监视器
+ * vm：组件
+ * watch：对象
+ * 将watch对象中的属性创建监视器对象
+ * 如果属性是数组对数组中的每一个值都创建监视器
+ * 其他对象为对象创建监视器
+ */
 function initWatch (vm: Component, watch: Object) 
 {
-  for (const key in watch) {
+  for (const key in watch) 
+  {
     const handler = watch[key]
-    if (Array.isArray(handler)) {
-      for (let i = 0; i < handler.length; i++) {
+    if (Array.isArray(handler)) 
+    {
+      for (let i = 0; i < handler.length; i++) 
+      {
         createWatcher(vm, key, handler[i])
       }
-    } else {
+    } 
+    else 
+    {
       createWatcher(vm, key, handler)
     }
   }
 }
-/**创建计算机 */
+/**创建监视器
+ * vm：组件对象
+ * keyOrFn：
+ * Handler：
+ * option:
+ * 返回组件的
+ * 根据Handler是否为可扩展对象进行处理
+ * 如果handler为可扩展对象设置option的值为Handler设置Handler的值为Handler的值的Handler属性
+ * 如果Handler的类型为字符串类型的处理设置Handler的值为组件对象的Handler属性
+ * 返回组件对象调用watch的结果
+ */
 function createWatcher (
   vm: Component,
   keyOrFn: string | Function,
   handler: any,
   options?: Object
-) {
-  if (isPlainObject(handler)) {
+) 
+{
+  if (isPlainObject(handler)) 
+  {
     options = handler
     handler = handler.handler
   }
-  if (typeof handler === 'string') {
+  if (typeof handler === 'string') 
+  {
     handler = vm[handler]
   }
   return vm.$watch(keyOrFn, handler, options)
 }
-/** */
-export function stateMixin (Vue: Class<Component>) {
+/**状态混合
+ * vue：组件对象
+ * 
+ */
+export function stateMixin (Vue: Class<Component>) 
+{
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up
   // the object here.
   const dataDef = {}
-  dataDef.get = function () { return this._data }
+  dataDef.get = function () 
+  { 
+    return this._data 
+  }
   const propsDef = {}
-  propsDef.get = function () { return this._props }
-  if (process.env.NODE_ENV !== 'production') {
-    dataDef.set = function (newData: Object) {
+  propsDef.get = function () 
+  { 
+    return this._props 
+  }
+  if (process.env.NODE_ENV !== 'production') 
+  {
+    dataDef.set = function (newData: Object) 
+    {
       warn(
         'Avoid replacing instance root $data. ' +
         'Use nested data properties instead.',
         this
       )
     }
-    propsDef.set = function () {
+    propsDef.set = function () 
+    {
       warn(`$props is readonly.`, this)
     }
   }
+  /**定义对象的data和props */
   Object.defineProperty(Vue.prototype, '$data', dataDef)
   Object.defineProperty(Vue.prototype, '$props', propsDef)
-
+  /**设置对象的设置和删除方法 */
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
-
+  /**实现监听
+   * 如果cb对象是可扩展对象使用createWatcher创建监听器
+   * 反之创建监听器对象根据传入对象的是否立即执行进行处理返回关闭监听函数
+   */
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
     options?: Object
-  ): Function {
+  ): Function 
+  {
     const vm: Component = this
-    if (isPlainObject(cb)) {
+    if (isPlainObject(cb)) 
+    {
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
     options.user = true
     const watcher = new Watcher(vm, expOrFn, cb, options)
-    if (options.immediate) {
+    if (options.immediate) 
+    {
       cb.call(vm, watcher.value)
     }
-    return function unwatchFn () {
+    return function unwatchFn () 
+    {
       watcher.teardown()
     }
   }

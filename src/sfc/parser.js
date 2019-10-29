@@ -16,10 +16,15 @@ type Attribute = {
 /**
  * Parse a single-file component (*.vue) file into an SFC Descriptor Object.
  */
+/**解析组件
+ * content：
+ * option
+ */
 export function parseComponent (
   content: string,
   options?: Object = {}
- ): SFCDescriptor {
+ ): SFCDescriptor 
+ {
   const sfc: SFCDescriptor = {
     template: null,
     script: null,
@@ -28,65 +33,84 @@ export function parseComponent (
   }
   let depth = 0
   let currentBlock: ?(SFCBlock | SFCCustomBlock) = null
-
+  /** */
   function start (
     tag: string,
     attrs: Array<Attribute>,
     unary: boolean,
     start: number,
     end: number
-  ) {
-    if (depth === 0) {
-      currentBlock = {
+  ) 
+  {
+    if (depth === 0) 
+    {
+      currentBlock = 
+      {
         type: tag,
         content: '',
         start: end,
-        attrs: attrs.reduce((cumulated, { name, value }) => {
+        attrs: attrs.reduce((cumulated, { name, value }) => 
+        {
           cumulated[name] = value || true
           return cumulated
         }, Object.create(null))
       }
-      if (isSpecialTag(tag)) {
+      if (isSpecialTag(tag)) 
+      {
         checkAttrs(currentBlock, attrs)
-        if (tag === 'style') {
+        if (tag === 'style') 
+        {
           sfc.styles.push(currentBlock)
-        } else {
+        } 
+        else 
+        {
           sfc[tag] = currentBlock
         }
-      } else { // custom blocks
+      } 
+      else { // custom blocks
         sfc.customBlocks.push(currentBlock)
       }
     }
-    if (!unary) {
+    if (!unary) 
+    {
       depth++
     }
   }
 
-  function checkAttrs (block: SFCBlock, attrs: Array<Attribute>) {
-    for (let i = 0; i < attrs.length; i++) {
+  function checkAttrs (block: SFCBlock, attrs: Array<Attribute>) 
+  {
+    for (let i = 0; i < attrs.length; i++) 
+    {
       const attr = attrs[i]
-      if (attr.name === 'lang') {
+      if (attr.name === 'lang') 
+      {
         block.lang = attr.value
       }
-      if (attr.name === 'scoped') {
+      if (attr.name === 'scoped') 
+      {
         block.scoped = true
       }
-      if (attr.name === 'module') {
+      if (attr.name === 'module') 
+      {
         block.module = attr.value || true
       }
-      if (attr.name === 'src') {
+      if (attr.name === 'src') 
+      {
         block.src = attr.value
       }
     }
   }
-
-  function end (tag: string, start: number, end: number) {
-    if (depth === 1 && currentBlock) {
+  /** */
+  function end (tag: string, start: number, end: number) 
+  {
+    if (depth === 1 && currentBlock) 
+    {
       currentBlock.end = start
       let text = deindent(content.slice(currentBlock.start, currentBlock.end))
       // pad content so that linters and pre-processors can output correct
       // line numbers in errors and warnings
-      if (currentBlock.type !== 'template' && options.pad) {
+      if (currentBlock.type !== 'template' && options.pad) 
+      {
         text = padContent(currentBlock, options.pad) + text
       }
       currentBlock.content = text
@@ -95,10 +119,14 @@ export function parseComponent (
     depth--
   }
 
-  function padContent (block: SFCBlock | SFCCustomBlock, pad: true | "line" | "space") {
-    if (pad === 'space') {
+  function padContent (block: SFCBlock | SFCCustomBlock, pad: true | "line" | "space") 
+  {
+    if (pad === 'space') 
+    {
       return content.slice(0, block.start).replace(replaceRE, ' ')
-    } else {
+    } 
+    else 
+    {
       const offset = content.slice(0, block.start).split(splitRE).length
       const padChar = block.type === 'script' && !block.lang
         ? '//\n'
@@ -106,7 +134,7 @@ export function parseComponent (
       return Array(offset).join(padChar)
     }
   }
-
+  /** */
   parseHTML(content, {
     start,
     end

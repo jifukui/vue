@@ -28,14 +28,26 @@ import {
 } from '../instance/lifecycle'
 
 // hooks to be invoked on component VNodes during patch
-const componentVNodeHooks = {
+/**钩子函数相关
+ * 
+ * 
+ */
+const componentVNodeHooks = 
+{
+  /**初始化 */
   init (
     vnode: VNodeWithData,
     hydrating: boolean,
     parentElm: ?Node,
     refElm: ?Node
-  ): ?boolean {
-    if (!vnode.componentInstance || vnode.componentInstance._isDestroyed) {
+  ): ?boolean 
+  {
+    /**组件实例为假或者是组件实例被销毁为真的处理
+     * 定义变量child的值为调用createComponentInstanceForVnode后的结果
+     * 并将此挂载
+     */
+    if (!vnode.componentInstance || vnode.componentInstance._isDestroyed) 
+    {
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance,
@@ -43,14 +55,24 @@ const componentVNodeHooks = {
         refElm
       )
       child.$mount(hydrating ? vnode.elm : undefined, hydrating)
-    } else if (vnode.data.keepAlive) {
+    } 
+    /**如果数据的keepAlive属性值为真的处理
+     * 调用prepatch函数
+     */
+    else if (vnode.data.keepAlive) 
+    {
       // kept-alive components, treat as a patch
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     }
   },
-
-  prepatch (oldVnode: MountedComponentVNode, vnode: MountedComponentVNode) {
+  /** */
+  prepatch (oldVnode: MountedComponentVNode, vnode: MountedComponentVNode) 
+  {
+    /**设置options的值为vnode.componentOptions
+     * 设置child的值为oldVnode.componentInstance
+     * 调用更新子组件
+     */
     const options = vnode.componentOptions
     const child = vnode.componentInstance = oldVnode.componentInstance
     updateChildComponent(
@@ -61,74 +83,107 @@ const componentVNodeHooks = {
       options.children // new children
     )
   },
-
-  insert (vnode: MountedComponentVNode) {
+  /**插入 */
+  insert (vnode: MountedComponentVNode) 
+  {
     const { context, componentInstance } = vnode
-    if (!componentInstance._isMounted) {
+    if (!componentInstance._isMounted)
+     {
       componentInstance._isMounted = true
       callHook(componentInstance, 'mounted')
     }
-    if (vnode.data.keepAlive) {
-      if (context._isMounted) {
+    if (vnode.data.keepAlive) 
+    {
+      if (context._isMounted) 
+      {
         // vue-router#1212
         // During updates, a kept-alive component's child components may
         // change, so directly walking the tree here may call activated hooks
         // on incorrect children. Instead we push them into a queue which will
         // be processed after the whole patch process ended.
         queueActivatedComponent(componentInstance)
-      } else {
+      } 
+      else 
+      {
         activateChildComponent(componentInstance, true /* direct */)
       }
     }
   },
-
-  destroy (vnode: MountedComponentVNode) {
+  /**销毁挂载的组件对象
+   * 
+   */
+  destroy (vnode: MountedComponentVNode) 
+  {
     const { componentInstance } = vnode
-    if (!componentInstance._isDestroyed) {
-      if (!vnode.data.keepAlive) {
+    /**组件实例的销毁状态为假的处理
+     * 如果数据的keepAlive的属性为假调用组件实例的销毁函数
+     * 反之调用deactivateChildComponent函数
+     */
+    if (!componentInstance._isDestroyed) 
+    {
+      if (!vnode.data.keepAlive) 
+      {
         componentInstance.$destroy()
-      } else {
+      } 
+      else 
+      {
         deactivateChildComponent(componentInstance, true /* direct */)
       }
     }
   }
 }
-
+/**钩子聚合 */
 const hooksToMerge = Object.keys(componentVNodeHooks)
-
+/**创建组件
+ * Ctor:组件
+ * data:数据
+ * context:内容
+ * children:子节点
+ * tag:标签
+ */
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
   data: ?VNodeData,
   context: Component,
   children: ?Array<VNode>,
   tag?: string
-): VNode | void {
-  if (isUndef(Ctor)) {
+): VNode | void 
+{
+  /**如果Ctor对象是未定义的返回 */
+  if (isUndef(Ctor)) 
+  {
     return
   }
-
+  /**设置baseCtor为组件的$options._base属性的值 */
   const baseCtor = context.$options._base
 
   // plain options object: turn it into a constructor
-  if (isObject(Ctor)) {
+  /**如果Ctor是对象设置Ctor的值为调用baseCtor.extend的结果 */
+  if (isObject(Ctor)) 
+  {
     Ctor = baseCtor.extend(Ctor)
   }
 
   // if at this stage it's not a constructor or an async component factory,
   // reject.
-  if (typeof Ctor !== 'function') {
-    if (process.env.NODE_ENV !== 'production') {
+  /**如果Ctor的类型不是函数的处理，返回 */
+  if (typeof Ctor !== 'function') 
+  {
+    if (process.env.NODE_ENV !== 'production') 
+    {
       warn(`Invalid Component definition: ${String(Ctor)}`, context)
     }
     return
   }
 
-  // async component
+  // async component 异步组件
   let asyncFactory
-  if (isUndef(Ctor.cid)) {
+  if (isUndef(Ctor.cid)) 
+  {
     asyncFactory = Ctor
     Ctor = resolveAsyncComponent(asyncFactory, baseCtor, context)
-    if (Ctor === undefined) {
+    if (Ctor === undefined) 
+    {
       // return a placeholder node for async component, which is rendered
       // as a comment node but preserves all the raw information for the node.
       // the information will be used for async server-rendering and hydration.
@@ -149,7 +204,8 @@ export function createComponent (
   resolveConstructorOptions(Ctor)
 
   // transform component v-model data into props & events
-  if (isDef(data.model)) {
+  if (isDef(data.model)) 
+  {
     transformModel(Ctor.options, data)
   }
 
@@ -157,7 +213,8 @@ export function createComponent (
   const propsData = extractPropsFromVNodeData(data, Ctor, tag)
 
   // functional component
-  if (isTrue(Ctor.options.functional)) {
+  if (isTrue(Ctor.options.functional)) 
+  {
     return createFunctionalComponent(Ctor, propsData, data, context, children)
   }
 
@@ -168,14 +225,16 @@ export function createComponent (
   // so it gets processed during parent component patch.
   data.on = data.nativeOn
 
-  if (isTrue(Ctor.options.abstract)) {
+  if (isTrue(Ctor.options.abstract)) 
+  {
     // abstract components do not keep anything
     // other than props & listeners & slot
 
     // work around flow
     const slot = data.slot
     data = {}
-    if (slot) {
+    if (slot) 
+    {
       data.slot = slot
     }
   }
@@ -193,15 +252,23 @@ export function createComponent (
   )
   return vnode
 }
-
+/**给节点创建组件实例
+ * vnode:
+ * parent:
+ * parentElm:
+ * refElm:
+ * 返回组件对象
+ */
 export function createComponentInstanceForVnode (
   vnode: any, // we know it's MountedComponentVNode but flow doesn't
   parent: any, // activeInstance in lifecycle state
   parentElm?: ?Node,
   refElm?: ?Node
-): Component {
+): Component 
+{
   const vnodeComponentOptions = vnode.componentOptions
-  const options: InternalComponentOptions = {
+  const options: InternalComponentOptions = 
+  {
     _isComponent: true,
     parent,
     propsData: vnodeComponentOptions.propsData,
@@ -213,27 +280,37 @@ export function createComponentInstanceForVnode (
     _refElm: refElm || null
   }
   // check inline-template render functions
+  /**获取内联模板 */
   const inlineTemplate = vnode.data.inlineTemplate
-  if (isDef(inlineTemplate)) {
+  /**对于内联模板的 */
+  if (isDef(inlineTemplate)) 
+  {
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns
   }
   return new vnodeComponentOptions.Ctor(options)
 }
-
-function mergeHooks (data: VNodeData) {
-  if (!data.hook) {
+/**聚合钩子
+ * data:节点数据
+ */
+function mergeHooks (data: VNodeData) 
+{
+  /**如果值为否创建一个空的钩子对象 */
+  if (!data.hook) 
+  {
     data.hook = {}
   }
-  for (let i = 0; i < hooksToMerge.length; i++) {
+  for (let i = 0; i < hooksToMerge.length; i++) 
+  {
     const key = hooksToMerge[i]
     const fromParent = data.hook[key]
     const ours = componentVNodeHooks[key]
     data.hook[key] = fromParent ? mergeHook(ours, fromParent) : ours
   }
 }
-
-function mergeHook (one: Function, two: Function): Function {
+/**合并钩子 */
+function mergeHook (one: Function, two: Function): Function 
+{
   return function (a, b, c, d) {
     one(a, b, c, d)
     two(a, b, c, d)
@@ -242,14 +319,22 @@ function mergeHook (one: Function, two: Function): Function {
 
 // transform component v-model info (value and callback) into
 // prop and event handler respectively.
-function transformModel (options, data: any) {
+/**
+ * options:
+ * data
+ */
+function transformModel (options, data: any) 
+{
   const prop = (options.model && options.model.prop) || 'value'
   const event = (options.model && options.model.event) || 'input'
   ;(data.props || (data.props = {}))[prop] = data.model.value
   const on = data.on || (data.on = {})
-  if (isDef(on[event])) {
+  if (isDef(on[event])) 
+  {
     on[event] = [data.model.callback].concat(on[event])
-  } else {
+  } 
+  else 
+  {
     on[event] = data.model.callback
   }
 }

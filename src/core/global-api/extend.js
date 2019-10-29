@@ -3,7 +3,7 @@
 import { ASSET_TYPES } from 'shared/constants'
 import { warn, extend, mergeOptions } from '../util/index'
 import { defineComputed, proxy } from '../instance/state'
-
+/**初始化扩展 */
 export function initExtend (Vue: GlobalAPI) 
 {
   /**
@@ -94,7 +94,10 @@ export function initExtend (Vue: GlobalAPI)
     return Sub
   }
 }
-/** */
+/**初始化Props
+ * 获取对象的options.props属性值
+ * 
+ */
 function initProps (Comp) 
 {
   const props = Comp.options.props

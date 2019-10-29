@@ -24,20 +24,20 @@ let uid = 0
 /**导出默认的监视器
  * vm：组件对象
  * expression：
- * cb:
- * id:
- * deep:
- * user:
- * lazy:
- * sync:
- * dirty:
- * active:
- * deps:
- * newDeps:
- * depIds:
- * newDepIds:
- * getter:
- * value:
+ * cb:回调函数
+ * id:监听器的ID
+ * deep:深度模式
+ * user:用户模式
+ * lazy:懒散模式
+ * sync:同步状态
+ * dirty:参数是否修改
+ * active:监听器活动的状态
+ * deps:当前依赖数组
+ * newDeps:新的依赖数组
+ * depIds:依赖的id
+ * newDepIds:新的依赖的id 
+ * getter:获取器
+ * value:监听器的参数
  */
 export default class Watcher {
   vm: Component;
@@ -66,7 +66,7 @@ export default class Watcher {
   {
     this.vm = vm
     vm._watchers.push(this)
-    // options
+    // 设置状态
     if (options) 
     {
       this.deep = !!options.deep
@@ -110,11 +110,7 @@ export default class Watcher {
       ? undefined
       : this.get()
   }
-
-  /**
-   * Evaluate the getter, and re-collect dependencies.
-   */
-  /** */
+  /**访问器实现 */
   get () 
   {
     /**在事件处理队列中添加此监听对象 */
@@ -153,15 +149,14 @@ export default class Watcher {
     return value
   }
 
-  /**
-   * Add a dependency to this directive.
-   */
-  /**添加依赖
-   * 如果
-   */
+  /**添加依赖 */
   addDep (dep: Dep) 
   {
-    const id = dep.id
+    const id = dep.id;
+    /**如果在newDepIds中没有此属性的处理
+     * 添加此属性将此属性压入依赖数组中
+     * 如果depIds中也没有此属性，将此属性添加至Sub属性中
+     */
     if (!this.newDepIds.has(id)) 
     {
       this.newDepIds.add(id)
@@ -173,9 +168,7 @@ export default class Watcher {
     }
   }
 
-  /**
-   * Clean up for dependency collection.
-   */
+  /**清除依赖，清除Sub属性中的依赖 */
   cleanupDeps () 
   {
     let i = this.deps.length
@@ -197,10 +190,7 @@ export default class Watcher {
     this.newDeps.length = 0
   }
 
-  /**
-   * Subscriber interface.
-   * Will be called when a dependency changes.
-   */
+  /**更新依赖 */
   update () 
   {
     /* istanbul ignore else */
@@ -218,12 +208,16 @@ export default class Watcher {
     }
   }
 
-  /**
-   * Scheduler job interface.
-   * Will be called by the scheduler.
-   */
+  /**运行监听器 */
   run () 
   {
+    /**对于监听器处于运行模式的处理
+     * 调用获取参数
+     * 如果参数不等于当前的值
+     * 或者value是对象
+     * 或者deep模式的处理
+     * 设置老值为当前值，设置当前值为获取到的值，调用回调函数进行处理
+     */
     if (this.active) 
     {
       const value = this.get()
@@ -262,7 +256,7 @@ export default class Watcher {
    * Evaluate the value of the watcher.
    * This only gets called for lazy watchers.
    */
-  /**设置对象的value为 */
+  /**更新当前监听器的值，设置是否修改为否 */
   evaluate () 
   {
     this.value = this.get()
@@ -272,7 +266,7 @@ export default class Watcher {
   /**
    * Depend on all deps collected by this watcher.
    */
-  /** */
+  /**全部的依赖 */
   depend () 
   {
     let i = this.deps.length
@@ -285,6 +279,7 @@ export default class Watcher {
   /**
    * Remove self from all dependencies' subscriber list.
    */
+  /**关闭监听器，删除所有的依赖 */
   teardown () 
   {
     if (this.active) 
@@ -311,14 +306,21 @@ export default class Watcher {
  * getters, so that every nested property inside the object
  * is collected as a "deep" dependency.
  */
+/**集合对象 */
 const seenObjects = new Set()
 function traverse (val: any) 
 {
-  /**创建一个空对象 */
+  /**清空集合对象 */
   seenObjects.clear()
   _traverse(val, seenObjects)
 }
-/**这个函数的作用未知但是 */
+/**这个函数在deep为真的时候调用
+ * 这个函数的作用是判定val的值不是对象和数组且不可扩展时直接返回
+ * 对于对象具有__ob__s属相如果有此属性返回没有进行添加
+ * 对于是数组和对象递归进行处理，即用来设置seen对象
+ * val：
+ * seen：
+ */
 function _traverse (val: any, seen: ISet) 
 {
   let i, keys

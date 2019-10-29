@@ -13,7 +13,13 @@ import {
   emptyObject,
   validateProp
 } from '../util/index'
-
+/**渲染内容
+ * data:
+ * props:
+ * children:
+ * parent:
+ * Ctor:
+ */
 function FunctionalRenderContext (
   data,
   props,
@@ -37,7 +43,8 @@ function FunctionalRenderContext (
   const needNormalization = !isCompiled
 
   // support for compiled functional template
-  if (isCompiled) {
+  if (isCompiled) 
+  {
     // exposing $options for renderStatic()
     this.$options = options
     // pre-resolve slots for renderSlot()
@@ -45,8 +52,10 @@ function FunctionalRenderContext (
     this.$scopedSlots = data.scopedSlots || emptyObject
   }
 
-  if (options._scopeId) {
-    this._c = (a, b, c, d) => {
+  if (options._scopeId) 
+  {
+    this._c = (a, b, c, d) => 
+    {
       const vnode: ?VNode = createElement(contextVm, a, b, c, d, needNormalization)
       if (vnode) {
         vnode.functionalScopeId = options._scopeId
@@ -54,30 +63,50 @@ function FunctionalRenderContext (
       }
       return vnode
     }
-  } else {
+  } 
+  else 
+  {
     this._c = (a, b, c, d) => createElement(contextVm, a, b, c, d, needNormalization)
   }
 }
-
+/** */
 installRenderHelpers(FunctionalRenderContext.prototype)
-
+/**创建函数组件
+ * Ctor:
+ * propsData:
+ * data:
+ * contextVm:
+ * children:
+ */
 export function createFunctionalComponent (
   Ctor: Class<Component>,
   propsData: ?Object,
   data: VNodeData,
   contextVm: Component,
   children: ?Array<VNode>
-): VNode | void {
+): VNode | void 
+{
   const options = Ctor.options
   const props = {}
   const propOptions = options.props
-  if (isDef(propOptions)) {
-    for (const key in propOptions) {
+  /**如果propOptions被定义 */
+  if (isDef(propOptions)) 
+  {
+    for (const key in propOptions) 
+    {
       props[key] = validateProp(key, propOptions, propsData || emptyObject)
     }
-  } else {
-    if (isDef(data.attrs)) mergeProps(props, data.attrs)
-    if (isDef(data.props)) mergeProps(props, data.props)
+  } 
+  else 
+  {
+    if (isDef(data.attrs))
+    {
+      mergeProps(props, data.attrs)
+    }
+    if (isDef(data.props)) 
+    {
+      mergeProps(props, data.props)
+    }
   }
 
   const renderContext = new FunctionalRenderContext(
@@ -90,19 +119,25 @@ export function createFunctionalComponent (
 
   const vnode = options.render.call(null, renderContext._c, renderContext)
 
-  if (vnode instanceof VNode) {
+  if (vnode instanceof VNode) 
+  {
     vnode.functionalContext = contextVm
     vnode.functionalOptions = options
-    if (data.slot) {
+    if (data.slot) 
+    {
       (vnode.data || (vnode.data = {})).slot = data.slot
     }
   }
 
   return vnode
 }
-
-function mergeProps (to, from) {
-  for (const key in from) {
+/**聚合Props，
+ * 将form中的可枚举属性添加至to中并将属性值转换为驼峰式
+ * 将其中的属性转换为驼峰式 */
+function mergeProps (to, from) 
+{
+  for (const key in from) 
+  {
     to[camelize(key)] = from[key]
   }
 }

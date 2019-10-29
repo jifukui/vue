@@ -47,14 +47,15 @@ export function initInjections (vm: Component)
   }
 }
 /**
- * inject：
- * vm：
+ * inject：任意类型
+ * vm：组件对象
  * 如果inject的值不为否
  * 创建一个空的对象
- * 根据hasSymbol进行处理，获取对象的所有属性
+ * 根据hasSymbol进行处理，获取对象的所有属性包括可枚举属性
  * 
  */
-export function resolveInject (inject: any, vm: Component): ?Object {
+export function resolveInject (inject: any, vm: Component): ?Object 
+{
   if (inject) 
   {
     // inject is :any because flow is not smart enough to figure out cached

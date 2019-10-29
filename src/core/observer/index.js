@@ -34,20 +34,24 @@ export const observerState = {
  * collect dependencies and dispatches updates.
  */
 /**定义Observer类
- * value:
- * dep:
+ * value:对象
+ * dep:依赖
  * vmCount:
  */
-export class Observer {
+export class Observer 
+{
   value: any;
   dep: Dep;
   vmCount: number; // number of vms that has this object as root $data
-  /**构造函数 */
+  /**构造函数，
+   * 设置对象的值为
+   */
   constructor (value: any) 
   {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    /**定义对象的__ob__属性 */
     def(value, '__ob__', this)
     /**对于值为数组的处理 */
     if (Array.isArray(value)) 
@@ -97,6 +101,7 @@ export class Observer {
  * Augment an target Object or Array by intercepting
  * the prototype chain using __proto__
  */
+/**设置target的__proto__属性为src */
 function protoAugment (target, src: Object, keys: any) 
 {
   /* eslint-disable no-proto */
@@ -104,11 +109,9 @@ function protoAugment (target, src: Object, keys: any)
   /* eslint-enable no-proto */
 }
 
-/**
- * Augment an target Object or Array by defining
- * hidden properties.
+/**拷贝参数
+ * 将src中的keys属性拷贝到target对象中
  */
-/* istanbul ignore next */
 function copyAugment (target: Object, src: Object, keys: Array<string>) 
 {
   for (let i = 0, l = keys.length; i < l; i++) 
@@ -123,17 +126,36 @@ function copyAugment (target: Object, src: Object, keys: Array<string>)
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
+/**
+ * value：
+ * asRootData：
+ * 返回发布对象
+ */
 export function observe (value: any, asRootData: ?boolean): Observer | void 
 {
+  /**对于value的不是对象或者value是VNode的实例的处理
+   * 直接返回
+   */
   if (!isObject(value) || value instanceof VNode) 
   {
     return
   }
+  /**设置Ob的值为Observer或者是空对象 */
   let ob: Observer | void
+  /**对于value自身具有__ob__属性且其是Observer的实例的处理
+   * 设置ob的值为value.__ob__
+   */
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) 
   {
     ob = value.__ob__
   } 
+  /**对于observerState的shouldConvert属性为真
+   * 且不是服务器端渲染
+   * 且value不是数组或者不是
+   * 且
+   * 且value的isVue属性不为真的处理
+   * 根据value创建一个新的Observer对象
+   */
   else if (
     observerState.shouldConvert &&
     !isServerRendering() &&
@@ -144,6 +166,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void
   {
     ob = new Observer(value)
   }
+  /**如果asRootData的值和ob的值为针对处理设置ob的vmCount的值自增1 */
   if (asRootData && ob) 
   {
     ob.vmCount++
@@ -155,11 +178,11 @@ export function observe (value: any, asRootData: ?boolean): Observer | void
  * Define a reactive property on an Object.
  */
 /**定义对象的反应属性
- * obj:
- * string:
- * val:
- * customSetter:
- * shallow
+ * obj:反应的对象
+ * key:属性值
+ * val:值
+ * customSetter:用户定义的设置处理函数
+ * shallow：是否隐藏
 */
 export function defineReactive (
   obj: Object,
@@ -167,7 +190,8 @@ export function defineReactive (
   val: any,
   customSetter?: ?Function,
   shallow?: boolean
-) {
+) 
+{
   const dep = new Dep()
   /**获取对象的对应属性的属性描述符 */
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -189,12 +213,16 @@ export function defineReactive (
    * 定义对象的属性为可枚举和可配置以及设置函数和获取函数
    */
   Object.defineProperty(obj, key, 
-    {
+  {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () 
     {
+      /**获取属性值 */
       const value = getter ? getter.call(obj) : val
+      /**对于Dep的target的属性不为否的处理
+       * 更新依赖数组
+       */
       if (Dep.target) 
       {
         dep.depend()
@@ -212,7 +240,7 @@ export function defineReactive (
     set: function reactiveSetter (newVal) 
     {
       const value = getter ? getter.call(obj) : val
-      /* eslint-disable no-self-compare */
+      /* 对于参数没有发生变化的处理 */
       if (newVal === value || (newVal !== newVal && value !== value)) 
       {
         return
@@ -286,11 +314,14 @@ export function set (target: Array<any> | Object, key: any, val: any): any
 /**
  * Delete a property and trigger change if necessary.
  */
-/** */
+/**删除功能,删除数组此索引位置的值或者是对象的此自身属性
+ * target:数组对象或者是对象
+ * key:键值或者是索引号
+ */
 export function del (target: Array<any> | Object, key: any) 
 {
   /**对于target是数组且key为有效的数组索引值
-   * 更新此位置的数值
+   * 更新此位置的数值，删除此位置的值
    */
   if (Array.isArray(target) && isValidArrayIndex(key)) 
   {
@@ -298,16 +329,13 @@ export function del (target: Array<any> | Object, key: any)
     return
   }
   /**设置ob的值为对象__ob__的值 */
-  const ob = (target: any).__ob__
+  const ob = (target: any).__ob__;
   /**如果对象的_isVue的为真或者是ob.vmCount的值为真的处理
    * 返回
    */
   if (target._isVue || (ob && ob.vmCount)) 
   {
-    process.env.NODE_ENV !== 'production' && warn(
-      'Avoid deleting properties on a Vue instance or its root $data ' +
-      '- just set it to null.'
-    )
+    //process.env.NODE_ENV !== 'production' && warn ('Avoid deleting properties on a Vue instance or its root $data - just set it to null.')
     return
   }
   /**对于对象具有此属性返回 */
@@ -316,7 +344,7 @@ export function del (target: Array<any> | Object, key: any)
     return
   }
   /**删除对象的此属性 */
-  delete target[key]
+  delete target[key];
   /**如果对象的值为否的处理
    * 返回
    */
@@ -332,7 +360,7 @@ export function del (target: Array<any> | Object, key: any)
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
  */
-/** */
+/**依赖数组，更新对象的相关依赖数组 */
 function dependArray (value: Array<any>) 
 {
   for (let e, i = 0, l = value.length; i < l; i++) 

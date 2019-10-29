@@ -19,13 +19,22 @@ import {
 
 export let activeInstance: any = null
 export let isUpdatingChildComponent: boolean = false
-/**初始化生命周期 */
+/**初始化组件的生命周期
+ * vm：组件
+ */
 export function initLifecycle (vm: Component) 
 {
+  /**设置变量options存储组件的options属性值 */
   const options = vm.$options
 
   // locate first non-abstract parent
+  /**获取组件的父组件 */
   let parent = options.parent
+  /**对于父组件存在且abstract属性为假的处理
+   * 如果父组件的.$options.abstract的值为真且parent.$parent的值为真的处理
+   * 更新parent的是使上述条件不成立
+   * 在主组件的子组件队列中添加此组件
+   */
   if (parent && !options.abstract) 
   {
     while (parent.$options.abstract && parent.$parent) 
@@ -34,38 +43,58 @@ export function initLifecycle (vm: Component)
     }
     parent.$children.push(vm)
   }
-
+  /**设置此组件的一些默认值 */
+  /**此组件的父组件 */
   vm.$parent = parent
+  /**此组件是否是根组件 */
   vm.$root = parent ? parent.$root : vm
-
+  /**此组件的子组件 */
   vm.$children = []
+  /** */
   vm.$refs = {}
-
+  /**此组件的监听器 */
   vm._watcher = null
+  /**此组件的活跃状态 */
   vm._inactive = null
+  /**此组件的暂停状态 */
   vm._directInactive = false
+  /**此组件的挂载状态 */
   vm._isMounted = false
+  /**此组件的销毁状态 */
   vm._isDestroyed = false
+  /**此组件的预销毁状态 */
   vm._isBeingDestroyed = false
 }
-
+/**组件的生命周期混合 */
 export function lifecycleMixin (Vue: Class<Component>) 
 {
-  /**更新 */
-  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
+  /**添加组件的更新哈数
+   * vnode：
+   * hydrating
+   */
+  Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) 
+  {
     const vm: Component = this
-    /**这个组件被挂载调用回调函数 */
-    if (vm._isMounted) {
+    /**这个组件被挂载调用回调函数，进行预处理 */
+    if (vm._isMounted) 
+    {
       callHook(vm, 'beforeUpdate')
     }
+    /**上一级元素 */
     const prevEl = vm.$el
+    /**上一级节点 */
     const prevVnode = vm._vnode
+    /**上一级有效实例 */
     const prevActiveInstance = activeInstance
+    /**设置有效实例为当前实例 */
     activeInstance = vm
+    /**设置当前节点的父节点为传入的vnode */
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
-    if (!prevVnode) {
+    /**如果上一级节点不存在的处理，设置此节点的el值为调用__patch__函数的处理 */
+    if (!prevVnode) 
+    {
       // initial render
       vm.$el = vm.__patch__(
         vm.$el, vnode, hydrating, false /* removeOnly */,
@@ -75,59 +104,83 @@ export function lifecycleMixin (Vue: Class<Component>)
       // no need for the ref nodes after initial patch
       // this prevents keeping a detached DOM tree in memory (#5851)
       vm.$options._parentElm = vm.$options._refElm = null
-    } else {
+    } 
+    else 
+    {
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     activeInstance = prevActiveInstance
     // update __vue__ reference
-    if (prevEl) {
+    /**上一级元素存在的处理，设置上一级的__vue__的值为null */
+    if (prevEl) 
+    {
       prevEl.__vue__ = null
     }
-    if (vm.$el) {
+    /**本组件的$el的值为真的处理设置vm.$el.__vue__的值为vm */
+    if (vm.$el) 
+    {
       vm.$el.__vue__ = vm
     }
     // if parent is an HOC, update its $el as well
-    if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) {
+    /**如果 */
+    if (vm.$vnode && vm.$parent && vm.$vnode === vm.$parent._vnode) 
+    {
       vm.$parent.$el = vm.$el
     }
     // updated hook is called by the scheduler to ensure that children are
     // updated in a parent's updated hook.
   }
-
-  Vue.prototype.$forceUpdate = function () {
+  /**更新所有当前的组件的_watcher */
+  Vue.prototype.$forceUpdate = function () 
+  {
     const vm: Component = this
-    if (vm._watcher) {
+    if (vm._watcher) 
+    {
       vm._watcher.update()
     }
   }
 /**销毁组件  */
-  Vue.prototype.$destroy = function () {
+  Vue.prototype.$destroy = function () 
+  {
     const vm: Component = this
-    if (vm._isBeingDestroyed) {
+    /**如果组件的开始销毁状态为真返回 */
+    if (vm._isBeingDestroyed) 
+    {
       return
     }
+    /**调用开始销毁的钩子函数 */
     callHook(vm, 'beforeDestroy')
+    /**设置开始销毁的值为真 */
     vm._isBeingDestroyed = true
     // remove self from parent
+    /**获取当前组件的父组件并在父组件的子组件中删除此组件 */
     const parent = vm.$parent
-    if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
+    if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) 
+    {
       remove(parent.$children, vm)
     }
     // teardown watchers
-    if (vm._watcher) {
+    /**关闭此组件的监听器 */
+    if (vm._watcher) 
+    {
       vm._watcher.teardown()
     }
+    /**删除此组件的所有组件的监听器 */
     let i = vm._watchers.length
-    while (i--) {
+    while (i--) 
+    {
       vm._watchers[i].teardown()
     }
     // remove reference from data ob
     // frozen object may not have observer.
-    if (vm._data.__ob__) {
+    /**如果此组件的 */
+    if (vm._data.__ob__) 
+    {
       vm._data.__ob__.vmCount--
     }
     // call the last hook...
+    /**设置此组件的销毁状态为真 */
     vm._isDestroyed = true
     // invoke destroy hooks on current rendered tree
     vm.__patch__(vm._vnode, null)
@@ -136,35 +189,46 @@ export function lifecycleMixin (Vue: Class<Component>)
     // turn off all instance listeners.
     vm.$off()
     // remove __vue__ reference
-    if (vm.$el) {
+    if (vm.$el) 
+    {
       vm.$el.__vue__ = null
     }
     // release circular reference (#6759)
-    if (vm.$vnode) {
+    if (vm.$vnode) 
+    {
       vm.$vnode.parent = null
     }
   }
 }
-/**挂载组件 */
+/**挂载组件
+ * vm:
+ * el:挂载的元素
+ * hydrating：
+ */
 export function mountComponent (
   vm: Component,
   el: ?Element,
   hydrating?: boolean
-): Component {
+): Component 
+{
   vm.$el = el
-  if (!vm.$options.render) {
+  if (!vm.$options.render) 
+  {
     vm.$options.render = createEmptyVNode
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production') 
+    {
       /* istanbul ignore if */
-      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||
-        vm.$options.el || el) {
+      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||vm.$options.el || el) 
+      {
         warn(
           'You are using the runtime-only build of Vue where the template ' +
           'compiler is not available. Either pre-compile the templates into ' +
           'render functions, or use the compiler-included build.',
           vm
         )
-      } else {
+      } 
+      else 
+      {
         warn(
           'Failed to mount component: template or render function not defined.',
           vm
@@ -172,12 +236,15 @@ export function mountComponent (
       }
     }
   }
+  /**调用挂载回调函数 */
   callHook(vm, 'beforeMount')
 
   let updateComponent
   /* istanbul ignore if */
-  if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-    updateComponent = () => {
+  if (process.env.NODE_ENV !== 'production' && config.performance && mark) 
+  {
+    updateComponent = () => 
+    {
       const name = vm._name
       const id = vm._uid
       const startTag = `vue-perf-start:${id}`
@@ -193,8 +260,11 @@ export function mountComponent (
       mark(endTag)
       measure(`vue ${name} patch`, startTag, endTag)
     }
-  } else {
-    updateComponent = () => {
+  } 
+  else 
+  {
+    updateComponent = () => 
+    {
       vm._update(vm._render(), hydrating)
     }
   }
@@ -204,7 +274,8 @@ export function mountComponent (
 
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
-  if (vm.$vnode == null) {
+  if (vm.$vnode == null) 
+  {
     vm._isMounted = true
     callHook(vm, 'mounted')
   }

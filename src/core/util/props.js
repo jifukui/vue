@@ -22,7 +22,12 @@ type PropOptions = {
   required: ?boolean,
   validator: ?Function
 };
-/**有效的数据Prop */
+/**有效的数据Prop
+ * key:键值
+ * propOptions:对象
+ * propData:
+ * vm
+ */
 export function validateProp (
   key: string,
   propOptions: Object,
@@ -35,13 +40,19 @@ export function validateProp (
   /**判断propsData中的key是否为此对象的自有属性 */
   const absent = !hasOwn(propsData, key)
   let value = propsData[key]
-  // 判断type的类型是否为布尔型
+  // 对于prop的type的值为布尔型数据的处理设置value的值为布尔值
   if (isType(Boolean, prop.type)) 
   {
+    /**对于key不为自身属性且自身没有默认属性的处理
+     * 设置value的值为假
+     */
     if (absent && !hasOwn(prop, 'default')) 
     {
       value = false
     } 
+    /**对于prop的type属性不为字符串型且value的值为空或者value的值恒等于将key转换为除首字母外其他都为小写字母的形式的处理
+     * 设置value的值为真
+     */
     else if (!isType(String, prop.type) && (value === '' || value === hyphenate(key))) 
     {
       value = true
@@ -51,7 +62,7 @@ export function validateProp (
   /**对于value值未定义的处理 */
   if (value === undefined) 
   {
-    /**设置value的值为默认属性 */
+    /**获取value的值为默认属性 */
     value = getPropDefaultValue(vm, prop, key)
     // since the default value is a fresh copy,
     // make sure to observe it.

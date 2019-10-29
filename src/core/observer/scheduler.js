@@ -13,9 +13,9 @@ import {
 export const MAX_UPDATE_COUNT = 100
 /**监听队列 */
 const queue: Array<Watcher> = []
-/**有效的 */
+/**有效的孩子，组件数组 */
 const activatedChildren: Array<Component> = []
-/**has */
+/**has 监听器对象*/
 let has: { [key: number]: ?true } = {}
 let circular: { [key: number]: number } = {}
 let waiting = false
@@ -44,7 +44,9 @@ function resetSchedulerState ()
 /**
  * Flush both queues and run the watchers.
  */
-/**刷新任务队列 */
+/**刷新任务队列
+ * 
+ */
 function flushSchedulerQueue () 
 {
   flushing = true
@@ -105,7 +107,10 @@ function flushSchedulerQueue ()
     devtools.emit('flush')
   }
 }
-/**调用更新钩子 */
+/**调用更新钩子
+ * 如果组件的监视器对象与监视器队列中的监视器相等且组件的挂载状态为挂载
+ * 调用主键的更新钩子函数
+ */
 function callUpdatedHooks (queue) 
 {
   let i = queue.length
@@ -124,7 +129,11 @@ function callUpdatedHooks (queue)
  * Queue a kept-alive component that was activated during patch.
  * The queue will be processed after the entire tree has been patched.
  */
-/**有效状态的组件的队列 */
+/**有效状态的组件的队列
+ * vm:
+ * 设置组件的_inactive的值为假
+ * 将当前的主键添加至有效的孩子队列中
+ */
 export function queueActivatedComponent (vm: Component) 
 {
   // setting _inactive to false here so that a render function can
@@ -132,7 +141,7 @@ export function queueActivatedComponent (vm: Component)
   vm._inactive = false
   activatedChildren.push(vm)
 }
-/**调用有效的钩子 */
+/**设置监视器队列中所有的监视器的_iacctive的值为真，调用activateChildComponent函数 */
 function callActivatedHooks (queue) 
 {
   for (let i = 0; i < queue.length; i++) 
@@ -147,10 +156,19 @@ function callActivatedHooks (queue)
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.
  */
-/**监听队列 */
+/**监听队列
+ * 获取监听器的id
+ * 对于不存在此监听器的处理
+ */
 export function queueWatcher (watcher: Watcher) 
 {
   const id = watcher.id
+  /**对于监听器数组中此项参数值为null的处理
+   * 设置此属性的值为真
+   * 对于刷新为假的监听器队列中添加此监听器。
+   * 对于刷新为真的处理，将监听对象添加到监听数组中
+   * 对于waiting的值为假设置其值为真且下一个是个运行刷新调度队列
+   */
   if (has[id] == null) 
   {
     has[id] = true

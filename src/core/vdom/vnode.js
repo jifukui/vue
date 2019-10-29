@@ -1,30 +1,30 @@
 /* @flow */
 /**引入vNode类 
  * 下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型
- * tag的类型可以是string或者是void
- * data的类型可以是VNodeData或者是void
- * children：
- * text：
- * elm:
+ * tag：标签
+ * data：数据
+ * children：子组件
+ * text：文本内容
+ * elm:节点元素
  * ns:
- * context：
+ * context：正文内容
  * key：
  * componentOptions：
  * componentInstance：
  * parent
  * raw：
- * isStatic：
- * isRootInsert
- * isComment
- * isCloned
- * isOnce
- * asyncFactory
- * asyncMeta
- * isAsyncPlaceholder
- * ssrContext
- * functionalContext
- * functionalOptions
- * functionalScopeId
+ * isStatic：是否是静态
+ * isRootInsert：是否在根中插入
+ * isComment：是否是
+ * isCloned:是否是克隆
+ * isOnce：是否
+ * asyncFactory：
+ * asyncMeta：
+ * isAsyncPlaceholder：
+ * ssrContext：
+ * functionalContext：
+ * functionalOptions：
+ * functionalScopeId：
 */
 export default class VNode {
   /**标签 */
@@ -104,7 +104,11 @@ export default class VNode {
     return this.componentInstance
   }
 }
-/**创建一个空的虚拟节点 */
+/**创建一个空的虚拟节点
+ * 使用构造函数创建一个虚拟节点
+ * 设置节点的text属性为text值
+ * 设置节点的isComment为真
+ */
 export const createEmptyVNode = (text: string = '') => 
 {
   const node = new VNode()
