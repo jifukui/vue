@@ -22,7 +22,8 @@ const keyCodes: { [key: string]: number | Array<number> } = {
 /** */
 const genGuard = condition => `if(${condition})return null;`
 
-const modifierCode: { [key: string]: string } = {
+const modifierCode: { [key: string]: string } = 
+{
   stop: '$event.stopPropagation();',
   prevent: '$event.preventDefault();',
   self: genGuard(`$event.target !== $event.currentTarget`),
@@ -34,61 +35,91 @@ const modifierCode: { [key: string]: string } = {
   middle: genGuard(`'button' in $event && $event.button !== 1`),
   right: genGuard(`'button' in $event && $event.button !== 2`)
 }
-/** */
+/**
+ * 
+ * @param {*} events 
+ * @param {*} isNative 
+ * @param {*} warn 
+ */
 export function genHandlers (
   events: ASTElementHandlers,
   isNative: boolean,
   warn: Function
-): string {
+): string 
+{
+  /**根据传入的isNative进行处理 设置res的值 */
   let res = isNative ? 'nativeOn:{' : 'on:{'
-  for (const name in events) {
+  /**变量事件属性 */
+  for (const name in events) 
+  {
+    /**获取事件值 */
     const handler = events[name]
     // #5330: warn click.right, since right clicks do not actually fire click events.
     if (process.env.NODE_ENV !== 'production' &&
       name === 'click' &&
       handler && handler.modifiers && handler.modifiers.right
-    ) {
+    ) 
+    {
       warn(
         `Use "contextmenu" instead of "click.right" since right clicks ` +
         `do not actually fire "click" events.`
       )
     }
+    /**字符串转换 */
     res += `"${name}":${genHandler(name, handler)},`
   }
+  /**生成最终的字符串 */
   return res.slice(0, -1) + '}'
 }
-/**产生器处理 */
+/**
+ * 产生处理
+ * @param {*} name 事件名称
+ * @param {*} handler 事件处理函数
+ */
 function genHandler (
   name: string,
   handler: ASTElementHandler | Array<ASTElementHandler>
-): string {
-  if (!handler) {
+): string 
+{
+  /**如果事件处理函数的值为假返回空函数 */
+  if (!handler) 
+  {
     return 'function(){}'
   }
-
-  if (Array.isArray(handler)) {
+  /**如果事件处理函数是数组的处理 */
+  if (Array.isArray(handler)) 
+  {
+    /**返回数组处理的形式 */
     return `[${handler.map(handler => genHandler(name, handler)).join(',')}]`
   }
 
   const isMethodPath = simplePathRE.test(handler.value)
   const isFunctionExpression = fnExpRE.test(handler.value)
 
-  if (!handler.modifiers) {
+  if (!handler.modifiers) 
+  {
     return isMethodPath || isFunctionExpression
       ? handler.value
       : `function($event){${handler.value}}` // inline statement
-  } else {
+  } 
+  else 
+  {
     let code = ''
     let genModifierCode = ''
     const keys = []
-    for (const key in handler.modifiers) {
-      if (modifierCode[key]) {
+    for (const key in handler.modifiers) 
+    {
+      if (modifierCode[key]) 
+      {
         genModifierCode += modifierCode[key]
         // left/right
-        if (keyCodes[key]) {
+        if (keyCodes[key]) 
+        {
           keys.push(key)
         }
-      } else if (key === 'exact') {
+      } 
+      else if (key === 'exact') 
+      {
         const modifiers: ASTModifiers = (handler.modifiers: any)
         genModifierCode += genGuard(
           ['ctrl', 'shift', 'alt', 'meta']
@@ -96,15 +127,19 @@ function genHandler (
             .map(keyModifier => `$event.${keyModifier}Key`)
             .join('||')
         )
-      } else {
+      } 
+      else 
+      {
         keys.push(key)
       }
     }
-    if (keys.length) {
+    if (keys.length) 
+    {
       code += genKeyFilter(keys)
     }
     // Make sure modifiers like prevent and stop get executed after key filtering
-    if (genModifierCode) {
+    if (genModifierCode) 
+    {
       code += genModifierCode
     }
     const handlerCode = isMethodPath
@@ -115,16 +150,30 @@ function genHandler (
     return `function($event){${code}${handlerCode}}`
   }
 }
-/**产生键过滤 */
-function genKeyFilter (keys: Array<string>): string {
+/**
+ * 产生过滤器
+ * @param {*} keys 
+ */
+function genKeyFilter (keys: Array<string>): string 
+{
   return `if(!('button' in $event)&&${keys.map(genFilterCode).join('&&')})return null;`
 }
-
-function genFilterCode (key: string): string {
+/**
+ * 产生过滤代码
+ * @param {*} key 
+ */
+function genFilterCode (key: string): string 
+{
+  /**将key转换为10进制的整数 */
   const keyVal = parseInt(key, 10)
-  if (keyVal) {
+  /**如果转换的值为真的处理
+   * 返回
+   */
+  if (keyVal) 
+  {
     return `$event.keyCode!==${keyVal}`
   }
+  /**设置code的值在 */
   const code = keyCodes[key]
   return (
     `_k($event.keyCode,` +

@@ -32,7 +32,8 @@ export class CodegenState {
   }
 }
 
-export type CodegenResult = {
+export type CodegenResult = 
+{
   render: string,
   staticRenderFns: Array<string>
 };
@@ -448,7 +449,11 @@ export function genText (text: ASTText | ASTExpression): string {
 export function genComment (comment: ASTText): string {
   return `_e(${JSON.stringify(comment.text)})`
 }
-
+/**
+ * 产生槽
+ * @param {*} el 
+ * @param {*} state 
+ */
 function genSlot (el: ASTElement, state: CodegenState): string {
   const slotName = el.slotName || '"default"'
   const children = genChildren(el, state)
@@ -468,20 +473,32 @@ function genSlot (el: ASTElement, state: CodegenState): string {
 }
 
 // componentName is el.component, take it as argument to shun flow's pessimistic refinement
+/**
+ * 产生组件
+ * @param {*} componentName  组件名称
+ * @param {*} el  dom属性
+ * @param {*} state 状态值
+ */
 function genComponent (
   componentName: string,
   el: ASTElement,
   state: CodegenState
-): string {
+): string 
+{
   const children = el.inlineTemplate ? null : genChildren(el, state, true)
   return `_c(${componentName},${genData(el, state)}${
     children ? `,${children}` : ''
   })`
 }
-
-function genProps (props: Array<{ name: string, value: string }>): string {
+/**
+ * 
+ * @param {*} props 属性
+ */
+function genProps (props: Array<{ name: string, value: string }>): string 
+{
   let res = ''
-  for (let i = 0; i < props.length; i++) {
+  for (let i = 0; i < props.length; i++) 
+  {
     const prop = props[i]
     res += `"${prop.name}":${transformSpecialNewlines(prop.value)},`
   }
@@ -489,7 +506,12 @@ function genProps (props: Array<{ name: string, value: string }>): string {
 }
 
 // #3895, #4268
-function transformSpecialNewlines (text: string): string {
+/**
+ * 
+ * @param {*} text 文本字符串 
+ */
+function transformSpecialNewlines (text: string): string 
+{
   return text
     .replace(/\u2028/g, '\\u2028')
     .replace(/\u2029/g, '\\u2029')

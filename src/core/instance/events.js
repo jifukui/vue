@@ -9,6 +9,7 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 /**初始化事件 
+ * 初始化组件的事件对象为空对象
  * 创建空的事件对象
  * 设置有钩子事件为否
  * 获取父监听处理，如果有更新组件监听
@@ -19,6 +20,9 @@ export function initEvents (vm: Component)
   vm._hasHookEvent = false
   // init parent attached events
   const listeners = vm.$options._parentListeners
+  /**如果组件的存在父组件的监听器属性的处理
+   * 更新当前组件的监听器
+   */
   if (listeners) 
   {
     updateComponentListeners(vm, listeners)
@@ -26,7 +30,9 @@ export function initEvents (vm: Component)
 }
 
 let target: Component
-/**添加事件处理 */
+/**添加事件处理
+ * 调用组件对象的on或者是once方法
+ */
 function add (event, fn, once) 
 {
   if (once) 
@@ -38,15 +44,17 @@ function add (event, fn, once)
     target.$on(event, fn)
   }
 }
-/**移除事件处理 */
+/**移除事件处理
+ * 调用组件的off方法
+ */
 function remove (event, fn) 
 {
   target.$off(event, fn)
 }
 /**更新组件的监视器
- * vm：
- * listeners:
- * OldListeners:
+ * vm：组件对象
+ * listeners:新的监听器对象
+ * OldListeners:老的监听器对象
  */
 export function updateComponentListeners (
   vm: Component,
@@ -55,17 +63,22 @@ export function updateComponentListeners (
 ) 
 {
   target = vm
+  /**调用监听器的更新方法 */
   updateListeners(listeners, oldListeners || {}, add, remove, vm)
 }
 /**事件混合，将事件添加至事件数组中
- * event：
- * fn:
+ * event：事件名称
+ * fn:事件处理函数
  * 对于事件为数组，按序进行处理
  * 对于事件为字符串，将此对象添加至事件数组中如果是以hook:开始的设置对象具有hook处理事件的状态值为真
  */
 export function eventsMixin (Vue: Class<Component>) 
 {
   const hookRE = /^hook:/
+  /**组件对象的on方法的实现
+   * event事件名称或者是字符串数组
+   * fn：方法
+   */
   Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component 
   {
     const vm: Component = this
@@ -184,6 +197,9 @@ export function eventsMixin (Vue: Class<Component>)
         )
       }
     }
+    /**获取事件的处理函数，对于处理函数存在的处理
+     * 对于此组件的所有的方法
+     */
     let cbs = vm._events[event]
     if (cbs) 
     {

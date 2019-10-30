@@ -1,4 +1,4 @@
- ├─compiler
+├─compiler
 │  │  create-compiler.js
 │  │  error-detector.js
 │  │  helpers.js
@@ -24,38 +24,38 @@
 │          text-parser.js
 │          
 ├─core
-│  │  config.js
-│  │  index.js
+│  │  config.js                         定义配置
+│  │  index.js                          
 │  │  
 │  ├─components
-│  │      index.js
-│  │      keep-alive.js
+│  │      index.js                      引出keepalive
+│  │      keep-alive.js                 销毁活跃的组件
 │  │      
 │  ├─global-api                         全局的函数接口实现
-│  │      assets.js
-│  │      extend.js
+│  │      assets.js                     设置组件，指令等的实现
+│  │      extend.js                     全局API的扩展的实现，初始化props属性和computed属性
 │  │      index.js                      初始化全局API函数
 │  │      mixin.js                      将两个对象的属性进行混合（调用混合函数）返回混合后的此对象
-│  │      use.js
+│  │      use.js                        全局APID对象的use属性的实现，即插件的安装
 │  │      
 │  ├─instance                           Vue的实例化
-│  │  │  events.js
+│  │  │  events.js                      事件的相关处理
 │  │  │  index.js                       Vue函数的实现以及一些环境的初始化
-│  │  │  init.js
-│  │  │  inject.js
-│  │  │  lifecycle.js
-│  │  │  proxy.js
-│  │  │  render.js
+│  │  │  init.js                        Vue的初始化的实现，初始化内部组件
+│  │  │  inject.js                      向组件注射相关的处理
+│  │  │  lifecycle.js                   完成组件的初始化，更新，挂载，销毁，暂停和钩子函数调用的实现
+│  │  │  proxy.js                       非生产模式的使用，生产模式下没有作用
+│  │  │  render.js                      渲染相关
 │  │  │  state.js                       数据，props，监视器等相关的处理
 │  │  │  
 │  │  └─render-helpers
-│  │          bind-object-listeners.js
+│  │          bind-object-listeners.js          合并对象的监听器
 │  │          bind-object-props.js
 │  │          check-keycodes.js
 │  │          index.js
 │  │          render-list.js
 │  │          render-slot.js
-│  │          render-static.js
+│  │          render-static.js                  静态渲染相关
 │  │          resolve-filter.js
 │  │          resolve-slots.js
 │  │          
@@ -68,11 +68,11 @@
 │  │      
 │  ├─util
 │  │      debug.js
-│  │      env.js                                下一时刻处理函数和Set的添加
-│  │      error.js
+│  │      env.js                                判断浏览器的属性，根据浏览器的支持情况实现一些功能
+│  │      error.js                              错误的处理
 │  │      index.js                              导出常用的组件
 │  │      lang.js                               预留属性，设置对象属性的相关处理
-│  │      options.js
+│  │      options.js                            设置strats对象并添加相关属性和相关属性的方法以及大量的属性的聚合
 │  │      perf.js                               props的实现
 │  │      props.js
 │  │      
@@ -91,7 +91,7 @@
 │      │      merge-hook.js
 │      │      normalize-children.js
 │      │      resolve-async-component.js
-│      │      update-listeners.js
+│      │      update-listeners.js               监听器相关的处理
 │      │      
 │      └─modules
 │              directives.js

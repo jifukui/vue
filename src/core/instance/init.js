@@ -136,7 +136,11 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
     opts.staticRenderFns = options.staticRenderFns
   }
 }
-/** */
+/**这个函数还没有弄明白具体的意图
+ * Ctor：
+ * 如果Ctor的super属性存在的处理
+ * 进行迭代调用
+ */
 export function resolveConstructorOptions (Ctor: Class<Component>) 
 {
   let options = Ctor.options
@@ -144,6 +148,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>)
   {
     const superOptions = resolveConstructorOptions(Ctor.super)
     const cachedSuperOptions = Ctor.superOptions
+    /**对于当前的与缓存的不一致的处理 */
     if (superOptions !== cachedSuperOptions) 
     {
       // super option changed,
@@ -165,7 +170,13 @@ export function resolveConstructorOptions (Ctor: Class<Component>)
   }
   return options
 }
-/** */
+/**
+ * Ctor：组件类
+ * 获取组件类型的操作，扩展操作和剔除操作
+ * 遍历options中的属性
+ * 如果此属性的值不等于sealed属性中的值且modified的值为假设置modified的值为空对象
+ * 设置modified的此属性的值为dequpe操作后的值
+ */
 function resolveModifiedOptions (Ctor: Class<Component>): ?Object 
 {
   let modified
@@ -176,13 +187,23 @@ function resolveModifiedOptions (Ctor: Class<Component>): ?Object
   {
     if (latest[key] !== sealed[key]) 
     {
-      if (!modified) modified = {}
+      if (!modified) 
+      {
+        modified = {}
+      }
       modified[key] = dedupe(latest[key], extended[key], sealed[key])
     }
   }
   return modified
 }
-/** */
+/**这个函数的主要功能是在latest为数组的处理
+ * 放回latest中的数据存在于extend中的数据不存在于sealed中的数据
+ * latest:
+ * extended:
+ * sealed:
+ * 对于latest的属性为数组的处理如果此数值在extend中能找到活着在sealed中找不到添加在res中
+ * 对于latest的类型不是数组直接返回latest
+ */
 function dedupe (latest, extended, sealed) 
 {
   // compare latest and sealed to ensure lifecycle hooks won't be duplicated

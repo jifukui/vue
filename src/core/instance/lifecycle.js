@@ -19,7 +19,7 @@ import {
 
 export let activeInstance: any = null
 export let isUpdatingChildComponent: boolean = false
-/**初始化组件的生命周期
+/**初始化生命周期，初始化组件的相关参数
  * vm：组件
  */
 export function initLifecycle (vm: Component) 
@@ -65,7 +65,7 @@ export function initLifecycle (vm: Component)
   /**此组件的预销毁状态 */
   vm._isBeingDestroyed = false
 }
-/**组件的生命周期混合 */
+/**组件的生命周期混合，实现组件的更新，强制更新和销毁的实现 */
 export function lifecycleMixin (Vue: Class<Component>) 
 {
   /**添加组件的更新哈数
@@ -200,8 +200,8 @@ export function lifecycleMixin (Vue: Class<Component>)
     }
   }
 }
-/**挂载组件
- * vm:
+/**挂载组件,Vue对象$mount的具体实现
+ * vm:组件对象
  * el:挂载的元素
  * hydrating：
  */
@@ -288,8 +288,10 @@ export function updateChildComponent (
   listeners: ?Object,
   parentVnode: VNode,
   renderChildren: ?Array<VNode>
-) {
-  if (process.env.NODE_ENV !== 'production') {
+) 
+{
+  if (process.env.NODE_ENV !== 'production') 
+  {
     isUpdatingChildComponent = true
   }
 
@@ -305,7 +307,8 @@ export function updateChildComponent (
   vm.$options._parentVnode = parentVnode
   vm.$vnode = parentVnode // update vm's placeholder node without re-render
 
-  if (vm._vnode) { // update child tree's parent
+  if (vm._vnode) 
+  { // update child tree's parent
     vm._vnode.parent = parentVnode
   }
   vm.$options._renderChildren = renderChildren
@@ -317,11 +320,13 @@ export function updateChildComponent (
   vm.$listeners = listeners || emptyObject
 
   // update props
-  if (propsData && vm.$options.props) {
+  if (propsData && vm.$options.props) 
+  {
     observerState.shouldConvert = false
     const props = vm._props
     const propKeys = vm.$options._propKeys || []
-    for (let i = 0; i < propKeys.length; i++) {
+    for (let i = 0; i < propKeys.length; i++) 
+    {
       const key = propKeys[i]
       props[key] = validateProp(key, vm.$options.props, propsData, vm)
     }
@@ -331,75 +336,120 @@ export function updateChildComponent (
   }
 
   // update listeners
-  if (listeners) {
+  if (listeners) 
+  {
     const oldListeners = vm.$options._parentListeners
     vm.$options._parentListeners = listeners
     updateComponentListeners(vm, listeners, oldListeners)
   }
   // resolve slots + force update if has children
-  if (hasChildren) {
+  if (hasChildren) 
+  {
     vm.$slots = resolveSlots(renderChildren, parentVnode.context)
     vm.$forceUpdate()
   }
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production') 
+  {
     isUpdatingChildComponent = false
   }
 }
-
-function isInInactiveTree (vm) {
-  while (vm && (vm = vm.$parent)) {
-    if (vm._inactive) return true
+/**在组件树中向上获取组件的状态，即获取组件的状态 */
+function isInInactiveTree (vm) 
+{
+  /**组件存在，如果组件的有效态为真返回真，反之返回假 */
+  while (vm && (vm = vm.$parent)) 
+  {
+    if (vm._inactive) 
+    {
+      return true
+    }
   }
   return false
 }
-
-export function activateChildComponent (vm: Component, direct?: boolean) {
-  if (direct) {
+/**设置子组件的状态 */
+export function activateChildComponent (vm: Component, direct?: boolean) 
+{
+  if (direct) 
+  {
     vm._directInactive = false
-    if (isInInactiveTree(vm)) {
+    if (isInInactiveTree(vm)) 
+    {
       return
     }
-  } else if (vm._directInactive) {
+  } 
+  else if (vm._directInactive) 
+  {
     return
   }
-  if (vm._inactive || vm._inactive === null) {
+  if (vm._inactive || vm._inactive === null) 
+  {
     vm._inactive = false
-    for (let i = 0; i < vm.$children.length; i++) {
+    for (let i = 0; i < vm.$children.length; i++) 
+    {
       activateChildComponent(vm.$children[i])
     }
     callHook(vm, 'activated')
   }
 }
-
-export function deactivateChildComponent (vm: Component, direct?: boolean) {
-  if (direct) {
+/**暂停组件
+ * vm：组件对象
+ * direct:暂停标志
+ */
+export function deactivateChildComponent (vm: Component, direct?: boolean) 
+{
+  /**暂停的处理
+   * 设置暂停状态为真
+   * 如果组件的状态为真返回
+   */
+  if (direct) 
+  {
     vm._directInactive = true
-    if (isInInactiveTree(vm)) {
+    if (isInInactiveTree(vm)) 
+    {
       return
     }
   }
-  if (!vm._inactive) {
+  /**如果组件的活跃状态为假的处理且要解除暂停的处理
+   * 设置主键的活跃状态为真，
+   * 变量此组件的子组件设置为停止暂停
+   * 调用钩子函数
+   */
+  if (!vm._inactive) 
+  {
     vm._inactive = true
-    for (let i = 0; i < vm.$children.length; i++) {
+    for (let i = 0; i < vm.$children.length; i++) 
+    {
       deactivateChildComponent(vm.$children[i])
     }
     callHook(vm, 'deactivated')
   }
 }
-
+/**调用钩子函数
+ * vm：组件
+ * hook：状态字符串
+ */
 export function callHook (vm: Component, hook: string) {
+  /**获取组件对应的钩子函数 */
   const handlers = vm.$options[hook]
-  if (handlers) {
-    for (let i = 0, j = handlers.length; i < j; i++) {
-      try {
+  /**对于钩子函数存在的处理 */
+  if (handlers) 
+  {
+    for (let i = 0, j = handlers.length; i < j; i++) 
+    {
+      try 
+      {
         handlers[i].call(vm)
-      } catch (e) {
+      } 
+      catch (e) 
+      {
         handleError(e, vm, `${hook} hook`)
       }
     }
   }
-  if (vm._hasHookEvent) {
+  /**对于组件定义_hasHookEvent的处理 */
+  if (vm._hasHookEvent) 
+  {
     vm.$emit('hook:' + hook)
   }
 }

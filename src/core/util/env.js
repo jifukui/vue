@@ -4,6 +4,7 @@
 import { handleError } from './error'
 
 // can we use __proto__?
+/**对象是否具有__proto__属性 */
 export const hasProto = '__proto__' in {}
 
 // Browser environment sniffing
@@ -25,6 +26,7 @@ export const isIOS = UA && /iphone|ipad|ipod|ios/.test(UA)
 export const isChrome = UA && /chrome\/\d+/.test(UA) && !isEdge
 
 // Firefox has a "watch" function on Object.prototype...
+/**原生对象是否具有watch功能 */
 export const nativeWatch = ({}).watch
 
 export let supportsPassive = false
@@ -88,7 +90,7 @@ export function isNative (Ctor: any): boolean
 {
   return typeof Ctor === 'function' && /native code/.test(Ctor.toString())
 }
-/**判断undefined是否是原生的 */
+/**判断是否支持Symbol和Reflect*/
 export const hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys)
@@ -96,13 +98,16 @@ export const hasSymbol =
 /**
  * Defer a task to execute it asynchronously.
  */
-/** 定义nextTick函数
+/** 定义nextTick函数，异步执行的实现
  * 
 */
 export const nextTick = (function () 
 {
+  /**回调函数数组 */
   const callbacks = []
+  /**挂起状态 */
   let pending = false
+  /** */
   let timerFunc
   /**定义下一个时刻处理函数 
    * 根据浏览器的情况进行下一时刻处理函数的处理
@@ -128,17 +133,13 @@ export const nextTick = (function ()
     }
   } 
   /**如果对于MessageChannel不是未定义的处理，使用MessaeChannel */
-  else if (typeof MessageChannel !== 'undefined' && 
-  (
-    isNative(MessageChannel) ||
-    // PhantomJS
-    MessageChannel.toString() === '[object MessageChannelConstructor]'
-  )) 
+  else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) ||MessageChannel.toString() === '[object MessageChannelConstructor]')) 
   {
     const channel = new MessageChannel()
     const port = channel.port2
     channel.port1.onmessage = nextTickHandler
-    timerFunc = () => {
+    timerFunc = () => 
+    {
       port.postMessage(1)
     }
   } 
@@ -166,7 +167,10 @@ export const nextTick = (function ()
       }
     }
   }
-  /**返回任务回调函数入队函数 */
+  /**返回任务回调函数入队函数，回调函数入队
+   * cb:回调函数
+   * ctx:参数
+   */
   return function queueNextTick (cb?: Function, ctx?: Object) 
   {
     let _resolve;
@@ -204,9 +208,9 @@ export const nextTick = (function ()
     }
   }
 })()
-/**判断定义Set是否是原生的
- * 对于是原生的处理是设置_Set为Set
- * 反之
+/**设置集合_Set
+ * 如果支持Set使用原生的Set
+ * 如果不支持Set实现Set方法
  */
 let _Set
 if (typeof Set !== 'undefined' && isNative(Set)) 

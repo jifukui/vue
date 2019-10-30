@@ -27,10 +27,12 @@ function matches (pattern: string | RegExp | Array<string>, name: string): boole
   /* istanbul ignore next */
   return false
 }
-/** */
+/**移除缓存中指定过滤的属性 */
 function pruneCache (keepAliveInstance: any, filter: Function) 
 {
+  /**从保持活跃的实例中获取相关参数 */
   const { cache, keys, _vnode } = keepAliveInstance
+  /**遍历cache遍历中的属性 */
   for (const key in cache) 
   {
     const cachedNode: ?VNode = cache[key]
@@ -44,7 +46,12 @@ function pruneCache (keepAliveInstance: any, filter: Function)
     }
   }
 }
-
+/**删除指定为缓存属性
+ * cache：缓存的虚拟节点
+ * key:键
+ * keys:
+ * current:当前虚拟节点
+ */
 function pruneCacheEntry (
   cache: VNodeCache,
   key: string,
@@ -52,6 +59,10 @@ function pruneCacheEntry (
   current?: VNode
 ) 
 {
+  /**获取传入的属性
+   * 当此缓存存在且不等于当前的虚拟节点销毁此组件实例
+   * 设置此缓存的值为空并在keys中移除此key
+   */
   const cached = cache[key]
   if (cached && cached !== current) 
   {
@@ -62,7 +73,7 @@ function pruneCacheEntry (
 }
 
 const patternTypes: Array<Function> = [String, RegExp, Array]
-
+/**导出默认 */
 export default 
 {
   name: 'keep-alive',

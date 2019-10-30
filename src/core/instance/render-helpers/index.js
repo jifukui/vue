@@ -10,7 +10,7 @@ import { bindObjectProps } from './bind-object-props'
 import { renderStatic, markOnce } from './render-static'
 import { bindObjectListeners } from './bind-object-listeners'
 import { resolveScopedSlots } from './resolve-slots'
-
+/**导出安装渲染帮助函数 */
 export function installRenderHelpers (target: any) {
   target._o = markOnce
   target._n = toNumber

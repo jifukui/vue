@@ -163,21 +163,27 @@ export const camelize = cached((str: string): string => {
   return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
 })
 
-/**这部分将传入的字符串 */
-export const capitalize = cached((str: string): string => {
+/**
+ * 这部分将传入的字符串
+ */
+export const capitalize = cached((str: string): string => 
+{
   return str.charAt(0).toUpperCase() + str.slice(1)
 })
 
-/**将字符串中的单词除首字符后面的字符转换为小写形式 */
+/**
+ * 将字符串中的单词除首字符后面的字符转换为小写形式
+ */
 const hyphenateRE = /\B([A-Z])/g
-export const hyphenate = cached((str: string): string => {
+export const hyphenate = cached((str: string): string => 
+{
   return str.replace(hyphenateRE, '-$1').toLowerCase()
 })
 
-/**bind函数的简单的实现版本，返回bind函数
- * 如果参数的个数大于1使用apply传入对象和参数数组
- * 如果参数的个数为1调用call传入对象和一个参数值
- * 如果参数的个数为0调用call传入对象
+/**
+ * 
+ * @param {*} fn 
+ * @param {*} ctx 
  */
 export function bind (fn: Function, ctx: Object): Function {
   function boundFn (a) {
@@ -206,49 +212,65 @@ export function toArray (list: any, start?: number): Array<any> {
 }
 
 /**
- * Mix properties into target object.
+ * 将form中的属性拷贝到to中，属于浅拷贝
+ * @param {*} to 目的
+ * @param {*} _from 源
  */
-export function extend (to: Object, _from: ?Object): Object {
-  for (const key in _from) {
+export function extend (to: Object, _from: ?Object): Object 
+{
+  for (const key in _from) 
+  {
     to[key] = _from[key]
   }
   return to
 }
 
 /**
- * Merge an Array of Objects into a single Object.
+ * 将数组转换为对象
+ * @param {*} arr 
  */
-export function toObject (arr: Array<any>): Object {
+export function toObject (arr: Array<any>): Object 
+{
   const res = {}
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i]) {
+  for (let i = 0; i < arr.length; i++) 
+  {
+    if (arr[i]) 
+    {
       extend(res, arr[i])
     }
   }
   return res
 }
 
+
 /**
- * Perform no operation.
- * Stubbing args to make Flow happy without leaving useless transpiled code
- * with ...rest (https://flow.org/blog/2017/05/07/Strict-Function-Call-Arity/)
- * 
+ * 定义空函数
+ * @param {*} a 
+ * @param {*} b 
+ * @param {*} c 
  */
 export function noop (a?: any, b?: any, c?: any) {}
 
 /**
- * Always return false.
- * 一直返回错误
+ * 定义函数只返回错
+ * @param {*} a 
+ * @param {*} b 
+ * @param {*} c 
  */
 export const no = (a?: any, b?: any, c?: any) => false
 
 /**
- * Return same value
+ * 定义函数返回与自己想等的值
+ * @param {*} _ 
  */
 export const identity = (_: any) => _
 
 /**
  * Generate a static keys string from compiler modules.
+ */
+/**
+ * 产生静态的
+ * @param {*} modules 
  */
 export function genStaticKeys (modules: Array<ModuleOptions>): string 
 {
@@ -258,12 +280,15 @@ export function genStaticKeys (modules: Array<ModuleOptions>): string
   }, []).join(',')
 }
 
+
 /**
- * Check if two values are loosely equal - that is,
- * if they are plain objects, do they have the same shape?
+ * 判断连个参数是否相等
+ * @param {*} a 参数1
+ * @param {*} b 参数2
  */
 export function looseEqual (a: any, b: any): boolean 
 {
+  /**如果a绝对等于b返回真 */
   if (a === b) 
   {
     return true;
@@ -310,7 +335,11 @@ export function looseEqual (a: any, b: any): boolean
     return false
   }
 }
-
+/**
+ * 判断数组中是否有值等于val
+ * @param {*} arr 数组
+ * @param {*} val 数值
+ */
 export function looseIndexOf (arr: Array<mixed>, val: mixed): number 
 {
   for (let i = 0; i < arr.length; i++) 
@@ -323,14 +352,17 @@ export function looseIndexOf (arr: Array<mixed>, val: mixed): number
   return -1
 }
 
+
 /**
- * Ensure a function is called only once.
+ * 设置这个函数只执行一次
+ * @param {*} fn 函数
  */
 export function once (fn: Function): Function 
 {
   let called = false
   return function () 
   {
+    /**如果called的值为假的处理 */
     if (!called) 
     {
       called = true

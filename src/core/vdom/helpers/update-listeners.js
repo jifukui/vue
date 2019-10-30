@@ -2,8 +2,9 @@
 
 import { warn } from 'core/util/index'
 import { cached, isUndef } from 'shared/util'
-
-const normalizeEvent = cached((name: string): {
+/**规范化事件名称 */
+const normalizeEvent = cached((name: string): 
+{
   name: string,
   once: boolean,
   capture: boolean,
@@ -22,16 +23,22 @@ const normalizeEvent = cached((name: string): {
     passive
   }
 })
-
-export function createFnInvoker (fns: Function | Array<Function>): Function {
-  function invoker () {
+/*** */
+export function createFnInvoker (fns: Function | Array<Function>): Function 
+{
+  function invoker () 
+  {
     const fns = invoker.fns
-    if (Array.isArray(fns)) {
+    if (Array.isArray(fns)) 
+    {
       const cloned = fns.slice()
-      for (let i = 0; i < cloned.length; i++) {
+      for (let i = 0; i < cloned.length; i++) 
+      {
         cloned[i].apply(null, arguments)
       }
-    } else {
+    } 
+    else 
+    {
       // return handler return value for single handlers
       return fns.apply(null, arguments)
     }
@@ -39,36 +46,62 @@ export function createFnInvoker (fns: Function | Array<Function>): Function {
   invoker.fns = fns
   return invoker
 }
-
+/**更新监听器
+ * on：新的监听对象
+ * oldon:老的监听对象
+ * add:
+ * remove:
+ * vm：组件对象
+ */
 export function updateListeners (
   on: Object,
   oldOn: Object,
   add: Function,
   remove: Function,
   vm: Component
-) {
+) 
+{
   let name, cur, old, event
-  for (name in on) {
+  for (name in on) 
+  {
     cur = on[name]
     old = oldOn[name]
+    /**规范化事件名称 */
     event = normalizeEvent(name)
-    if (isUndef(cur)) {
+    /**如果当前属性未定义的处理，未处理 */
+    if (isUndef(cur)) 
+    {
       process.env.NODE_ENV !== 'production' && warn(
         `Invalid handler for event "${event.name}": got ` + String(cur),
         vm
       )
-    } else if (isUndef(old)) {
-      if (isUndef(cur.fns)) {
+    } 
+    /**如果在老的兑现中未定义的处理
+     * 如果在行动对象中的fns属性未定义创建新的
+     * 执行添加操作
+     */
+    else if (isUndef(old)) 
+    {
+      if (isUndef(cur.fns)) 
+      {
         cur = on[name] = createFnInvoker(cur)
       }
       add(event.name, cur, event.once, event.capture, event.passive)
-    } else if (cur !== old) {
+    } 
+    /**如果新的对象不等于老的对象的处理设置老的处理函数为新的 */
+    else if (cur !== old) 
+    {
       old.fns = cur
       on[name] = old
     }
   }
-  for (name in oldOn) {
-    if (isUndef(on[name])) {
+  /**遍历存在于老的对象中的属性，
+   * 如果此对象不存在规范化此事件名，然后移除此事件名
+   */
+  for (name in oldOn) 
+  {
+    if (isUndef(on[name])) 
+    {
       event = normalizeEvent(name)
       remove(event.name, oldOn[name], event.capture)
     }

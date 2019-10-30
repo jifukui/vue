@@ -25,7 +25,8 @@ import {
  * how to merge a parent option value and a child option
  * value into the final value.
  */
-/**strats为配置的config.optionMergeStrategies属性
+/**创建strats对象为一个空的对象
+ * strats为配置的config.optionMergeStrategies属性
  * 即为创建空对象的函数
  */
 const strats = config.optionMergeStrategies
@@ -150,10 +151,14 @@ export function mergeDataOrFn (
     }
   }
 }
-/**
- * parentVal
- * childVal
- * vm
+/**strats对象的data属性
+ * parentVal：父值
+ * childVal：子值
+ * vm：组件对象
+ * 如果vm的值为否
+ * 如果子存在且子的类型不为方法，返回父的值
+ * 反之返回当前strats的值与父的值聚合到子的值
+ * 反之返回聚合父的值和子的值到vm的值
  */
 strats.data = function (
   parentVal: any,
@@ -183,7 +188,15 @@ strats.data = function (
 /**
  * Hooks and props are merged as arrays.
  */
-/**聚合钩子 */
+/**聚合钩子
+ * parentVal:
+ * childVal:
+ * 如果子的值为否返回父的值
+ * 如果子的值为真
+ * 如果父的值为真返回父的值concat后的值
+ * 如果父的值为假判断子是否是数组
+ * 如果子的属性为数组返回子，返回子的数组化形式
+ */
 function mergeHook (
   parentVal: ?Array<Function>,
   childVal: ?Function | ?Array<Function>
@@ -197,7 +210,7 @@ function mergeHook (
         : [childVal]
     : parentVal
 }
-
+/**设置strats的钩子的方法 */
 LIFECYCLE_HOOKS.forEach(hook => {
   strats[hook] = mergeHook
 })
@@ -210,11 +223,13 @@ LIFECYCLE_HOOKS.forEach(hook => {
  * options and parent options.
  */
 /**聚合资源
- * parentVal：
- * childVal：
- * vm：
- * key：
- * 
+ * parentVal：父值
+ * childVal：子值
+ * vm：组件
+ * key：键值
+ * 如果子的值为真，将子的值浅拷贝到资源对象中
+ * 如果子的值为假，不对资源对象进行处理
+ * 返回资源对象
  */
 function mergeAssets (
   parentVal: ?Object,
@@ -223,6 +238,7 @@ function mergeAssets (
   key: string
 ): Object 
 {
+  /**创建资源对象 */
   const res = Object.create(parentVal || null)
   if (childVal) 
   {
@@ -234,7 +250,7 @@ function mergeAssets (
     return res
   }
 }
-
+/**strats对象中添加对应的资源的方法 */
 ASSET_TYPES.forEach(function (type) {
   strats[type + 's'] = mergeAssets
 })
@@ -245,7 +261,24 @@ ASSET_TYPES.forEach(function (type) {
  * Watchers hashes should not overwrite one
  * another, so we merge them as arrays.
  */
-/** */
+/**strats对象的watch属性
+ * parentVal：
+ * childVal：
+ * vm：
+ * key：
+ * 如果父的值和子的值都是对象的watch属性设置其值为undefined
+ * 如果子的值为否返回父对象或者是空对象
+ * 如果子的值为真父的值为否返回子对象
+ * 如果父子对象都存在
+ * 将父对象浅拷贝值资源对象中
+ * 遍历子对象的属性
+ * 如果也存在于父值中且不是数组设置临时变量为此属性值的数组化结构
+ * 反之不做任何处理
+ * 设置父对象的浅拷贝的此属性值为
+ * 当此属性在父对象中设置此属性为数组拼接此子属性
+ * 当存在于父属性中此属性在子对象中为数组设置为此子属性反之设置为子对象此属性的数组形式
+ * 返回此对象的父对象的浅拷贝的合并版本
+ */
 strats.watch = function (
   parentVal: ?Object,
   childVal: ?Object,
@@ -253,7 +286,7 @@ strats.watch = function (
   key: string
 ): ?Object 
 {
-  // work around Firefox's Object.prototype.watch...
+  /**如果父的值和子的值都是对象的watch属性设置其值为undefined */
   if (parentVal === nativeWatch) 
   {
     parentVal = undefined
@@ -291,9 +324,15 @@ strats.watch = function (
   }
   return ret
 }
-
-/**
- * Other object hashes.
+/**设置strats对象的props属性，methods属性，inject属性和computed属性
+ * parentVal：
+ * childVal：
+ * vm：
+ * key：
+ * 如果父对象的值为假返回子对象
+ * 如果父对象的值不为假的处理
+ * 创建一个空格对象，浅拷贝父对象
+ * 如果子对象存在，再将此对象浅拷贝子对象，返回合并之后的对象
  */
 strats.props =
 strats.methods =
@@ -321,6 +360,7 @@ strats.computed = function (
   }
   return ret
 }
+/**设置strats对象的provide属性为聚合数据和方法的函数 */
 strats.provide = mergeDataOrFn
 
 /**
@@ -334,10 +374,7 @@ const defaultStrat = function (parentVal: any, childVal: any): any
     : childVal
 }
 
-/**
- * Validate component names
- */
-/**检测组件
+/**检测组件中属性的名称是否是合法的属性名称
  * 对于组件中使用构建的标签或者是预留的标签进行警告
  */
 function checkComponents (options: Object) 
@@ -359,7 +396,16 @@ function checkComponents (options: Object)
  * Ensure all props option syntax are normalized into the
  * Object-based format.
  */
-/** */
+/**对对象的属性名称经过规则处理
+ * options：
+ * vm：组件对象
+ * 如果对象的props属性的值为假直接返回
+ * 如果props属性为数组类型的处理
+ * 遍历所有的内容如果值为字符串将字符串转换为驼峰格式并设置资源的此属性的值为type为空
+ * 如果props属性为对象的处理
+ * 遍历所有的属性将属性名设置为驼峰格式然后设置此属性为如果是对象为对象反之设置type为此属性的值
+ * 最后设置对象的props属性值
+*/
 function normalizeProps (options: Object, vm: ?Component) 
 {
   const props = options.props
@@ -408,10 +454,7 @@ function normalizeProps (options: Object, vm: ?Component)
   options.props = res
 }
 
-/**
- * Normalize all injections into Object-based format
- */
-/** */
+/**规则化处理注射属性 */
 function normalizeInject (options: Object, vm: ?Component) 
 {
   const inject = options.inject
@@ -443,10 +486,7 @@ function normalizeInject (options: Object, vm: ?Component)
   }
 }
 
-/**
- * Normalize raw function directives into object format.
- */
-/** */
+/**规则化指令 */
 function normalizeDirectives (options: Object) 
 {
   const dirs = options.directives
@@ -506,10 +546,13 @@ export function mergeOptions (
   {
     child = child.options
   }
-
+  /**规范化pros属性 */
   normalizeProps(child, vm)
+  /**规范化注射属性 */
   normalizeInject(child, vm)
+  /**规范化指令属性 */
   normalizeDirectives(child)
+  /**获取子对象的extend属性如果存在 */
   const extendsFrom = child.extends
   if (extendsFrom) 
   {
@@ -535,6 +578,7 @@ export function mergeOptions (
       mergeField(key)
     }
   }
+  /**聚合域 */
   function mergeField (key) 
   {
     const strat = strats[key] || defaultStrat

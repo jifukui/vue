@@ -35,7 +35,7 @@ const sharedPropertyDefinition = {
   set: noop
 }
 /**创建代理函数
- * target：
+ * target：目的对象
  * sourcekey:
  * key:
  * 设置对象target对象key属性的值和获取与设置函数
@@ -50,6 +50,7 @@ export function proxy (target: Object, sourceKey: string, key: string)
   {
     this[sourceKey][key] = val
   }
+  /**定义属性 */
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 /**初始化对象的状态
@@ -168,7 +169,7 @@ function initData (vm: Component)
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
-  /**如果data为不可扩展对象的处理设置data的值为空对象 */
+  /**如果data的类型不是对象的处理设置data为空对象 */
   if (!isPlainObject(data)) 
   {
     data = {}
@@ -202,6 +203,7 @@ function initData (vm: Component)
         )
       }
     }
+    /**对于props存在且此属性存在于props的处理 */
     if (props && hasOwn(props, key)) 
     {
       process.env.NODE_ENV !== 'production' && warn(
@@ -210,6 +212,9 @@ function initData (vm: Component)
         vm
       )
     } 
+    /**对于key不是预留的参数的处理
+     * 定义组件的_data属性中的key属性的设置访问函数
+     */
     else if (!isReserved(key)) 
     {
       proxy(vm, `_data`, key)
@@ -451,11 +456,13 @@ function createWatcher (
   options?: Object
 ) 
 {
+  /**对于是对象的处理 */
   if (isPlainObject(handler)) 
   {
     options = handler
     handler = handler.handler
   }
+  /**对于是字符串的处理 */
   if (typeof handler === 'string') 
   {
     handler = vm[handler]

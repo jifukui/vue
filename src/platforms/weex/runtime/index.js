@@ -27,7 +27,10 @@ Vue.options.components = platformComponents
 // install platform patch function
 Vue.prototype.__patch__ = patch
 
-// wrap mount
+/**Vue的挂载的实现
+ * el:
+ * hydrating:
+ */
 Vue.prototype.$mount = function (
   el?: any,
   hydrating?: boolean
