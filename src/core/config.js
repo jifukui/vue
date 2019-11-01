@@ -12,19 +12,21 @@ import {
 } from 'shared/util'
 /**导入生命周期的钩子函数 */
 import { LIFECYCLE_HOOKS } from 'shared/constants'
-/**可以被导出的配置信息 */
+/**
+ * 配置信息
+ */
 export type Config = 
 {
   // user
-  optionMergeStrategies: { [key: string]: Function };
-  silent: boolean;
-  productionTip: boolean;
-  performance: boolean;
-  devtools: boolean;
-  errorHandler: ?(err: Error, vm: Component, info: string) => void;
-  warnHandler: ?(msg: string, vm: Component, trace: string) => void;
-  ignoredElements: Array<string>;
-  keyCodes: { [key: string]: number | Array<number> };
+  optionMergeStrategies: { [key: string]: Function };/**自定义合并策略函数 */
+  silent: boolean;  /**是否关闭所有日志和警告 */
+  productionTip: boolean; /**设置为 false 以阻止 vue 在启动时生成生产提示 */
+  performance: boolean;/**设置为 true 以在浏览器开发工具的性能/时间线面板中启用对组件初始化、编译、渲染和打补丁的性能追踪 */
+  devtools: boolean;    /**是否启用代码检查 */
+  errorHandler: ?(err: Error, vm: Component, info: string) => void;/**捕获错误 */
+  warnHandler: ?(msg: string, vm: Component, trace: string) => void;/**警告处理函数 */
+  ignoredElements: Array<string>;/**定义忽略DOM元素 */
+  keyCodes: { [key: string]: number | Array<number> };/**给v-on定义键位别名 */
 
   // platform
   isReservedTag: (x?: string) => boolean;

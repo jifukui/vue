@@ -4,7 +4,10 @@ import { renderMixin } from './render'
 import { eventsMixin } from './events'
 import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
-/**Vue函数 */
+/**
+ * Vue实例化的第一个步骤
+ * @param {*} options option为创建Vue时的传入的对象结构
+ */
 function Vue (options) 
 {
   /**判断是否是使用New创建的vue */
@@ -15,12 +18,13 @@ function Vue (options)
   {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
-  /**初始化 */
-  console.log("The vue first is "+JSON.stringify(options));
+  
   /**根据传入的数据进行Vue对象的初始化工作 */
   this._init(options)
 }
-/**初始化混合 */
+/**
+ * 给Vue对象添加_init方法
+ */
 initMixin(Vue)
 /**状态绑定$watch函数 */
 stateMixin(Vue)

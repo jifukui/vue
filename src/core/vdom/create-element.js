@@ -98,9 +98,7 @@ export function _createElement (
     return createEmptyVNode()
   }
   // warn against non-primitive key
-  if (process.env.NODE_ENV !== 'production' &&
-    isDef(data) && isDef(data.key) && !isPrimitive(data.key)
-  ) 
+  if (process.env.NODE_ENV !== 'production' &&isDef(data) && isDef(data.key) && !isPrimitive(data.key)) 
   {
     warn(
       'Avoid using non-primitive value as key, ' +
@@ -186,7 +184,12 @@ export function _createElement (
     return createEmptyVNode()
   }
 }
-/** */
+/**
+ * 
+ * @param {*} vnode 
+ * @param {*} ns 
+ * @param {*} force 
+ */
 function applyNS (vnode, ns, force) 
 {
   vnode.ns = ns

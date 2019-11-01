@@ -19,12 +19,15 @@ import {
 
 export let activeInstance: any = null
 export let isUpdatingChildComponent: boolean = false
-/**初始化生命周期，初始化组件的相关参数
- * vm：组件
+/**
+ * 初始化生命周期
+ * @param {*} vm 
  */
 export function initLifecycle (vm: Component) 
 {
-  /**设置变量options存储组件的options属性值 */
+  /**
+   * 获取Vue对象的options对象
+   */
   const options = vm.$options
 
   // locate first non-abstract parent

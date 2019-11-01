@@ -11,44 +11,36 @@ import { initProvide, initInjections } from './inject'
 import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
-/**初始化混合
- * vue：为组件
- * 定义组件对象的原型的初始化函数
+/**
+ * Vue的实例化，定义Vue对象的_init方法
+ * @param {*} Vue对象
  */
 export function initMixin (Vue: Class<Component>) 
 {
-  /**Vue原型的的初始化函数 */
+  /**
+   * Vue的原型初始化函数
+   * options：为传入的对象
+   */
   Vue.prototype._init = function (options?: Object) 
   {
-    console.log("This is the first?");
     const vm: Component = this
-    // a uid
-    console.log("this uid is "+uid);
+    /**定义使用的Vue实例的编号 */
     vm._uid = uid++
 
     let startTag, endTag
-    /**  istanbul ignore if 
-     * 如果不是，非生产模式的调用
-     * 正常情况下没有什么用
-    */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) 
     {
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
       mark(startTag)
     }
-
-    // a flag to avoid this being observed
     /**设置是否是Vue */
     vm._isVue = true
     /**options存在且options是组件初始化化此组件
-     * 反之设置此组件为
+     * 反之设置此Vue对象的options值为传入的options参数与此对象继承的options对象进行合并
      */
     if (options && options._isComponent) 
     {
-      // optimize internal component instantiation
-      // since dynamic options merging is pretty slow, and none of the
-      // internal component options needs special treatment.
       /**初始化内部组件 */
       initInternalComponent(vm, options)
     } 
@@ -60,19 +52,19 @@ export function initMixin (Vue: Class<Component>)
         vm
       )
     }
-    /* istanbul ignore else */
-    /**如果不是开发模式初始化代理
-     * 反之设置渲染代理为此对象
-     */
+    /**如果不是生产模式的处理 */
     if (process.env.NODE_ENV !== 'production') 
     {
       initProxy(vm)
     } 
+    /**对于是生产模式的处理
+     * 设置Vue对象的_renderProxy属性的值为当前Vue对象
+     */
     else 
     {
       vm._renderProxy = vm
     }
-    // expose real self
+    /**设置_self属性的值为vm */
     vm._self = vm
     /**初始化生命周期 */
     initLifecycle(vm)
@@ -90,8 +82,6 @@ export function initMixin (Vue: Class<Component>)
     initProvide(vm) // resolve provide after data/props
     /**调用钩子函数创建的处理 */
     callHook(vm, 'created')
-
-    /* istanbul ignore if */
     /**如果不是生产模式且 */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) 
     {
@@ -106,10 +96,11 @@ export function initMixin (Vue: Class<Component>)
     }
   }
 }
-/**初始化内部组件options组件参数 
- * vm:为Vue对象
- * InternalComponentOptions：为传入的设置的Vue参数
-*/
+/**
+ * 初始化内部组件
+ * @param {*} vm 
+ * @param {*} options 
+ */
 function initInternalComponent (vm: Component, options: InternalComponentOptions) 
 {
   const opts = vm.$options = Object.create(vm.constructor.options)
@@ -136,32 +127,44 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
     opts.staticRenderFns = options.staticRenderFns
   }
 }
-/**这个函数还没有弄明白具体的意图
- * Ctor：
- * 如果Ctor的super属性存在的处理
- * 进行迭代调用
+/**
+ * 这个参数用于获取此对象的父对象的options参数
+ * 这函数用于获取对象的options，子对象继承父对象的options对象
+ * @param {*} Ctor Ctor其实是Vue函数的构造函数，这里指向的还是Vue对象
  */
 export function resolveConstructorOptions (Ctor: Class<Component>) 
 {
+  /**
+   * 获取Ctor对象的option参数，其实这个参数是components,directives,filters和_base这四个属性其中_base这个属性执行这个函数
+   * 当前这个对象是最简单的对象
+   */
   let options = Ctor.options
+  /**对于此对象的super属性的值为真的处理，即此对象的父对象 */
   if (Ctor.super) 
   {
+    /**获取父对象的option参数 */
     const superOptions = resolveConstructorOptions(Ctor.super)
+    /**获取 */
     const cachedSuperOptions = Ctor.superOptions
-    /**对于当前的与缓存的不一致的处理 */
+    /**对于当前的与缓存的不一致的处理
+     * 更新缓存的数据
+     */
     if (superOptions !== cachedSuperOptions) 
     {
-      // super option changed,
-      // need to resolve new options.
+      /**进行参数的更新 */
       Ctor.superOptions = superOptions
-      // check if there are any late-modified/attached options (#4976)
+      /**获取修改后的修改参数 */
       const modifiedOptions = resolveModifiedOptions(Ctor)
-      // update base extend options
+      /**对于存在有修改的参数的处理
+       * 将修改的参数添加至扩展的参数中
+       */
       if (modifiedOptions) 
       {
         extend(Ctor.extendOptions, modifiedOptions)
       }
+      /**设置参数为父的当前参数与扩展的参数进行合并操作 */
       options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions)
+      /**如果有name参数设置此的组件名称为当前对象 */
       if (options.name) 
       {
         options.components[options.name] = Ctor
@@ -171,18 +174,23 @@ export function resolveConstructorOptions (Ctor: Class<Component>)
   return options
 }
 /**
- * Ctor：组件类
- * 获取组件类型的操作，扩展操作和剔除操作
- * 遍历options中的属性
- * 如果此属性的值不等于sealed属性中的值且modified的值为假设置modified的值为空对象
- * 设置modified的此属性的值为dequpe操作后的值
+ * 返回修改后对象
+ * @param {*} Ctor Vue对象
  */
 function resolveModifiedOptions (Ctor: Class<Component>): ?Object 
 {
   let modified
+  /**此对象的当前值 */
   const latest = Ctor.options
+  /**此对象扩展的值 */
   const extended = Ctor.extendOptions
+  /**此对象 */
   const sealed = Ctor.sealedOptions
+  /**变量此对象当前的值
+   * 对于当前的值不等于与的处理
+   * 如果modified的值为假设置modified的值为空对象。
+   * 设置modified对象的值为处理的值
+   */
   for (const key in latest) 
   {
     if (latest[key] !== sealed[key]) 
@@ -196,18 +204,22 @@ function resolveModifiedOptions (Ctor: Class<Component>): ?Object
   }
   return modified
 }
-/**这个函数的主要功能是在latest为数组的处理
- * 放回latest中的数据存在于extend中的数据不存在于sealed中的数据
- * latest:
- * extended:
- * sealed:
- * 对于latest的属性为数组的处理如果此数值在extend中能找到活着在sealed中找不到添加在res中
- * 对于latest的类型不是数组直接返回latest
+/**
+ * 这个函数的作用是根据当前值是否是数组进行处理
+ * 如果不是数组直接返回此对象，
+ * 如果是数组如果数组中的参数存在于扩展中获取不存在于封闭中添加此元素
+ * @param {*} latest 当前的值
+ * @param {*} extended 扩展的值
+ * @param {*} sealed 封闭值
  */
 function dedupe (latest, extended, sealed) 
 {
-  // compare latest and sealed to ensure lifecycle hooks won't be duplicated
-  // between merges
+  /**对于当前的值为数组的处理
+   * 创建空的对象
+   * 遍历当前值的所有索引
+   * 对于这个值存在于扩展中或者是不存在与sealed中将此值添加至创建的资源数组中并返回此数组
+   * 对于当前值不是数组直接返回此数组
+   */
   if (Array.isArray(latest)) 
   {
     const res = []

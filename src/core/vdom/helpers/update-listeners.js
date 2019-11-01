@@ -23,12 +23,20 @@ const normalizeEvent = cached((name: string):
     passive
   }
 })
-/*** */
+/**
+ * 创建祈求函数
+ * @param {*} fns 函数或者是函数数组 
+ */
 export function createFnInvoker (fns: Function | Array<Function>): Function 
 {
+  /**
+   * 祈求函数
+   */
   function invoker () 
   {
-    const fns = invoker.fns
+    /**获取fns的值为祈求的处理函数 */
+    const fns = invoker.fns;
+    /**如果处理函数为数组的处理 */
     if (Array.isArray(fns)) 
     {
       const cloned = fns.slice()
@@ -37,21 +45,25 @@ export function createFnInvoker (fns: Function | Array<Function>): Function
         cloned[i].apply(null, arguments)
       }
     } 
+    /**反之调用函数的 */
     else 
     {
       // return handler return value for single handlers
       return fns.apply(null, arguments)
     }
   }
+  /**设置处理函数 */
   invoker.fns = fns
+  /**返回对象 */
   return invoker
 }
-/**更新监听器
- * on：新的监听对象
- * oldon:老的监听对象
- * add:
- * remove:
- * vm：组件对象
+/**
+ * 更新监听器
+ * @param {*} on 
+ * @param {*} oldOn 
+ * @param {*} add 
+ * @param {*} remove 
+ * @param {*} vm 
  */
 export function updateListeners (
   on: Object,

@@ -469,9 +469,11 @@ function createWatcher (
   }
   return vm.$watch(keyOrFn, handler, options)
 }
-/**状态混合
- * vue：组件对象
- * 
+/**
+ * 在Vue的原型对象上添加$data和$props属性的获取方法
+ * 设置原型的set和del方法
+ * watch方法
+ * @param {*} Vue Vue对象 
  */
 export function stateMixin (Vue: Class<Component>) 
 {

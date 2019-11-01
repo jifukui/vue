@@ -32,7 +32,7 @@
 │  │      keep-alive.js                 销毁活跃的组件
 │  │      
 │  ├─global-api                         全局的函数接口实现
-│  │      assets.js                     设置组件，指令等的实现
+│  │      assets.js                     Vue对象组件，指令，过滤的实现。并添加到当前对象中。
 │  │      extend.js                     全局API的扩展的实现，初始化props属性和computed属性
 │  │      index.js                      初始化全局API函数
 │  │      mixin.js                      将两个对象的属性进行混合（调用混合函数）返回混合后的此对象
@@ -94,8 +94,8 @@
 │      │      update-listeners.js               监听器相关的处理
 │      │      
 │      └─modules
-│              directives.js
-│              index.js
+│              directives.js                    指令的更新插入和销毁处理
+│              index.js                         导出指令和ref
 │              ref.js
 │              
 ├─platforms
@@ -253,6 +253,6 @@
 │      parser.js
 │      
 └─shared
-        constants.js                    定义一些资源类型和钩子类型
+        constants.js                    定义一些资源类型和钩子类型,配置Vue对象的
         util.js                         
         

@@ -28,9 +28,8 @@ import {
 } from '../instance/lifecycle'
 
 // hooks to be invoked on component VNodes during patch
-/**钩子函数相关
- * 
- * 
+/**
+ * 组件的虚拟节点的钩子
  */
 const componentVNodeHooks = 
 {
@@ -109,8 +108,9 @@ const componentVNodeHooks =
       }
     }
   },
-  /**销毁挂载的组件对象
-   * 
+  /**
+   * 销毁组件
+   * @param {*} vnode 节点对象 
    */
   destroy (vnode: MountedComponentVNode) 
   {
@@ -134,12 +134,13 @@ const componentVNodeHooks =
 }
 /**钩子聚合 */
 const hooksToMerge = Object.keys(componentVNodeHooks)
-/**创建组件
- * Ctor:组件
- * data:数据
- * context:内容
- * children:子节点
- * tag:标签
+/**
+ * 创建组件
+ * @param {*} Ctor  组件
+ * @param {*} data  节点数据
+ * @param {*} context 内容
+ * @param {*} children 子组件
+ * @param {*} tag 标签
  */
 export function createComponent (
   Ctor: Class<Component> | Function | Object | void,
@@ -317,11 +318,10 @@ function mergeHook (one: Function, two: Function): Function
   }
 }
 
-// transform component v-model info (value and callback) into
-// prop and event handler respectively.
 /**
- * options:
- * data
+ * 
+ * @param {*} options 
+ * @param {*} data 
  */
 function transformModel (options, data: any) 
 {

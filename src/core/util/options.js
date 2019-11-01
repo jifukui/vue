@@ -20,11 +20,6 @@ import {
   isPlainObject
 } from 'shared/util'
 
-/**
- * Option overwriting strategies are functions that handle
- * how to merge a parent option value and a child option
- * value into the final value.
- */
 /**创建strats对象为一个空的对象
  * strats为配置的config.optionMergeStrategies属性
  * 即为创建空对象的函数
@@ -55,9 +50,7 @@ if (process.env.NODE_ENV !== 'production')
   }
 }
 
-/**
- * Helper that recursively merges two data objects together.
- */
+
 /**将数据进行聚合
  * 将from中的属性添加至to对象
  */
@@ -215,13 +208,7 @@ LIFECYCLE_HOOKS.forEach(hook => {
   strats[hook] = mergeHook
 })
 
-/**
- * Assets
- *
- * When a vm is present (instance creation), we need to do
- * a three-way merge between constructor options, instance
- * options and parent options.
- */
+
 /**聚合资源
  * parentVal：父值
  * childVal：子值
@@ -255,12 +242,7 @@ ASSET_TYPES.forEach(function (type) {
   strats[type + 's'] = mergeAssets
 })
 
-/**
- * Watchers.
- *
- * Watchers hashes should not overwrite one
- * another, so we merge them as arrays.
- */
+
 /**strats对象的watch属性
  * parentVal：
  * childVal：
@@ -382,6 +364,7 @@ function checkComponents (options: Object)
   for (const key in options.components) 
   {
     const lower = key.toLowerCase()
+    /**不能是slot或者是component或者是预留的标签这里应该是没有的 */
     if (isBuiltInTag(lower) || config.isReservedTag(lower)) 
     {
       warn(
@@ -392,10 +375,7 @@ function checkComponents (options: Object)
   }
 }
 
-/**
- * Ensure all props option syntax are normalized into the
- * Object-based format.
- */
+
 /**对对象的属性名称经过规则处理
  * options：
  * vm：组件对象
@@ -406,8 +386,14 @@ function checkComponents (options: Object)
  * 遍历所有的属性将属性名设置为驼峰格式然后设置此属性为如果是对象为对象反之设置type为此属性的值
  * 最后设置对象的props属性值
 */
+/**
+ * 
+ * @param {*} options Vue对象的options属性
+ * @param {*} vm 
+ */
 function normalizeProps (options: Object, vm: ?Component) 
 {
+  /**获取Vue对象的options属性的props属性的值 */
   const props = options.props
   if (!props) 
   {
@@ -415,6 +401,10 @@ function normalizeProps (options: Object, vm: ?Component)
   }
   const res = {}
   let i, val, name
+  /**对于props类型为数组的处理
+   * 遍历所有属性，
+   * 对于参数值为字符串将字符串转换为驼峰形式设置此属性的值的{ type: null }
+   */
   if (Array.isArray(props)) 
   {
     i = props.length
@@ -432,6 +422,11 @@ function normalizeProps (options: Object, vm: ?Component)
       }
     }
   } 
+  /**对于props的值为对象的处理
+   * 遍历所有属性
+   * 获取属性值和将属性名设置为驼峰形式
+   * 设置资源此属性名的值为如果是对象为对象值如果不是对象为{ type: val }
+   */
   else if (isPlainObject(props)) 
   {
     for (const key in props) 
@@ -443,6 +438,7 @@ function normalizeProps (options: Object, vm: ?Component)
         : { type: val }
     }
   } 
+  /**这部分在生产模式中不会出现 */
   else if (process.env.NODE_ENV !== 'production' && props) 
   {
     warn(
@@ -454,7 +450,11 @@ function normalizeProps (options: Object, vm: ?Component)
   options.props = res
 }
 
-/**规则化处理注射属性 */
+/**
+ * 
+ * @param {*} options Vue对象的options属性
+ * @param {*} vm 
+ */
 function normalizeInject (options: Object, vm: ?Component) 
 {
   const inject = options.inject
@@ -485,8 +485,10 @@ function normalizeInject (options: Object, vm: ?Component)
     )
   }
 }
-
-/**规则化指令 */
+/**
+ * 
+ * @param {*} options 
+ */
 function normalizeDirectives (options: Object) 
 {
   const dirs = options.directives
@@ -502,10 +504,11 @@ function normalizeDirectives (options: Object)
     }
   }
 }
-/**对象类型的断言
- * name：
- * value：
- * vm：
+/**
+ * 
+ * @param {*} name 
+ * @param {*} value 
+ * @param {*} vm 
  */
 function assertObjectType (name: string, value: any, vm: ?Component) 
 {
@@ -534,7 +537,7 @@ export function mergeOptions (
   vm?: Component
 ): Object 
 {
-  /**如果不是发布模式的话执行检测组件 */
+  /**检测新赋值的参数是否正确 */
   if (process.env.NODE_ENV !== 'production') 
   {
     checkComponents(child)
@@ -586,11 +589,12 @@ export function mergeOptions (
   }
   return options
 }
-
 /**
- * Resolve an asset.
- * This function is used because child instances need access
- * to assets defined in its ancestor chain.
+ * 
+ * @param {*} options 
+ * @param {*} type 
+ * @param {*} id 
+ * @param {*} warnMissing 
  */
 export function resolveAsset (
   options: Object,
