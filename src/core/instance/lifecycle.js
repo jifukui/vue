@@ -21,6 +21,7 @@ export let activeInstance: any = null
 export let isUpdatingChildComponent: boolean = false
 /**
  * 初始化生命周期
+ * 设置组件对象的相关参数和初始化相关的参数
  * @param {*} vm 
  */
 export function initLifecycle (vm: Component) 
@@ -206,7 +207,7 @@ export function lifecycleMixin (Vue: Class<Component>)
 /**挂载组件,Vue对象$mount的具体实现
  * vm:组件对象
  * el:挂载的元素
- * hydrating：
+ * hydrating：这个值一般很少用
  */
 export function mountComponent (
   vm: Component,
@@ -215,6 +216,7 @@ export function mountComponent (
 ): Component 
 {
   vm.$el = el
+  /** */
   if (!vm.$options.render) 
   {
     vm.$options.render = createEmptyVNode
@@ -266,6 +268,7 @@ export function mountComponent (
   } 
   else 
   {
+    /**定义组件更新的方法 */
     updateComponent = () => 
     {
       vm._update(vm._render(), hydrating)

@@ -9,46 +9,73 @@ let warn
 // in some cases, the event used has to be determined at runtime
 // so we used some reserved tokens during compile.
 export const RANGE_TOKEN = '__r'
-
+/**
+ * 根据el的对应的属性进行相关的模式化处理，返回成功或者是失败
+ * @param {*} el 元素对象
+ * @param {*} dir 
+ * @param {*} _warn 警告处理函数
+ */
 export default function model (
   el: ASTElement,
   dir: ASTDirective,
   _warn: Function
-): ?boolean {
+): ?boolean 
+{
   warn = _warn
   const value = dir.value
   const modifiers = dir.modifiers
   const tag = el.tag
   const type = el.attrsMap.type
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production') 
+  {
     // inputs with type="file" are read only and setting the input's
     // value will throw an error.
-    if (tag === 'input' && type === 'file') {
+    if (tag === 'input' && type === 'file') 
+    {
       warn(
         `<${el.tag} v-model="${value}" type="file">:\n` +
         `File inputs are read only. Use a v-on:change listener instead.`
       )
     }
   }
-
-  if (el.component) {
+  /**对于是组件的处理 */
+  if (el.component) 
+  {
     genComponentModel(el, value, modifiers)
     // component v-model doesn't need extra runtime
     return false
-  } else if (tag === 'select') {
+  } 
+  /**对于标签是select的处理 */
+  else if (tag === 'select') 
+  {
     genSelect(el, value, modifiers)
-  } else if (tag === 'input' && type === 'checkbox') {
+  } 
+  /**对于标签是input且类型是复选框的处理 */
+  else if (tag === 'input' && type === 'checkbox') 
+  {
     genCheckboxModel(el, value, modifiers)
-  } else if (tag === 'input' && type === 'radio') {
+  } 
+  /**对于是单选框的处理 */
+  else if (tag === 'input' && type === 'radio') 
+  {
     genRadioModel(el, value, modifiers)
-  } else if (tag === 'input' || tag === 'textarea') {
+  } 
+  /**对于是input或者是textarea的处理 */
+  else if (tag === 'input' || tag === 'textarea') 
+  {
     genDefaultModel(el, value, modifiers)
-  } else if (!config.isReservedTag(tag)) {
+  } 
+  /**对于不是预留标签的处理 */
+  else if (!config.isReservedTag(tag)) 
+  {
     genComponentModel(el, value, modifiers)
     // component v-model doesn't need extra runtime
     return false
-  } else if (process.env.NODE_ENV !== 'production') {
+  } 
+  /**其他的错误处理 */
+  else if (process.env.NODE_ENV !== 'production') 
+  {
     warn(
       `<${el.tag} v-model="${value}">: ` +
       `v-model is not supported on this element type. ` +
@@ -60,7 +87,12 @@ export default function model (
   // ensure runtime directive metadata
   return true
 }
-
+/**
+ * 
+ * @param {*} el 
+ * @param {*} value 
+ * @param {*} modifiers 
+ */
 function genCheckboxModel (
   el: ASTElement,
   value: string,
@@ -91,7 +123,12 @@ function genCheckboxModel (
     null, true
   )
 }
-
+/**
+ * 产生单选框模式
+ * @param {*} el 元素对象
+ * @param {*} value 
+ * @param {*} modifiers 
+ */
 function genRadioModel (
     el: ASTElement,
     value: string,
@@ -103,7 +140,12 @@ function genRadioModel (
   addProp(el, 'checked', `_q(${value},${valueBinding})`)
   addHandler(el, 'change', genAssignmentCode(value, valueBinding), null, true)
 }
-
+/**
+ * 产生选择模式
+ * @param {*} el 
+ * @param {*} value 
+ * @param {*} modifiers 
+ */
 function genSelect (
     el: ASTElement,
     value: string,
@@ -120,37 +162,50 @@ function genSelect (
   code = `${code} ${genAssignmentCode(value, assignment)}`
   addHandler(el, 'change', code, null, true)
 }
-
+/**
+ * 产生默认模式
+ * @param {*} el 
+ * @param {*} value 
+ * @param {*} modifiers 
+ */
 function genDefaultModel (
   el: ASTElement,
   value: string,
   modifiers: ?ASTModifiers
-): ?boolean {
+): ?boolean 
+{
+  /** */
   const type = el.attrsMap.type
+  /** */
   const { lazy, number, trim } = modifiers || {}
   const needCompositionGuard = !lazy && type !== 'range'
+  /** */
   const event = lazy
     ? 'change'
     : type === 'range'
       ? RANGE_TOKEN
       : 'input'
-
+  /**设置数值的表达式 */
   let valueExpression = '$event.target.value'
-  if (trim) {
+  if (trim) 
+  {
     valueExpression = `$event.target.value.trim()`
   }
-  if (number) {
+  if (number) 
+  {
     valueExpression = `_n(${valueExpression})`
   }
 
   let code = genAssignmentCode(value, valueExpression)
-  if (needCompositionGuard) {
+  if (needCompositionGuard) 
+  {
     code = `if($event.target.composing)return;${code}`
   }
 
   addProp(el, 'value', `(${value})`)
   addHandler(el, event, code, null, true)
-  if (trim || number) {
+  if (trim || number) 
+  {
     addHandler(el, 'blur', '$forceUpdate()')
   }
 }

@@ -19,7 +19,7 @@ export function initMixin (Vue: Class<Component>)
 {
   /**
    * Vue的原型初始化函数
-   * options：为传入的对象
+   * options：为传入的对象，对于根组件这个为传入的参数
    */
   Vue.prototype._init = function (options?: Object) 
   {
@@ -34,10 +34,11 @@ export function initMixin (Vue: Class<Component>)
       endTag = `vue-perf-end:${vm._uid}`
       mark(startTag)
     }
-    /**设置是否是Vue */
+    /**设置当前对象为Vue */
     vm._isVue = true
     /**options存在且options是组件初始化化此组件
      * 反之设置此Vue对象的options值为传入的options参数与此对象继承的options对象进行合并
+     * 对于是组件的
      */
     if (options && options._isComponent) 
     {
@@ -66,7 +67,7 @@ export function initMixin (Vue: Class<Component>)
     }
     /**设置_self属性的值为vm */
     vm._self = vm
-    /**初始化生命周期 */
+    /**初始化生命周期，初始化组件的相关参数 */
     initLifecycle(vm)
     /**初始化事件处理 */
     initEvents(vm)
@@ -97,9 +98,9 @@ export function initMixin (Vue: Class<Component>)
   }
 }
 /**
- * 初始化内部组件
+ * 初始化内部组件，即将组件挂载在父组件上
  * @param {*} vm 
- * @param {*} options 
+ * @param {*} options 父组件对象
  */
 function initInternalComponent (vm: Component, options: InternalComponentOptions) 
 {

@@ -21,15 +21,14 @@ import {
 const SIMPLE_NORMALIZE = 1
 const ALWAYS_NORMALIZE = 2
 
-// wrapper function for providing a more flexible interface
-// without getting yelled at by flow
-/**创建元素接口
- * context：组件对象
- * tag：标签
- * data：数据
- * children：子组件
- * normalizationType：创建模式
- * alwaysNormalize：总是常规模式
+/**
+ * 创建DOM元素
+ * @param {*} context 组件对象
+ * @param {*} tag 标签
+ * @param {*} data 数据
+ * @param {*} children 子对象
+ * @param {*} normalizationType 规范化模式
+ * @param {*} alwaysNormalize 是否总是规范化模式
  */
 export function createElement (
   context: Component,
@@ -58,12 +57,13 @@ export function createElement (
   /**调用创建元素函数进行真正的创建元素 */
   return _createElement(context, tag, data, children, normalizationType)
 }
-/**真正的创建元素
- * context：组件
- * tag：标签
- * data：节点数据
- * children：子组件
- * normalizationType：创建模式
+/**
+ * 真正的创建DOM元素的函数
+ * @param {*} context 组件对象
+ * @param {*} tag 组件标签
+ * @param {*} data 数据
+ * @param {*} children 子对象
+ * @param {*} normalizationType 规范化类型
  */
 export function _createElement (
   context: Component,
@@ -83,7 +83,6 @@ export function _createElement (
     )
     return createEmptyVNode()
   }
-  // object syntax in v-bind
   /**如果data被定义且data的is属性被定义的处理
    * 设置tag的值为data的is属性值
    */
@@ -94,10 +93,8 @@ export function _createElement (
   /**如果tag的值不空的处理，返回空的虚拟节点 */
   if (!tag) 
   {
-    // in case of component :is set to falsy value
     return createEmptyVNode()
   }
-  // warn against non-primitive key
   if (process.env.NODE_ENV !== 'production' &&isDef(data) && isDef(data.key) && !isPrimitive(data.key)) 
   {
     warn(
@@ -106,13 +103,10 @@ export function _createElement (
       context
     )
   }
-  // support single function children as default scoped slot
   /**如果children为数组且第一个子对象为函数的处理
    * 设置data的scopedSlots的属性
    */
-  if (Array.isArray(children) &&
-    typeof children[0] === 'function'
-  ) 
+  if (Array.isArray(children) &&typeof children[0] === 'function') 
   {
     data = data || {}
     data.scopedSlots = { default: children[0] }

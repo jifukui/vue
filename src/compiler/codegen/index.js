@@ -8,8 +8,11 @@ import { baseWarn, pluckModuleFunction } from '../helpers'
 type TransformFunction = (el: ASTElement, code: string) => string;
 type DataGenFunction = (el: ASTElement) => string;
 type DirectiveFunction = (el: ASTElement, dir: ASTDirective, warn: Function) => boolean;
-
-export class CodegenState {
+/**
+ * 代码产生的实现
+ */
+export class CodegenState 
+{
   options: CompilerOptions;
   warn: Function;
   transforms: Array<TransformFunction>;
@@ -18,8 +21,9 @@ export class CodegenState {
   maybeComponent: (el: ASTElement) => boolean;
   onceId: number;
   staticRenderFns: Array<string>;
-
-  constructor (options: CompilerOptions) {
+  /**构造函数 */
+  constructor (options: CompilerOptions) 
+  {
     this.options = options
     this.warn = options.warn || baseWarn
     this.transforms = pluckModuleFunction(options.modules, 'transformCode')
@@ -31,44 +35,74 @@ export class CodegenState {
     this.staticRenderFns = []
   }
 }
-
+/**
+ * 上升代码的结果的结构
+ */
 export type CodegenResult = 
 {
   render: string,
   staticRenderFns: Array<string>
 };
-
+/**
+ * 代码产生的主体函数
+ * @param {*} ast 元素抽象结构
+ * @param {*} options 编译参数
+ */
 export function generate (
   ast: ASTElement | void,
   options: CompilerOptions
-): CodegenResult {
+): CodegenResult 
+{
+  /**创建新的编译器状态对象 */
   const state = new CodegenState(options)
+  /** */
   const code = ast ? genElement(ast, state) : '_c("div")'
   return {
     render: `with(this){return ${code}}`,
     staticRenderFns: state.staticRenderFns
   }
 }
-
-export function genElement (el: ASTElement, state: CodegenState): string {
-  if (el.staticRoot && !el.staticProcessed) {
+/**
+ * 
+ * @param {*} el 
+ * @param {*} state 
+ */
+export function genElement (el: ASTElement, state: CodegenState): string 
+{
+  if (el.staticRoot && !el.staticProcessed) 
+  {
     return genStatic(el, state)
-  } else if (el.once && !el.onceProcessed) {
+  } 
+  else if (el.once && !el.onceProcessed) 
+  {
     return genOnce(el, state)
-  } else if (el.for && !el.forProcessed) {
+  } 
+  else if (el.for && !el.forProcessed) 
+  {
     return genFor(el, state)
-  } else if (el.if && !el.ifProcessed) {
+  } 
+  else if (el.if && !el.ifProcessed) 
+  {
     return genIf(el, state)
-  } else if (el.tag === 'template' && !el.slotTarget) {
+  } 
+  else if (el.tag === 'template' && !el.slotTarget) 
+  {
     return genChildren(el, state) || 'void 0'
-  } else if (el.tag === 'slot') {
+  } 
+  else if (el.tag === 'slot') 
+  {
     return genSlot(el, state)
-  } else {
+  } 
+  else 
+  {
     // component or element
     let code
-    if (el.component) {
+    if (el.component) 
+    {
       code = genComponent(el.component, el, state)
-    } else {
+    } 
+    else 
+    {
       const data = el.plain ? undefined : genData(el, state)
 
       const children = el.inlineTemplate ? null : genChildren(el, state, true)
@@ -79,22 +113,33 @@ export function genElement (el: ASTElement, state: CodegenState): string {
       })`
     }
     // module transforms
-    for (let i = 0; i < state.transforms.length; i++) {
+    for (let i = 0; i < state.transforms.length; i++) 
+    {
       code = state.transforms[i](el, code)
     }
     return code
   }
 }
 
-// hoist static sub-trees out
-function genStatic (el: ASTElement, state: CodegenState): string {
+/**
+ * 
+ * @param {*} el 
+ * @param {*} state 
+ */
+function genStatic (el: ASTElement, state: CodegenState): string 
+{
   el.staticProcessed = true
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
   return `_m(${state.staticRenderFns.length - 1}${el.staticInFor ? ',true' : ''})`
 }
 
-// v-once
-function genOnce (el: ASTElement, state: CodegenState): string {
+/**
+ * 
+ * @param {*} el 
+ * @param {*} state 
+ */
+function genOnce (el: ASTElement, state: CodegenState): string 
+{
   el.onceProcessed = true
   if (el.if && !el.ifProcessed) {
     return genIf(el, state)
@@ -119,40 +164,65 @@ function genOnce (el: ASTElement, state: CodegenState): string {
     return genStatic(el, state)
   }
 }
-
+/**
+ * v-if指令的实现
+ * @param {*} el 
+ * @param {*} state 
+ * @param {*} altGen 
+ * @param {*} altEmpty 
+ */
 export function genIf (
   el: any,
   state: CodegenState,
   altGen?: Function,
   altEmpty?: string
-): string {
+): string 
+{
   el.ifProcessed = true // avoid recursion
   return genIfConditions(el.ifConditions.slice(), state, altGen, altEmpty)
 }
-
+/**
+ * v-if的具体的实现
+ * @param {*} conditions 抽象的数据的对象
+ * @param {*} state  CodegenState对象实例
+ * @param {*} altGen 
+ * @param {*} altEmpty 
+ */
 function genIfConditions (
   conditions: ASTIfConditions,
   state: CodegenState,
   altGen?: Function,
   altEmpty?: string
-): string {
-  if (!conditions.length) {
+): string 
+{
+  if (!conditions.length) 
+  {
     return altEmpty || '_e()'
   }
-
+  /**获取一个参数 */
   const condition = conditions.shift()
-  if (condition.exp) {
+  /**获取关联的参数，对于有关联的参数的处理 */
+  if (condition.exp) 
+  {
     return `(${condition.exp})?${
       genTernaryExp(condition.block)
     }:${
       genIfConditions(conditions, state, altGen, altEmpty)
     }`
-  } else {
+  } 
+  /**对于没有关联的参数的处理 */
+  else 
+  {
     return `${genTernaryExp(condition.block)}`
   }
 
   // v-if with v-once should generate code like (a)?_m(0):_m(1)
-  function genTernaryExp (el) {
+  /**
+   * 
+   * @param {*} el 
+   */
+  function genTernaryExp (el) 
+  {
     return altGen
       ? altGen(el, state)
       : el.once
@@ -160,7 +230,13 @@ function genIfConditions (
         : genElement(el, state)
   }
 }
-
+/**
+ * 
+ * @param {*} el 
+ * @param {*} state 
+ * @param {*} altGen 
+ * @param {*} altHelper 
+ */
 export function genFor (
   el: any,
   state: CodegenState,
@@ -192,8 +268,13 @@ export function genFor (
       `return ${(altGen || genElement)(el, state)}` +
     '})'
 }
-
-export function genData (el: ASTElement, state: CodegenState): string {
+/**
+ * 产生数据
+ * @param {*} el 
+ * @param {*} state 
+ */
+export function genData (el: ASTElement, state: CodegenState): string 
+{
   let data = '{'
 
   // directives first.

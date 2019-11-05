@@ -2,7 +2,7 @@
 
 import { warn } from 'core/util/index'
 /**
- * 
+ * 定义对于on事件的处理
  * @param {*} el DOM元素
  * @param {*} dir 
  */

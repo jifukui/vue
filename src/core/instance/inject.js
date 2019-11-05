@@ -13,6 +13,7 @@ import { defineReactive, observerState } from '../observer/index'
 export function initProvide (vm: Component) 
 {
   const provide = vm.$options.provide
+  /**对于provide的属性存在且是函数的处理 */
   if (provide) 
   {
     vm._provided = typeof provide === 'function'
@@ -20,8 +21,9 @@ export function initProvide (vm: Component)
       : provide
   }
 }
-/**初始化注射
- * vm：为组件对象
+/**
+ * 注射初始化
+ * @param {*} vm 
  */
 export function initInjections (vm: Component) 
 {

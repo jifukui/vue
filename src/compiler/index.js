@@ -5,11 +5,8 @@ import { optimize } from './optimizer'
 import { generate } from './codegen/index'
 import { createCompilerCreator } from './create-compiler'
 
-// `createCompilerCreator` allows creating compilers that use alternative
-// parser/optimizer/codegen, e.g the SSR optimizing compiler.
-// Here we just export a default compiler using the default parts.
 /**
- * 设置createCompiler的值为创建编译器产生器函数
+ * 创造编译器产生器
  */
 export const createCompiler = createCompilerCreator(function baseCompile (
   template: string,

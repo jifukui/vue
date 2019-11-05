@@ -18,7 +18,7 @@ export function initEvents (vm: Component)
 {
   vm._events = Object.create(null)
   vm._hasHookEvent = false
-  // init parent attached events
+  /**获取 */
   const listeners = vm.$options._parentListeners
   /**如果组件的存在父组件的监听器属性的处理
    * 更新当前组件的监听器
@@ -51,10 +51,11 @@ function remove (event, fn)
 {
   target.$off(event, fn)
 }
-/**更新组件的监视器
- * vm：组件对象
- * listeners:新的监听器对象
- * OldListeners:老的监听器对象
+/**
+ * 更新组件的监听器
+ * @param {*} vm 组件
+ * @param {*} listeners 监听器 
+ * @param {*} oldListeners 老的监听器
  */
 export function updateComponentListeners (
   vm: Component,

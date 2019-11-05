@@ -15,7 +15,10 @@ import VNode, { cloneVNodes, createEmptyVNode } from '../vdom/vnode'
 
 import { isUpdatingChildComponent } from './lifecycle'
 /**初始化渲染
- * vm：组件对象
+ * 定义组件的槽和扩展槽的处理
+ * 定义组件创建DOM元素的实现
+ * 定义组件的属性和监听器改变的处理
+ * vm：组件对象或Vue组件
  */
 export function initRender (vm: Component) 
 {
@@ -26,27 +29,17 @@ export function initRender (vm: Component)
   const parentVnode = vm.$vnode = options._parentVnode // the placeholder node in parent tree
   /**父对象的内容 */
   const renderContext = parentVnode && parentVnode.context
-  /** */
+  /**确定槽的参数 */
   vm.$slots = resolveSlots(options._renderChildren, renderContext)
-  /** */
+  /**设置槽范围的参数为空的对象 */
   vm.$scopedSlots = emptyObject
-  // bind the createElement fn to this instance
-  // so that we get proper render context inside it.
-  // args order: tag, data, children, normalizationType, alwaysNormalize
-  // internal version is used by render functions compiled from templates
-  /**创建文本元素 */
+  /**设置_c函数的方法为创建DOM元素*/
   vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
-  // normalization is always applied for the public version, used in
-  // user-written render functions.
-  /** */
+  /**设置对象$createElement的属相为创建DOM元素 强制使用规范格式*/
   vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
 
-  // $attrs & $listeners are exposed for easier HOC creation.
-  // they need to be reactive so that HOCs using them are always updated
   /**获取父数据 */
   const parentData = parentVnode && parentVnode.data
-
-  /* istanbul ignore else */
   /**给组件添加attrs和listeners的处理 */
   if (process.env.NODE_ENV !== 'production') 
   {
@@ -63,7 +56,7 @@ export function initRender (vm: Component)
     defineReactive(vm, '$listeners', options._parentListeners || emptyObject, null, true)
   }
 }
-/**渲染的混合
+/**渲染的混入
  * Vue：组件对象
  */
 export function renderMixin (Vue: Class<Component>) 
@@ -76,7 +69,7 @@ export function renderMixin (Vue: Class<Component>)
   {
     return nextTick(fn, this)
   }
-  /**定义Vue的渲染属性 */
+  /**定义Vue的渲染属性函数的处理 */
   Vue.prototype._render = function (): VNode 
   {
     const vm: Component = this
@@ -85,14 +78,13 @@ export function renderMixin (Vue: Class<Component>)
     /**对于组件被挂载的处理 */
     if (vm._isMounted) 
     {
-      // if the parent didn't update, the slot nodes will be the ones from
-      // last render. They need to be cloned to ensure "freshness" for this render.
       /**遍历组件的$slots的所有属性
        * 如果值的渲染属性为真深度的克隆此阐述到此组件的属性中
        */
       for (const key in vm.$slots) 
       {
         const slot = vm.$slots[key]
+        /**对于已经被渲染的处理 */
         if (slot._rendered) 
         {
           vm.$slots[key] = cloneVNodes(slot, true /* deep */)
@@ -109,13 +101,12 @@ export function renderMixin (Vue: Class<Component>)
     let vnode
     try 
     {
+      /**调用call方法 */
       vnode = render.call(vm._renderProxy, vm.$createElement)
-    } catch (e) 
+    } 
+    catch (e) 
     {
       handleError(e, vm, `render`)
-      // return error render result,
-      // or previous vnode to prevent render error causing blank component
-      /* istanbul ignore else */
       if (process.env.NODE_ENV !== 'production') 
       {
         if (vm.$options.renderError) 
@@ -140,7 +131,7 @@ export function renderMixin (Vue: Class<Component>)
         vnode = vm._vnode
       }
     }
-    // return empty vnode in case the render function errored out
+    /**vNode为渲染的对象，如果vnode的实例不是VNode */
     if (!(vnode instanceof VNode)) 
     {
       if (process.env.NODE_ENV !== 'production' && Array.isArray(vnode)) 

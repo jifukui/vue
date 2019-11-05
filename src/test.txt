@@ -7,24 +7,24 @@
 │  │  to-function.js
 │  │  
 │  ├─codegen
-│  │      events.js
+│  │      events.js                     事件处理相关的代码产生
 │  │      index.js
 │  │      
-│  ├─directives
-│  │      bind.js
-│  │      index.js
-│  │      model.js
-│  │      on.js
+│  ├─directives                         相关指令的编译
+│  │      bind.js                       产生bind的处理代码
+│  │      index.js                      导出on或者是Bind方法
+│  │      model.js                      组件模式的处理
+│  │      on.js                         产生on的处理代码
 │  │      
 │  └─parser
-│          entity-decoder.js
+│          entity-decoder.js            解码相关
 │          filter-parser.js
 │          html-parser.js
 │          index.js
 │          text-parser.js
 │          
 ├─core
-│  │  config.js                         定义配置
+│  │  config.js                         定义配置Vue的一些配置
 │  │  index.js                          
 │  │  
 │  ├─components
@@ -32,7 +32,7 @@
 │  │      keep-alive.js                 销毁活跃的组件
 │  │      
 │  ├─global-api                         全局的函数接口实现
-│  │      assets.js                     Vue对象组件，指令，过滤的实现。并添加到当前对象中。
+│  │      assets.js                     Vue对象组件，指令，过滤的资源的注册。并添加到当前对象中。
 │  │      extend.js                     全局API的扩展的实现，初始化props属性和computed属性
 │  │      index.js                      初始化全局API函数
 │  │      mixin.js                      将两个对象的属性进行混合（调用混合函数）返回混合后的此对象
@@ -54,10 +54,10 @@
 │  │          check-keycodes.js
 │  │          index.js
 │  │          render-list.js
-│  │          render-slot.js
+│  │          render-slot.js                     
 │  │          render-static.js                  静态渲染相关
 │  │          resolve-filter.js
-│  │          resolve-slots.js
+│  │          resolve-slots.js                  槽的确定
 │  │          
 │  ├─observer                                   发布订阅的处理
 │  │      array.js                              数组的实现
@@ -78,7 +78,7 @@
 │  │      
 │  └─vdom
 │      │  create-component.js
-│      │  create-element.js
+│      │  create-element.js                     创建DOM元素相关
 │      │  create-functional-component.js
 │      │  patch.js
 │      │  vnode.js                              虚拟节点相关类的实现
@@ -99,10 +99,10 @@
 │              ref.js
 │              
 ├─platforms
-│  ├─web
-│  │  │  entry-compiler.js
-│  │  │  entry-runtime-with-compiler.js
-│  │  │  entry-runtime.js
+│  ├─web        
+│  │  │  entry-compiler.js                      综合性
+│  │  │  entry-runtime-with-compiler.js         元素挂载的实现
+│  │  │  entry-runtime.js                       综合性
 │  │  │  entry-server-basic-renderer.js
 │  │  │  entry-server-renderer.js
 │  │  │  
@@ -112,10 +112,10 @@
 │  │  │  │  util.js
 │  │  │  │  
 │  │  │  ├─directives
-│  │  │  │      html.js
-│  │  │  │      index.js
-│  │  │  │      model.js
-│  │  │  │      text.js
+│  │  │  │      html.js                 向props中添加innerHTML属性和值
+│  │  │  │      index.js                导出html,text,model属性
+│  │  │  │      model.js                根据元素对象的类型和值进行分别模式化处理
+│  │  │  │      text.js                 向props中添加textContent属性和值
 │  │  │  │      
 │  │  │  └─modules
 │  │  │          class.js
@@ -165,12 +165,12 @@
 │  │  │          style.js
 │  │  │          
 │  │  └─util
-│  │          attrs.js
-│  │          class.js
-│  │          compat.js                 函数shouldDecode判断内容中是否存在编码的字符
-│  │          element.js
-│  │          index.js                  检测对象是否存在
-│  │          style.js
+│  │          attrs.js                  判断属性是否是需要的属性返回是否
+│  │          class.js                  class的合并以及字符串化
+│  │          compat.js                 主要是判断字符是否存在于检索字符中
+│  │          element.js                元素的处理
+│  │          index.js                  返回此对象的DOM元素
+│  │          style.js                  样式的相关处理
 │  │          
 │  └─weex
 │      │  entry-compiler.js

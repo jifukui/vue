@@ -41,7 +41,12 @@ let platformMustUseProp
 let platformGetTagNamespace
 
 type Attr = { name: string; value: string };
-
+/**
+ * 产生抽象元素
+ * @param {*} tag 
+ * @param {*} attrs 
+ * @param {*} parent 
+ */
 export function createASTElement (
   tag: string,
   attrs: Array<Attr>,
@@ -60,10 +65,16 @@ export function createASTElement (
 /**
  * Convert HTML string to AST.
  */
+/**
+ * 将HTML文本转换为抽象结构
+ * @param {*} template HTML字符串，即模板字符串
+ * @param {*} options 抽象结构体
+ */
 export function parse (
   template: string,
   options: CompilerOptions
-): ASTElement | void {
+): ASTElement | void 
+{
   warn = options.warn || baseWarn
 
   platformIsPreTag = options.isPreTag || no
@@ -83,24 +94,37 @@ export function parse (
   let inVPre = false
   let inPre = false
   let warned = false
-
+  /**
+   * 警告一次的处理，
+   * 如果没有警告过进行警告，如果已经警告过不在进行警告
+   * @param {*} msg 
+   */
   function warnOnce (msg) {
-    if (!warned) {
+    if (!warned) 
+    {
       warned = true
       warn(msg)
     }
   }
-
-  function endPre (element) {
+  /**
+   * 
+   * @param {*} element 
+   */
+  function endPre (element) 
+  {
     // check pre state
-    if (element.pre) {
+    if (element.pre) 
+    {
       inVPre = false
     }
-    if (platformIsPreTag(element.tag)) {
+    if (platformIsPreTag(element.tag)) 
+    {
       inPre = false
     }
   }
-
+  /**
+   * 
+   */
   parseHTML(template, {
     warn,
     expectHTML: options.expectHTML,
@@ -108,14 +132,16 @@ export function parse (
     canBeLeftOpenTag: options.canBeLeftOpenTag,
     shouldDecodeNewlines: options.shouldDecodeNewlines,
     shouldKeepComment: options.comments,
-    start (tag, attrs, unary) {
+    start (tag, attrs, unary) 
+    {
       // check namespace.
       // inherit parent ns if there is one
       const ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag)
 
       // handle IE svg bug
       /* istanbul ignore if */
-      if (isIE && ns === 'svg') {
+      if (isIE && ns === 'svg') 
+      {
         attrs = guardIESVGBug(attrs)
       }
 
@@ -286,30 +312,55 @@ export function parse (
   })
   return root
 }
-
-function processPre (el) {
-  if (getAndRemoveAttr(el, 'v-pre') != null) {
+/**
+ * 预指令的处理
+ * 获取元素对象中的预处理的属性值，
+ * 如果值不为NULL设置值的pre属性的值为真
+ * @param {*} el 
+ */
+function processPre (el) 
+{
+  if (getAndRemoveAttr(el, 'v-pre') != null) 
+  {
     el.pre = true
   }
 }
-
-function processRawAttrs (el) {
+/**
+ * 原始属性的处理
+ * @param {*} el 
+ */
+function processRawAttrs (el) 
+{
+  /**获取对象的属性数组 */
   const l = el.attrsList.length
-  if (l) {
+  /**对于数组长度大于0的处理
+   * 将属性名和属性值组成的数组存储在el的attrs数组中
+   */
+  if (l) 
+  {
     const attrs = el.attrs = new Array(l)
-    for (let i = 0; i < l; i++) {
+    for (let i = 0; i < l; i++) 
+    {
       attrs[i] = {
         name: el.attrsList[i].name,
         value: JSON.stringify(el.attrsList[i].value)
       }
     }
-  } else if (!el.pre) {
+  } 
+  /**对于el的预处理属性为假的处理，设置元素的plain属性为真 */
+  else if (!el.pre) 
+  {
     // non root node in pre blocks with no attributes
     el.plain = true
   }
 }
-
-export function processElement (element: ASTElement, options: CompilerOptions) {
+/**
+ * 处理元素
+ * @param {*} element 
+ * @param {*} options 
+ */
+export function processElement (element: ASTElement, options: CompilerOptions) 
+{
   processKey(element)
 
   // determine whether this is a plain element after
@@ -319,31 +370,52 @@ export function processElement (element: ASTElement, options: CompilerOptions) {
   processRef(element)
   processSlot(element)
   processComponent(element)
-  for (let i = 0; i < transforms.length; i++) {
+  for (let i = 0; i < transforms.length; i++) 
+  {
     element = transforms[i](element, options) || element
   }
   processAttrs(element)
 }
-
+/**
+ * 处理key属性
+ * 如果此属性存在设置此元素的key属性的值为返回的表达式
+ * @param {*} el 
+ */
 function processKey (el) {
   const exp = getBindingAttr(el, 'key')
-  if (exp) {
-    if (process.env.NODE_ENV !== 'production' && el.tag === 'template') {
+  if (exp) 
+  {
+    if (process.env.NODE_ENV !== 'production' && el.tag === 'template') 
+    {
       warn(`<template> cannot be keyed. Place the key on real elements instead.`)
     }
     el.key = exp
   }
 }
-
-function processRef (el) {
+/**
+ * 处理ref属性
+ * @param {*} el 
+ */
+function processRef (el) 
+{
+  /**获取此对象ref属性的值 */
   const ref = getBindingAttr(el, 'ref')
-  if (ref) {
+  /**对于值不为假的处理
+   * 设置el的ref属性为ref属性的值
+   * 设置refInFor，即是否有for属性
+   */
+  if (ref) 
+  {
     el.ref = ref
     el.refInFor = checkInFor(el)
   }
 }
-
-export function processFor (el: ASTElement) {
+/**
+ * for指令的处理
+ * @param {*} el 
+ */
+export function processFor (el: ASTElement) 
+{
   let exp
   if ((exp = getAndRemoveAttr(el, 'v-for'))) {
     const inMatch = exp.match(forAliasRE)
@@ -367,7 +439,10 @@ export function processFor (el: ASTElement) {
     }
   }
 }
-
+/**
+ * 
+ * @param {*} el 
+ */
 function processIf (el) {
   const exp = getAndRemoveAttr(el, 'v-if')
   if (exp) {
@@ -386,7 +461,11 @@ function processIf (el) {
     }
   }
 }
-
+/**
+ * 
+ * @param {*} el 
+ * @param {*} parent 
+ */
 function processIfConditions (el, parent) {
   const prev = findPrevElement(parent.children)
   if (prev && prev.if) {
@@ -401,7 +480,10 @@ function processIfConditions (el, parent) {
     )
   }
 }
-
+/**
+ * 
+ * @param {*} children 
+ */
 function findPrevElement (children: Array<any>): ASTElement | void {
   let i = children.length
   while (i--) {
@@ -418,21 +500,31 @@ function findPrevElement (children: Array<any>): ASTElement | void {
     }
   }
 }
-
+/**
+ * 
+ * @param {*} el 
+ * @param {*} condition 
+ */
 export function addIfCondition (el: ASTElement, condition: ASTIfCondition) {
   if (!el.ifConditions) {
     el.ifConditions = []
   }
   el.ifConditions.push(condition)
 }
-
+/**
+ * 
+ * @param {*} el 
+ */
 function processOnce (el) {
   const once = getAndRemoveAttr(el, 'v-once')
   if (once != null) {
     el.once = true
   }
 }
-
+/**
+ * 
+ * @param {*} el 
+ */
 function processSlot (el) {
   if (el.tag === 'slot') {
     el.slotName = getBindingAttr(el, 'name')
@@ -472,7 +564,10 @@ function processSlot (el) {
     }
   }
 }
-
+/**
+ * 组件处理
+ * @param {*} el 
+ */
 function processComponent (el) {
   let binding
   if ((binding = getBindingAttr(el, 'is'))) {
@@ -482,7 +577,10 @@ function processComponent (el) {
     el.inlineTemplate = true
   }
 }
-
+/**
+ * 
+ * @param {*} el 
+ */
 function processAttrs (el) {
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, isProp
@@ -558,19 +656,28 @@ function processAttrs (el) {
     }
   }
 }
-
+/**
+ * 判断此属性向上是否有for属性
+ * @param {*} el 
+ */
 function checkInFor (el: ASTElement): boolean {
   let parent = el
-  while (parent) {
-    if (parent.for !== undefined) {
+  while (parent) 
+  {
+    if (parent.for !== undefined) 
+    {
       return true
     }
     parent = parent.parent
   }
   return false
 }
-
-function parseModifiers (name: string): Object | void {
+/**
+ * 
+ * @param {*} name 
+ */
+function parseModifiers (name: string): Object | void 
+{
   const match = name.match(modifierRE)
   if (match) {
     const ret = {}
@@ -578,14 +685,20 @@ function parseModifiers (name: string): Object | void {
     return ret
   }
 }
-
-function makeAttrsMap (attrs: Array<Object>): Object {
+/**
+ * 
+ * @param {*} attrs 
+ */
+function makeAttrsMap (attrs: Array<Object>): Object 
+{
   const map = {}
-  for (let i = 0, l = attrs.length; i < l; i++) {
+  for (let i = 0, l = attrs.length; i < l; i++) 
+  {
     if (
       process.env.NODE_ENV !== 'production' &&
       map[attrs[i].name] && !isIE && !isEdge
-    ) {
+    ) 
+    {
       warn('duplicate attribute: ' + attrs[i].name)
     }
     map[attrs[i].name] = attrs[i].value
@@ -594,10 +707,17 @@ function makeAttrsMap (attrs: Array<Object>): Object {
 }
 
 // for script (e.g. type="x/template") or style, do not decode content
+/**
+ * 判断是否是文本标签即是否是script和style标签
+ * @param {*} el 
+ */
 function isTextTag (el): boolean {
   return el.tag === 'script' || el.tag === 'style'
 }
-
+/**
+ * 
+ * @param {*} el 
+ */
 function isForbiddenTag (el): boolean {
   return (
     el.tag === 'style' ||
@@ -611,7 +731,10 @@ function isForbiddenTag (el): boolean {
 const ieNSBug = /^xmlns:NS\d+/
 const ieNSPrefix = /^NS\d+:/
 
-/* istanbul ignore next */
+/**
+ * 
+ * @param {*} attrs 
+ */
 function guardIESVGBug (attrs) {
   const res = []
   for (let i = 0; i < attrs.length; i++) {
@@ -623,8 +746,13 @@ function guardIESVGBug (attrs) {
   }
   return res
 }
-
-function checkForAliasModel (el, value) {
+/**
+ * 
+ * @param {*} el 
+ * @param {*} value 
+ */
+function checkForAliasModel (el, value) 
+{
   let _el = el
   while (_el) {
     if (_el.for && _el.alias === value) {

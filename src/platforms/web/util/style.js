@@ -1,12 +1,15 @@
 /* @flow */
 
 import { cached, extend, toObject } from 'shared/util'
-
+/**
+ * 分析处理样式的文本内容
+ */
 export const parseStyleText = cached(function (cssText) 
 {
   const res = {}
   const listDelimiter = /;(?![^(]*\))/g
   const propertyDelimiter = /:(.+)/
+  /** */
   cssText.split(listDelimiter).forEach(function (item) 
   {
     if (item) 
@@ -18,12 +21,16 @@ export const parseStyleText = cached(function (cssText)
   return res
 })
 
-// merge static and dynamic style data on the same vnode
-/**聚合静态和动态样式
- * data:
+/**
+ * 获取data数据的style属性值
+ * 并将此属性值转换为对象形式
+ * 如果data的静态样式不存在返回样式
+ * 如果静态样式存在返回静态样式和样式的合并
+ * @param {*} data 
  */
 function normalizeStyleData (data: VNodeData): ?Object 
 {
+  /**将传入数据的style属性转换为对象形式存放在style变量中 */
   const style = normalizeStyleBinding(data.style)
   // static style is pre-processed into an object during compilation
   // and is always a fresh object, so it's safe to merge into it
@@ -32,8 +39,10 @@ function normalizeStyleData (data: VNodeData): ?Object
     : style
 }
 
-// normalize possible array / string values into Object
-/**将字符串或者是数组转换为对象形式 */
+/**
+ * 将字符串或者是数组转换为对象形式
+ * @param {*} bindingStyle 
+ */
 export function normalizeStyleBinding (bindingStyle: any): ?Object 
 {
   if (Array.isArray(bindingStyle)) 
@@ -46,14 +55,10 @@ export function normalizeStyleBinding (bindingStyle: any): ?Object
   }
   return bindingStyle
 }
-
 /**
- * parent component style should be after child's
- * so that parent component's style could override it
- */
-/**获取样式
- * Vnode：
- * checkChild:
+ * 
+ * @param {*} vnode 
+ * @param {*} checkChild 
  */
 export function getStyle (vnode: VNode, checkChild: boolean): Object 
 {

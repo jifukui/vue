@@ -4,7 +4,7 @@ import config from '../config'
 import { ASSET_TYPES } from 'shared/constants'
 import { warn, isPlainObject } from '../util/index'
 /**
- * 定义Vue的一些方法的处理
+ * 定义Vue的一些方法的处理，初始化资源注册
  * component
  * directive
  * filter

@@ -12,7 +12,7 @@ const buildRegex = cached(delimiters => {
   return new RegExp(open + '((?:.|\\n)+?)' + close, 'g')
 })
 /**
- * 
+ * 分析处理文本
  * @param {*} text 
  * @param {*} delimiters 
  */

@@ -175,15 +175,13 @@ export function observe (value: any, asRootData: ?boolean): Observer | void
 }
 
 /**
- * Define a reactive property on an Object.
+ * 定义对象的反应属性
+ * @param {*} obj 反应的对象
+ * @param {*} key 属性
+ * @param {*} val 值
+ * @param {*} customSetter 用户定义的设置处理函数
+ * @param {*} shallow 是否隐藏
  */
-/**定义对象的反应属性
- * obj:反应的对象
- * key:属性值
- * val:值
- * customSetter:用户定义的设置处理函数
- * shallow：是否隐藏
-*/
 export function defineReactive (
   obj: Object,
   key: string,

@@ -7,7 +7,7 @@ export const namespaceMap = {
   svg: 'http://www.w3.org/2000/svg',
   math: 'http://www.w3.org/1998/Math/MathML'
 }
-
+/**HTML标签 */
 export const isHTMLTag = makeMap(
   'html,body,base,head,link,meta,style,title,' +
   'address,article,aside,footer,header,h1,h2,h3,h4,h5,h6,hgroup,nav,section,' +
@@ -30,46 +30,70 @@ export const isSVG = makeMap(
   'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
   true
 )
-
+/**判断是否是预指令 */
 export const isPreTag = (tag: ?string): boolean => tag === 'pre'
-
-export const isReservedTag = (tag: string): ?boolean => {
+/**
+ * 判断是否是预留指令 
+ * @param {*} tag 
+ */
+export const isReservedTag = (tag: string): ?boolean => 
+{
   return isHTMLTag(tag) || isSVG(tag)
 }
-
+/**
+ * 
+ * @param {*} tag 
+ */
 export function getTagNamespace (tag: string): ?string {
-  if (isSVG(tag)) {
+  if (isSVG(tag)) 
+  {
     return 'svg'
   }
   // basic support for MathML
   // note it doesn't support other MathML elements being component roots
-  if (tag === 'math') {
+  if (tag === 'math') 
+  {
     return 'math'
   }
 }
 
 const unknownElementCache = Object.create(null)
-export function isUnknownElement (tag: string): boolean {
-  /* istanbul ignore if */
-  if (!inBrowser) {
+/**
+ * 
+ * @param {*} tag 
+ */
+export function isUnknownElement (tag: string): boolean 
+{
+  /**如果不是浏览器环境返回真 */
+  if (!inBrowser) 
+  {
     return true
   }
-  if (isReservedTag(tag)) {
+  /**如果是预留的标签返回假 */
+  if (isReservedTag(tag)) 
+  {
     return false
   }
+  /**将标签小写转换 */
   tag = tag.toLowerCase()
-  /* istanbul ignore if */
-  if (unknownElementCache[tag] != null) {
+  /**如果此标签存在于未知元素中返回此未知元素的值 */
+  if (unknownElementCache[tag] != null) 
+  {
     return unknownElementCache[tag]
   }
   const el = document.createElement(tag)
-  if (tag.indexOf('-') > -1) {
+  /**对于标签中有连接号的处理 */
+  if (tag.indexOf('-') > -1) 
+  {
     // http://stackoverflow.com/a/28210364/1070244
     return (unknownElementCache[tag] = (
       el.constructor === window.HTMLUnknownElement ||
       el.constructor === window.HTMLElement
     ))
-  } else {
+  }
+  /**对于不在在连接号的处理 */ 
+  else 
+  {
     return (unknownElementCache[tag] = /HTMLUnknownElement/.test(el.toString()))
   }
 }

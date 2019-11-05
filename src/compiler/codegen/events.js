@@ -36,7 +36,7 @@ const modifierCode: { [key: string]: string } =
   right: genGuard(`'button' in $event && $event.button !== 2`)
 }
 /**
- * 
+ * 参数处理代码
  * @param {*} events 
  * @param {*} isNative 
  * @param {*} warn 
@@ -72,7 +72,7 @@ export function genHandlers (
   return res.slice(0, -1) + '}'
 }
 /**
- * 产生处理
+ * 产生处理代码
  * @param {*} name 事件名称
  * @param {*} handler 事件处理函数
  */
@@ -151,7 +151,7 @@ function genHandler (
   }
 }
 /**
- * 产生过滤器
+ * 产生键值过滤器代码
  * @param {*} keys 
  */
 function genKeyFilter (keys: Array<string>): string 

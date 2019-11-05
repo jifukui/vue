@@ -52,15 +52,21 @@ function decodeAttr (value, shouldDecodeNewlines) {
   const re = shouldDecodeNewlines ? encodedAttrWithNewLines : encodedAttr
   return value.replace(re, match => decodingMap[match])
 }
-
-export function parseHTML (html, options) {
+/**
+ * 分析HTML
+ * @param {*} html 
+ * @param {*} options 
+ */
+export function parseHTML (html, options) 
+{
   const stack = []
   const expectHTML = options.expectHTML
   const isUnaryTag = options.isUnaryTag || no
   const canBeLeftOpenTag = options.canBeLeftOpenTag || no
   let index = 0
   let last, lastTag
-  while (html) {
+  while (html) 
+  {
     last = html
     // Make sure we're not in a plaintext content element like script/style
     if (!lastTag || !isPlainTextElement(lastTag)) {
@@ -178,13 +184,20 @@ export function parseHTML (html, options) {
 
   // Clean up any remaining tags
   parseEndTag()
-
-  function advance (n) {
+  /**
+   * 
+   * @param {*} n 
+   */
+  function advance (n) 
+  {
     index += n
     html = html.substring(n)
   }
-
-  function parseStartTag () {
+  /**
+   * 分析开始标签
+   */
+  function parseStartTag () 
+  {
     const start = html.match(startTagOpen)
     if (start) {
       const match = {
@@ -206,7 +219,10 @@ export function parseHTML (html, options) {
       }
     }
   }
-
+  /**
+   * 开始标签的处理
+   * @param {*} match 
+   */
   function handleStartTag (match) {
     const tagName = match.tagName
     const unarySlash = match.unarySlash
@@ -251,8 +267,14 @@ export function parseHTML (html, options) {
       options.start(tagName, attrs, unary, match.start, match.end)
     }
   }
-
-  function parseEndTag (tagName, start, end) {
+  /**
+   * 结束标签的处理
+   * @param {*} tagName 
+   * @param {*} start 
+   * @param {*} end 
+   */
+  function parseEndTag (tagName, start, end) 
+  {
     let pos, lowerCasedTagName
     if (start == null) start = index
     if (end == null) end = index

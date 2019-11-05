@@ -1,24 +1,30 @@
 /* @flow */
 
 /**
- * Cross-platform code generation for component v-model
+ * 产生组件模式
+ * @param {*} el 
+ * @param {*} value 
+ * @param {*} modifiers 
  */
 export function genComponentModel (
   el: ASTElement,
   value: string,
   modifiers: ?ASTModifiers
-): ?boolean {
+): ?boolean 
+{
   const { number, trim } = modifiers || {}
-
+  /**设置基本的表达式 */
   const baseValueExpression = '$$v'
   let valueExpression = baseValueExpression
-  if (trim) {
+  if (trim) 
+  {
     valueExpression =
       `(typeof ${baseValueExpression} === 'string'` +
         `? ${baseValueExpression}.trim()` +
         `: ${baseValueExpression})`
   }
-  if (number) {
+  if (number) 
+  {
     valueExpression = `_n(${valueExpression})`
   }
   const assignment = genAssignmentCode(value, valueExpression)
@@ -31,16 +37,25 @@ export function genComponentModel (
 }
 
 /**
- * Cross-platform codegen helper for generating v-model value assignment code.
+ * 根据传入的数值，设置其数值或是设置方法
+ * @param {*} value 
+ * @param {*} assignment 
  */
 export function genAssignmentCode (
   value: string,
   assignment: string
-): string {
+): string 
+{
+  /**返回进行模块化处理结束后的值 */
   const res = parseModel(value)
-  if (res.key === null) {
+  /**对于值不为空的处理设置value的值为assignment的值 */
+  if (res.key === null) 
+  {
     return `${value}=${assignment}`
-  } else {
+  } 
+  /**对于值为空的处理 */
+  else 
+  {
     return `$set(${res.exp}, ${res.key}, ${assignment})`
   }
 }
@@ -66,79 +81,134 @@ type ModelParseResult = {
   exp: string,
   key: string | null
 }
-
-export function parseModel (val: string): ModelParseResult {
+/**
+ * 模块分析
+ * @param {*} val 
+ */
+export function parseModel (val: string): ModelParseResult 
+{
+  /**获取字符串的长度 */
   len = val.length
-
-  if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
+  /**对于字符串中不存在方括号的处理 */
+  if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) 
+  {
+    /**获取最后一个点号的位置 */
     index = val.lastIndexOf('.')
-    if (index > -1) {
+    /**对于找到点号的处理
+     * 设置exp为属性key为值
+     */
+    if (index > -1) 
+    {
       return {
         exp: val.slice(0, index),
         key: '"' + val.slice(index + 1) + '"'
       }
-    } else {
+    } 
+    /**对于没有找到点号的处理 */
+    else 
+    {
       return {
         exp: val,
         key: null
       }
     }
   }
-
+  /**对于存在方括号的处理 */
   str = val
   index = expressionPos = expressionEndPos = 0
 
-  while (!eof()) {
+  while (!eof()) 
+  {
     chr = next()
-    /* istanbul ignore if */
-    if (isStringStart(chr)) {
+    /**对于是头字符的处理 */
+    if (isStringStart(chr)) 
+    {
       parseString(chr)
-    } else if (chr === 0x5B) {
+    } 
+    /**对于是方括号的处理 */
+    else if (chr === 0x5B) 
+    {
       parseBracket(chr)
     }
   }
 
-  return {
+  return 
+  {
     exp: val.slice(0, expressionPos),
     key: val.slice(expressionPos + 1, expressionEndPos)
   }
 }
-
-function next (): number {
+/**
+ * 获取字符串的下一个字符的编码值
+ */
+function next (): number 
+{
   return str.charCodeAt(++index)
 }
-
-function eof (): boolean {
+/**
+ * 判断是否到了字符串的结尾
+ */
+function eof (): boolean 
+{
   return index >= len
 }
-
-function isStringStart (chr: number): boolean {
+/**
+ * 是否是字符串的开始，即判断传入的参数是否时单引号或者是双引号
+ * @param {*} chr 
+ */
+function isStringStart (chr: number): boolean 
+{
   return chr === 0x22 || chr === 0x27
 }
-
-function parseBracket (chr: number): void {
+/**
+ * 方括号的处理，返回找到匹配的方括号结束位置
+ * @param {*} chr 
+ */
+function parseBracket (chr: number): void 
+{
   let inBracket = 1
   expressionPos = index
-  while (!eof()) {
+  while (!eof()) 
+  {
     chr = next()
-    if (isStringStart(chr)) {
+    if (isStringStart(chr)) 
+    {
       parseString(chr)
       continue
     }
-    if (chr === 0x5B) inBracket++
-    if (chr === 0x5D) inBracket--
-    if (inBracket === 0) {
+    /**对于是方括号的处理 */
+    if (chr === 0x5B) 
+    {
+      inBracket++
+    }
+    /**对于是方括号结束的处理 */
+    if (chr === 0x5D) 
+    {
+      inBracket--
+    }
+    if (inBracket === 0) 
+    {
       expressionEndPos = index
       break
     }
   }
 }
-
-function parseString (chr: number): void {
+/**
+ * 字符串分析
+ * 在字符串中寻找是否还有此字符
+ * @param {*} chr 
+ */
+function parseString (chr: number): void 
+{
   const stringQuote = chr
-  while (!eof()) {
+  /**一直循环到字符串结束 */
+  while (!eof()) 
+  {
+    /**获取下一个字符的值 */
     chr = next()
-    if (chr === stringQuote) {
+    /**如果在后续的字符串中找到此字符退出 */
+    if (chr === stringQuote) 
+    {
       break
     }
   }

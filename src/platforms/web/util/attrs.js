@@ -2,13 +2,20 @@
 
 import { makeMap } from 'shared/util'
 
-// these are reserved for web because they are directly compiled away
-// during template compilation
+/**预留属性 */
 export const isReservedAttr = makeMap('style,class')
 
 // attributes that should be using props for binding
+/**接收值的属性 */
 const acceptValue = makeMap('input,textarea,option,select,progress')
-export const mustUseProp = (tag: string, type: ?string, attr: string): boolean => {
+/**
+ * 
+ * @param {*} tag 
+ * @param {*} type 
+ * @param {*} attr 属性名称
+ */
+export const mustUseProp = (tag: string, type: ?string, attr: string): boolean => 
+{
   return (
     (attr === 'value' && acceptValue(tag)) && type !== 'button' ||
     (attr === 'selected' && tag === 'option') ||
@@ -29,15 +36,25 @@ export const isBooleanAttr = makeMap(
 )
 
 export const xlinkNS = 'http://www.w3.org/1999/xlink'
-
-export const isXlink = (name: string): boolean => {
+/**
+ * 判断是否是xlink
+ * @param {*} name 
+ */
+export const isXlink = (name: string): boolean => 
+{
   return name.charAt(5) === ':' && name.slice(0, 5) === 'xlink'
 }
-
+/**
+ * 获取xlink属性的值
+ * @param {*} name 
+ */
 export const getXlinkProp = (name: string): string => {
   return isXlink(name) ? name.slice(6, name.length) : ''
 }
-
+/**
+ * 
+ * @param {*} val 
+ */
 export const isFalsyAttrValue = (val: any): boolean => {
   return val == null || val === false
 }

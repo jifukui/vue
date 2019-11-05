@@ -1,7 +1,7 @@
 /* @flow */
 
 import { mergeOptions } from '../util/index'
-/**定义对象的混合属性 */
+/**定义全局对象的混合属性，实现全局API的混入实现 */
 export function initMixin (Vue: GlobalAPI) 
 {
   Vue.mixin = function (mixin: Object) 

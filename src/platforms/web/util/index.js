@@ -7,9 +7,9 @@ export * from './class'
 export * from './element'
 
 /**
- * Query an element selector if it's not an element already.
+ * 返回此对象的dom元素
+ * @param {*} el 字符串或者是元素DOM对象
  */
-/**查询元素是否存在 */
 export function query (el: string | Element): Element 
 {
   if (typeof el === 'string') 
