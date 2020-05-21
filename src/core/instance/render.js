@@ -20,13 +20,20 @@ import { isUpdatingChildComponent } from './lifecycle'
  * 定义组件的属性和监听器改变的处理
  * vm：组件对象或Vue组件
  */
+/**
+ * 渲染的混入
+ * 渲染的初始化
+ * @param {*} vm Vue对象
+ * 设置组件的$vnode属性为对象的_parentVnode属性的值
+ * 设置组件的$slots的值为
+ */
 export function initRender (vm: Component) 
 {
   vm._vnode = null // the root of the child tree
   /**参数 */
   const options = vm.$options
   /**父节点 */
-  const parentVnode = vm.$vnode = options._parentVnode // the placeholder node in parent tree
+  const parentVnode = vm.$vnode = options._parentVnode 
   /**父对象的内容 */
   const renderContext = parentVnode && parentVnode.context
   /**确定槽的参数 */

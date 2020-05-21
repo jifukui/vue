@@ -50,28 +50,32 @@ if (process.env.NODE_ENV !== 'production')
   }
 }
 
-
-/**将数据进行聚合
- * 将from中的属性添加至to对象
+/**
+ * 进行数据的合并，将from中的属性添加至to对象
+ * @param {*} to 数据目标
+ * @param {*} from 数据源
  */
 function mergeData (to: Object, from: ?Object): Object 
 {
+  /**对于数据源的值为空的处理，直接返回目的数据 */
   if (!from) 
   {
     return to
   }
   let key, toVal, fromVal
-  /**获取keys的所有属性 */
   const keys = Object.keys(from)
+  /**将源数据中的数据合并到目的数据 */
   for (let i = 0; i < keys.length; i++) 
   {
     key = keys[i]
     toVal = to[key]
     fromVal = from[key]
+    /**如果目的对象没有这个属性的处理添加此属性 */
     if (!hasOwn(to, key)) 
     {
       set(to, key, fromVal)
     } 
+    /**对于目的对象没有此属性且目的对象的值为对象且源对象的值为对象的处理，递归调用此函数进行深度的复制 */
     else if (isPlainObject(toVal) && isPlainObject(fromVal)) 
     {
       mergeData(toVal, fromVal)
@@ -81,16 +85,10 @@ function mergeData (to: Object, from: ?Object): Object
 }
 
 /**
- * Data
- */
-/**聚合数据或者是函数
- * parentVal：
- * childVal：
- * vm:
- * 如果vm为否 如果子对象不为空返回父对象
- * 如果vm为否 如果符对象不为空返回子对象
- * 如果vm为否 如果父子对象都为空返回聚合数据函数
- * 如果vm为真父子对象至少有一个为真的处理 返回聚合实例数据的函数
+ * 聚合数据
+ * @param {*} parentVal 
+ * @param {*} childVal 
+ * @param {*} vm Vue对象
  */
 export function mergeDataOrFn (
   parentVal: any,
@@ -98,6 +96,7 @@ export function mergeDataOrFn (
   vm?: Component
 ): ?Function 
 {
+  /**对于Vue对象不存在的处理方式 */
   if (!vm) 
   {
     // in a Vue.extend merge, both should be functions
@@ -109,11 +108,6 @@ export function mergeDataOrFn (
     {
       return childVal
     }
-    // when parentVal & childVal are both present,
-    // we need to return a function that returns the
-    // merged result of both functions... no need to
-    // check if parentVal is a function here because
-    // it has to be a function to pass previous merges.
     return function mergedDataFn () 
     {
       return mergeData(
@@ -122,6 +116,7 @@ export function mergeDataOrFn (
       )
     }
   } 
+  /**对于两个对象有一个存在的处理 */
   else if (parentVal || childVal) 
   {
     return function mergedInstanceDataFn () 
@@ -376,7 +371,7 @@ function checkComponents (options: Object)
 }
 
 
-/**对对象的属性名称经过规则处理
+/**
  * options：
  * vm：组件对象
  * 如果对象的props属性的值为假直接返回
@@ -387,9 +382,9 @@ function checkComponents (options: Object)
  * 最后设置对象的props属性值
 */
 /**
- * 
+ * 对对象的属性名称经过规则处理
  * @param {*} options Vue对象的options属性
- * @param {*} vm 
+ * @param {*} vm 组件对象
  */
 function normalizeProps (options: Object, vm: ?Component) 
 {
@@ -453,7 +448,7 @@ function normalizeProps (options: Object, vm: ?Component)
 /**
  * 
  * @param {*} options Vue对象的options属性
- * @param {*} vm 
+ * @param {*} vm Vue对象
  */
 function normalizeInject (options: Object, vm: ?Component) 
 {

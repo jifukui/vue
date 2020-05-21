@@ -3,9 +3,6 @@
 import { cloneVNode, cloneVNodes } from 'core/vdom/vnode'
 
 /**
- * Runtime helper for rendering static trees.
- */
-/**
  * 静态渲染
  * @param {*} index 
  * @param {*} isInFor 
@@ -16,16 +13,12 @@ export function renderStatic (
   isInFor?: boolean
 ): VNode | Array<VNode> 
 {
-  // static trees can be rendered once and cached on the contructor options
-  // so every instance shares the same cached trees
   /**获取此对象的静态渲染函数 */
   const renderFns = this.$options.staticRenderFns
   /**获取渲染的缓存 */
   const cached = renderFns.cached || (renderFns.cached = [])
-  /** */
+  /**获取指定的渲染对象的缓存 */
   let tree = cached[index]
-  // if has already-rendered static tree and not inside v-for,
-  // we can reuse the same tree by doing a shallow clone.
   /**对于tree的值不为空且isInFor的值为假的处理，将tree数组化 */
   if (tree && !isInFor) 
   {
@@ -40,10 +33,6 @@ export function renderStatic (
   return tree
 }
 
-/**
- * Runtime helper for v-once.
- * Effectively it means marking the node as static with a unique key.
- */
 /**
  * 标记节点为静态且只渲染一次
  * @param {*} tree 节点
@@ -63,7 +52,7 @@ export function markOnce (
  * 标记节点为静态
  * @param {*} tree  虚拟节点
  * @param {*} key 属性键
- * @param {*} isOnce 
+ * @param {*} isOnce 是否只渲染一次
  */
 function markStatic (
   tree: VNode | Array<VNode>,
@@ -93,10 +82,10 @@ function markStatic (
   }
 }
 /**
- * 设置节点相关属性
+ * 设置节点相关属性，即标记节点为静态节点
  * @param {*} node 节点
  * @param {*} key 属性值
- * @param {*} isOnce 是否一次
+ * @param {*} isOnce 是否只渲染一次
  */
 function markStaticNode (node, key, isOnce) 
 {

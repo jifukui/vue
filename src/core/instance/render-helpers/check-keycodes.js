@@ -8,6 +8,13 @@ import { hyphenate } from 'shared/util'
  * exposed as Vue.prototype._k
  * passing in eventKeyName as last argument separately for backwards compat
  */
+/**
+ * 
+ * @param {*} eventKeyCode 
+ * @param {*} key 
+ * @param {*} builtInAlias 
+ * @param {*} eventKeyName 
+ */
 export function checkKeyCodes (
   eventKeyCode: number,
   key: string,

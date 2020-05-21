@@ -39,10 +39,11 @@ let postTransforms
 let platformIsPreTag
 let platformMustUseProp
 let platformGetTagNamespace
-
+/**定义属性的格式 */
 type Attr = { name: string; value: string };
 /**
  * 产生抽象元素
+ * 根据对标签的解析产生对应的抽象结构
  * @param {*} tag 
  * @param {*} attrs 
  * @param {*} parent 
@@ -51,7 +52,8 @@ export function createASTElement (
   tag: string,
   attrs: Array<Attr>,
   parent: ASTElement | void
-): ASTElement {
+): ASTElement 
+{
   return {
     type: 1,
     tag,
@@ -69,6 +71,10 @@ export function createASTElement (
  * 将HTML文本转换为抽象结构
  * @param {*} template HTML字符串，即模板字符串
  * @param {*} options 抽象结构体
+ * 获取对象的
+ * 实现只是警告一次的函数
+ * 实现结束预处理的函数
+ * 调用分析HTML
  */
 export function parse (
   template: string,
@@ -123,7 +129,7 @@ export function parse (
     }
   }
   /**
-   * 
+   * 调用分析HTML文件
    */
   parseHTML(template, {
     warn,
@@ -132,6 +138,12 @@ export function parse (
     canBeLeftOpenTag: options.canBeLeftOpenTag,
     shouldDecodeNewlines: options.shouldDecodeNewlines,
     shouldKeepComment: options.comments,
+    /**
+     * 
+     * @param {*} tag 
+     * @param {*} attrs 
+     * @param {*} unary 
+     */
     start (tag, attrs, unary) 
     {
       // check namespace.
@@ -146,11 +158,13 @@ export function parse (
       }
 
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
-      if (ns) {
+      if (ns) 
+      {
         element.ns = ns
       }
 
-      if (isForbiddenTag(element) && !isServerRendering()) {
+      if (isForbiddenTag(element) && !isServerRendering()) 
+      {
         element.forbidden = true
         process.env.NODE_ENV !== 'production' && warn(
           'Templates should only be responsible for mapping the state to the ' +
@@ -160,22 +174,29 @@ export function parse (
       }
 
       // apply pre-transforms
-      for (let i = 0; i < preTransforms.length; i++) {
+      for (let i = 0; i < preTransforms.length; i++) 
+      {
         element = preTransforms[i](element, options) || element
       }
 
-      if (!inVPre) {
+      if (!inVPre) 
+      {
         processPre(element)
-        if (element.pre) {
+        if (element.pre) 
+        {
           inVPre = true
         }
       }
-      if (platformIsPreTag(element.tag)) {
+      if (platformIsPreTag(element.tag)) 
+      {
         inPre = true
       }
-      if (inVPre) {
+      if (inVPre) 
+      {
         processRawAttrs(element)
-      } else if (!element.processed) {
+      } 
+      else if (!element.processed) 
+      {
         // structural directives
         processFor(element)
         processIf(element)
@@ -183,16 +204,26 @@ export function parse (
         // element-scope stuff
         processElement(element, options)
       }
-
-      function checkRootConstraints (el) {
-        if (process.env.NODE_ENV !== 'production') {
-          if (el.tag === 'slot' || el.tag === 'template') {
+      /**
+       * 检测根的约束条件
+       * @param {*} el 
+       */
+      function checkRootConstraints (el) 
+      {
+        if (process.env.NODE_ENV !== 'production') 
+        {
+          /**
+           * 获取el 对象的标签
+           */
+          if (el.tag === 'slot' || el.tag === 'template') 
+          {
             warnOnce(
               `Cannot use <${el.tag}> as component root element because it may ` +
               'contain multiple nodes.'
             )
           }
-          if (el.attrsMap.hasOwnProperty('v-for')) {
+          if (el.attrsMap.hasOwnProperty('v-for')) 
+          {
             warnOnce(
               'Cannot use v-for on stateful component root element because ' +
               'it renders multiple elements.'
@@ -202,18 +233,24 @@ export function parse (
       }
 
       // tree management
-      if (!root) {
+      if (!root) 
+      {
         root = element
         checkRootConstraints(root)
-      } else if (!stack.length) {
+      } 
+      else if (!stack.length) 
+      {
         // allow root elements with v-if, v-else-if and v-else
-        if (root.if && (element.elseif || element.else)) {
+        if (root.if && (element.elseif || element.else)) 
+        {
           checkRootConstraints(element)
           addIfCondition(root, {
             exp: element.elseif,
             block: element
           })
-        } else if (process.env.NODE_ENV !== 'production') {
+        } 
+        else if (process.env.NODE_ENV !== 'production') 
+        {
           warnOnce(
             `Component template should contain exactly one root element. ` +
             `If you are using v-if on multiple elements, ` +
@@ -221,31 +258,44 @@ export function parse (
           )
         }
       }
-      if (currentParent && !element.forbidden) {
-        if (element.elseif || element.else) {
+      if (currentParent && !element.forbidden) 
+      {
+        if (element.elseif || element.else) 
+        {
           processIfConditions(element, currentParent)
-        } else if (element.slotScope) { // scoped slot
+        } 
+        else if (element.slotScope) 
+        { // scoped slot
           currentParent.plain = false
           const name = element.slotTarget || '"default"'
           ;(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element
-        } else {
+        } 
+        else 
+        {
           currentParent.children.push(element)
           element.parent = currentParent
         }
       }
-      if (!unary) {
+      if (!unary) 
+      {
         currentParent = element
         stack.push(element)
-      } else {
+      } 
+      else 
+      {
         endPre(element)
       }
       // apply post-transforms
-      for (let i = 0; i < postTransforms.length; i++) {
+      for (let i = 0; i < postTransforms.length; i++) 
+      {
         postTransforms[i](element, options)
       }
     },
-
-    end () {
+    /**
+     * 
+     */
+    end () 
+    {
       // remove trailing whitespace
       const element = stack[stack.length - 1]
       const lastNode = element.children[element.children.length - 1]
@@ -257,15 +307,24 @@ export function parse (
       currentParent = stack[stack.length - 1]
       endPre(element)
     },
-
-    chars (text: string) {
-      if (!currentParent) {
-        if (process.env.NODE_ENV !== 'production') {
-          if (text === template) {
+    /**
+     * 
+     * @param {*} text 
+     */
+    chars (text: string) 
+    {
+      if (!currentParent) 
+      {
+        if (process.env.NODE_ENV !== 'production') 
+        {
+          if (text === template) 
+          {
             warnOnce(
               'Component template requires a root element, rather than just text.'
             )
-          } else if ((text = text.trim())) {
+          } 
+          else if ((text = text.trim())) 
+          {
             warnOnce(
               `text "${text}" outside root element will be ignored.`
             )
@@ -278,7 +337,8 @@ export function parse (
       if (isIE &&
         currentParent.tag === 'textarea' &&
         currentParent.attrsMap.placeholder === text
-      ) {
+      ) 
+      {
         return
       }
       const children = currentParent.children
@@ -286,15 +346,19 @@ export function parse (
         ? isTextTag(currentParent) ? text : decodeHTMLCached(text)
         // only preserve whitespace if its not right after a starting tag
         : preserveWhitespace && children.length ? ' ' : ''
-      if (text) {
+      if (text) 
+      {
         let expression
-        if (!inVPre && text !== ' ' && (expression = parseText(text, delimiters))) {
+        if (!inVPre && text !== ' ' && (expression = parseText(text, delimiters))) 
+        {
           children.push({
             type: 2,
             expression,
             text
           })
-        } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
+        } 
+        else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') 
+        {
           children.push({
             type: 3,
             text
@@ -302,7 +366,12 @@ export function parse (
         }
       }
     },
-    comment (text: string) {
+    /**
+     * 
+     * @param {*} text 
+     */
+    comment (text: string) 
+    {
       currentParent.children.push({
         type: 3,
         text,
@@ -381,7 +450,8 @@ export function processElement (element: ASTElement, options: CompilerOptions)
  * 如果此属性存在设置此元素的key属性的值为返回的表达式
  * @param {*} el 
  */
-function processKey (el) {
+function processKey (el) 
+{
   const exp = getBindingAttr(el, 'key')
   if (exp) 
   {
@@ -417,9 +487,11 @@ function processRef (el)
 export function processFor (el: ASTElement) 
 {
   let exp
-  if ((exp = getAndRemoveAttr(el, 'v-for'))) {
+  if ((exp = getAndRemoveAttr(el, 'v-for'))) 
+  {
     const inMatch = exp.match(forAliasRE)
-    if (!inMatch) {
+    if (!inMatch) 
+    {
       process.env.NODE_ENV !== 'production' && warn(
         `Invalid v-for expression: ${exp}`
       )
@@ -428,35 +500,45 @@ export function processFor (el: ASTElement)
     el.for = inMatch[2].trim()
     const alias = inMatch[1].trim()
     const iteratorMatch = alias.match(forIteratorRE)
-    if (iteratorMatch) {
+    if (iteratorMatch) 
+    {
       el.alias = iteratorMatch[1].trim()
       el.iterator1 = iteratorMatch[2].trim()
-      if (iteratorMatch[3]) {
+      if (iteratorMatch[3]) 
+      {
         el.iterator2 = iteratorMatch[3].trim()
       }
-    } else {
+    } 
+    else 
+    {
       el.alias = alias
     }
   }
 }
 /**
- * 
+ * 处理v-if指令
  * @param {*} el 
  */
-function processIf (el) {
+function processIf (el) 
+{
   const exp = getAndRemoveAttr(el, 'v-if')
-  if (exp) {
+  if (exp) 
+  {
     el.if = exp
     addIfCondition(el, {
       exp: exp,
       block: el
     })
-  } else {
-    if (getAndRemoveAttr(el, 'v-else') != null) {
+  } 
+  else 
+  {
+    if (getAndRemoveAttr(el, 'v-else') != null) 
+    {
       el.else = true
     }
     const elseif = getAndRemoveAttr(el, 'v-else-if')
-    if (elseif) {
+    if (elseif) 
+    {
       el.elseif = elseif
     }
   }
@@ -466,14 +548,19 @@ function processIf (el) {
  * @param {*} el 
  * @param {*} parent 
  */
-function processIfConditions (el, parent) {
+function processIfConditions (el, parent) 
+{
   const prev = findPrevElement(parent.children)
-  if (prev && prev.if) {
-    addIfCondition(prev, {
+  if (prev && prev.if) 
+  {
+    addIfCondition(prev, 
+      {
       exp: el.elseif,
       block: el
     })
-  } else if (process.env.NODE_ENV !== 'production') {
+  } 
+  else if (process.env.NODE_ENV !== 'production') 
+  {
     warn(
       `v-${el.elseif ? ('else-if="' + el.elseif + '"') : 'else'} ` +
       `used on element <${el.tag}> without corresponding v-if.`
@@ -484,13 +571,19 @@ function processIfConditions (el, parent) {
  * 
  * @param {*} children 
  */
-function findPrevElement (children: Array<any>): ASTElement | void {
+function findPrevElement (children: Array<any>): ASTElement | void 
+{
   let i = children.length
-  while (i--) {
-    if (children[i].type === 1) {
+  while (i--) 
+  {
+    if (children[i].type === 1) 
+    {
       return children[i]
-    } else {
-      if (process.env.NODE_ENV !== 'production' && children[i].text !== ' ') {
+    } 
+    else 
+    {
+      if (process.env.NODE_ENV !== 'production' && children[i].text !== ' ') 
+      {
         warn(
           `text "${children[i].text.trim()}" between v-if and v-else(-if) ` +
           `will be ignored.`
@@ -505,8 +598,10 @@ function findPrevElement (children: Array<any>): ASTElement | void {
  * @param {*} el 
  * @param {*} condition 
  */
-export function addIfCondition (el: ASTElement, condition: ASTIfCondition) {
-  if (!el.ifConditions) {
+export function addIfCondition (el: ASTElement, condition: ASTIfCondition) 
+{
+  if (!el.ifConditions) 
+  {
     el.ifConditions = []
   }
   el.ifConditions.push(condition)
@@ -515,9 +610,14 @@ export function addIfCondition (el: ASTElement, condition: ASTIfCondition) {
  * 
  * @param {*} el 
  */
-function processOnce (el) {
+function processOnce (el) 
+{
+  /**
+   * 获取v-once属性，并设置对象的once属性为此属性中是否存在v-once
+   */
   const once = getAndRemoveAttr(el, 'v-once')
-  if (once != null) {
+  if (once != null) 
+  {
     el.once = true
   }
 }
@@ -568,12 +668,15 @@ function processSlot (el) {
  * 组件处理
  * @param {*} el 
  */
-function processComponent (el) {
+function processComponent (el) 
+{
   let binding
-  if ((binding = getBindingAttr(el, 'is'))) {
+  if ((binding = getBindingAttr(el, 'is'))) 
+  {
     el.component = binding
   }
-  if (getAndRemoveAttr(el, 'inline-template') != null) {
+  if (getAndRemoveAttr(el, 'inline-template') != null) 
+  {
     el.inlineTemplate = true
   }
 }
@@ -581,10 +684,12 @@ function processComponent (el) {
  * 
  * @param {*} el 
  */
-function processAttrs (el) {
+function processAttrs (el) 
+{
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, isProp
-  for (i = 0, l = list.length; i < l; i++) {
+  for (i = 0, l = list.length; i < l; i++) 
+  {
     name = rawName = list[i].name
     value = list[i].value
     if (dirRE.test(name)) {
@@ -679,15 +784,16 @@ function checkInFor (el: ASTElement): boolean {
 function parseModifiers (name: string): Object | void 
 {
   const match = name.match(modifierRE)
-  if (match) {
+  if (match) 
+  {
     const ret = {}
     match.forEach(m => { ret[m.slice(1)] = true })
     return ret
   }
 }
 /**
- * 
- * @param {*} attrs 
+ * 将属性数组中的name属性值为键value属性值为值的映射表
+ * @param {*} attrs 属性数组
  */
 function makeAttrsMap (attrs: Array<Object>): Object 
 {
@@ -711,14 +817,16 @@ function makeAttrsMap (attrs: Array<Object>): Object
  * 判断是否是文本标签即是否是script和style标签
  * @param {*} el 
  */
-function isTextTag (el): boolean {
+function isTextTag (el): boolean 
+{
   return el.tag === 'script' || el.tag === 'style'
 }
 /**
  * 
- * @param {*} el 
+ * @param {*} el DOM对象的抽象形式
  */
-function isForbiddenTag (el): boolean {
+function isForbiddenTag (el): boolean 
+{
   return (
     el.tag === 'style' ||
     (el.tag === 'script' && (
@@ -735,11 +843,14 @@ const ieNSPrefix = /^NS\d+:/
  * 
  * @param {*} attrs 
  */
-function guardIESVGBug (attrs) {
+function guardIESVGBug (attrs) 
+{
   const res = []
-  for (let i = 0; i < attrs.length; i++) {
+  for (let i = 0; i < attrs.length; i++) 
+  {
     const attr = attrs[i]
-    if (!ieNSBug.test(attr.name)) {
+    if (!ieNSBug.test(attr.name)) 
+    {
       attr.name = attr.name.replace(ieNSPrefix, '')
       res.push(attr)
     }
@@ -754,8 +865,10 @@ function guardIESVGBug (attrs) {
 function checkForAliasModel (el, value) 
 {
   let _el = el
-  while (_el) {
-    if (_el.for && _el.alias === value) {
+  while (_el) 
+  {
+    if (_el.for && _el.alias === value) 
+    {
       warn(
         `<${el.tag} v-model="${value}">: ` +
         `You are binding v-model directly to a v-for iteration alias. ` +

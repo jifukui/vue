@@ -263,9 +263,10 @@ export function defineReactive (
 }
 
 /**
- * target：对象或者是数组
- * key:键值
- * val:参数值
+ * 为对象设置属性值
+ * @param {*} target 数组型的数据对象
+ * @param {*} key 属性
+ * @param {*} val 值
  */
 export function set (target: Array<any> | Object, key: any, val: any): any 
 {
@@ -286,9 +287,10 @@ export function set (target: Array<any> | Object, key: any, val: any): any
     target[key] = val
     return val
   }
-  /**设置ob为对象的__ob__属性 */
+  /**获取对象的__ob__的值存在在ob中 */
   const ob = (target: any).__ob__
-  /**进行警告和退出 */
+  /**对于对象的_isVue的属性为真或者ob存在且ob的vmCount的值不为0的处理
+   * 进行警告和退出 */
   if (target._isVue || (ob && ob.vmCount)) 
   {
     process.env.NODE_ENV !== 'production' && warn(
@@ -297,15 +299,17 @@ export function set (target: Array<any> | Object, key: any, val: any): any
     )
     return val
   }
-  /**ob的值不否，添加对象的此属性和属性值 */
+  /**ob的值为否，添加对象的此属性和属性值 */
   if (!ob) 
   {
     target[key] = val
     return val
   }
-  /**定义反应函数, */
+  /**定义反应处理*/
   defineReactive(ob.value, key, val)
+  /**定义提示 */
   ob.dep.notify()
+  /**返回参数值 */
   return val
 }
 

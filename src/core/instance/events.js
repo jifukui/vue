@@ -14,6 +14,12 @@ import { updateListeners } from '../vdom/helpers/index'
  * 设置有钩子事件为否
  * 获取父监听处理，如果有更新组件监听
 */
+/**
+ * 事件初始化
+ * @param {*} vm 组件对象
+ * 初始化组件的事件对象
+ * 初始化组件有钩子事件为否 
+ */
 export function initEvents (vm: Component) 
 {
   vm._events = Object.create(null)

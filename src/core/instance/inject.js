@@ -10,6 +10,10 @@ import { defineReactive, observerState } from '../observer/index'
  * 不为空且属性的类型为函数调用此函数，反之返回此对象
  * 为空不做任何处理
 */
+/**
+ * 
+ * @param {*} vm Vue对象
+ */
 export function initProvide (vm: Component) 
 {
   const provide = vm.$options.provide

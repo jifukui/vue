@@ -22,17 +22,20 @@ export let isUpdatingChildComponent: boolean = false
 /**
  * 初始化生命周期
  * 设置组件对象的相关参数和初始化相关的参数
- * @param {*} vm 
+ * 设置组件的父组件，在父组件的孩子组件中添加此组件
+ * 设置组件是否是根组件
+ * 初始化组件的子组件数组为空数组
+ * 初始化组件的ref为空对象
+ * 初始化组件的监视器为空
+ * 初始化组件的指令状态为不活跃
+ * 初始化组件的挂载状态为未挂载
+ * 初始化组件的销毁状态为为销毁
+ * 初始化组件的预销毁状态为否
+ * @param {*} vm Vue对象
  */
 export function initLifecycle (vm: Component) 
 {
-  /**
-   * 获取Vue对象的options对象
-   */
   const options = vm.$options
-
-  // locate first non-abstract parent
-  /**获取组件的父组件 */
   let parent = options.parent
   /**对于父组件存在且abstract属性为假的处理
    * 如果父组件的.$options.abstract的值为真且parent.$parent的值为真的处理

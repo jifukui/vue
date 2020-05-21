@@ -131,9 +131,7 @@ export function parseModel (val: string): ModelParseResult
       parseBracket(chr)
     }
   }
-
-  return 
-  {
+  return {
     exp: val.slice(0, expressionPos),
     key: val.slice(expressionPos + 1, expressionEndPos)
   }

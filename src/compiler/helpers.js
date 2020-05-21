@@ -10,7 +10,7 @@ export function baseWarn (msg: string) {
   console.error(`[Vue compiler]: ${msg}`)
 }
 /**
- * 
+ * 去除模块功能
  * @param {*} modules 
  * @param {*} key 
  */
@@ -44,7 +44,7 @@ export function addAttr (el: ASTElement, name: string, value: string)
   (el.attrs || (el.attrs = [])).push({ name, value })
 }
 /**
- * 向directive数组中添加参数
+ * 向directive数组中添加参数，即添加指令
  * @param {*} el 对象
  * @param {*} name 
  * @param {*} rawName 
@@ -66,7 +66,7 @@ export function addDirective (
 
 /**
  * 添加处理函数
- * @param {*} el 
+ * @param {*} el 对象
  * @param {*} name 
  * @param {*} value 
  * @param {*} modifiers 
@@ -140,7 +140,7 @@ export function addHandler (
  * 获取绑定的属性
  * @param {*} el DOM对象
  * @param {*} name 属性名称
- * @param {*} getStatic 获取静态状态
+ * @param {*} getStatic 获取静态状态,这里是是否获取原生的属性的标记
  */
 export function getBindingAttr (
   el: ASTElement,

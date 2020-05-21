@@ -2,42 +2,66 @@
 
 import { noop, extend } from 'shared/util'
 import { warn as baseWarn, tip } from 'core/util/debug'
-
-type CompiledFunctionResult = {
+/**定义编译函数的结果 */
+type CompiledFunctionResult = 
+{
   render: Function;
   staticRenderFns: Array<Function>;
 };
-
-function createFunction (code, errors) {
-  try {
+/**
+ * 创建函数
+ * @param {*} code 函数的代码
+ * @param {*} errors 错误信息
+ */
+function createFunction (code, errors) 
+{
+  try 
+  {
     return new Function(code)
-  } catch (err) {
+  } 
+  catch (err) 
+  {
     errors.push({ err, code })
     return noop
   }
 }
-
-export function createCompileToFunctionFn (compile: Function): Function {
-  const cache: {
+/**
+ * 
+ * @param {*} compile 
+ */
+export function createCompileToFunctionFn (compile: Function): Function 
+{
+  const cache: 
+  {
     [key: string]: CompiledFunctionResult;
   } = Object.create(null)
-
+  /**
+   * template：模板字符串
+   * option：编译指令
+   * vm:Vue对象
+   */
   return function compileToFunctions (
     template: string,
     options?: CompilerOptions,
     vm?: Component
-  ): CompiledFunctionResult {
+  ): CompiledFunctionResult 
+  {
     options = extend({}, options)
     const warn = options.warn || baseWarn
     delete options.warn
 
     /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production') 
+    {
       // detect possible CSP restriction
-      try {
+      try 
+      {
         new Function('return 1')
-      } catch (e) {
-        if (e.toString().match(/unsafe-eval|CSP/)) {
+      } 
+      catch (e) 
+      {
+        if (e.toString().match(/unsafe-eval|CSP/)) 
+        {
           warn(
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
@@ -53,7 +77,8 @@ export function createCompileToFunctionFn (compile: Function): Function {
     const key = options.delimiters
       ? String(options.delimiters) + template
       : template
-    if (cache[key]) {
+    if (cache[key]) 
+    {
       return cache[key]
     }
 
@@ -61,15 +86,18 @@ export function createCompileToFunctionFn (compile: Function): Function {
     const compiled = compile(template, options)
 
     // check compilation errors/tips
-    if (process.env.NODE_ENV !== 'production') {
-      if (compiled.errors && compiled.errors.length) {
+    if (process.env.NODE_ENV !== 'production') 
+    {
+      if (compiled.errors && compiled.errors.length) 
+      {
         warn(
           `Error compiling template:\n\n${template}\n\n` +
           compiled.errors.map(e => `- ${e}`).join('\n') + '\n',
           vm
         )
       }
-      if (compiled.tips && compiled.tips.length) {
+      if (compiled.tips && compiled.tips.length) 
+      {
         compiled.tips.forEach(msg => tip(msg, vm))
       }
     }
@@ -86,8 +114,10 @@ export function createCompileToFunctionFn (compile: Function): Function {
     // this should only happen if there is a bug in the compiler itself.
     // mostly for codegen development use
     /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production') {
-      if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
+    if (process.env.NODE_ENV !== 'production') 
+    {
+      if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) 
+      {
         warn(
           `Failed to generate render function:\n\n` +
           fnGenErrors.map(({ err, code }) => `${err.toString()} in\n\n${code}\n`).join('\n'),

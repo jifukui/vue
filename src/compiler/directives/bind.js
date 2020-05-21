@@ -1,6 +1,6 @@
 /* @flow */
 /**
- * 
+ * 数据封装
  * @param {*} el 
  * @param {*} dir 
  */

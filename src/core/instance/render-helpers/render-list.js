@@ -1,10 +1,6 @@
 /* @flow */
 
 import { isObject, isDef } from 'core/util/index'
-
-/**
- * Runtime helper for rendering v-for lists.
- */
 /**
  * 
  * @param {*} val 

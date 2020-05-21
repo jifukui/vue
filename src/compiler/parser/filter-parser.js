@@ -136,7 +136,7 @@ export function parseFilters (exp: string): string {
   return expression
 }
 /**
- * 
+ * 过滤器的封装
  * @param {*} exp 
  * @param {*} filter 
  */

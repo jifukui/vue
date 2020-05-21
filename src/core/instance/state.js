@@ -27,7 +27,13 @@ import {
   isServerRendering,
   isReservedAttribute
 } from '../util/index'
-
+/**
+ * 定义配置属性的方法
+ * enumerable:可枚举
+ * configurable:可配置
+ * get:
+ * set:
+ */
 const sharedPropertyDefinition = {
   enumerable: true,
   configurable: true,
@@ -60,6 +66,10 @@ export function proxy (target: Object, sourceKey: string, key: string)
  * 如果组件对象有data属性初始化data,反之调用observe函数
  * 如果组件对象具有computed属性初始化计算
  * 如果组件对象具有watch属性初始化watch
+ */
+/**
+ * 
+ * @param {*} vm Vue对象
  */
 export function initState (vm: Component) 
 {

@@ -1,0 +1,4138 @@
+
+> vue@2.5.0 build H:\jifukuistudy\sourcecode\vue-master
+> node build/build.js
+
+The info is 
+version value is   v12.13.0
+The Object protoprotype
+node value is   12.13.0
+v8 value is   7.7.299.13-node.12
+uv value is   1.32.0
+zlib value is   1.2.11
+brotli value is   1.0.7
+ares value is   1.15.0
+modules value is   72
+nghttp2 value is   1.39.2
+napi value is   5
+llhttp value is   1.1.4
+http_parser value is   2.8.0
+openssl value is   1.1.1d
+cldr value is   35.1
+icu value is   64.2
+tz value is   2019a
+unicode value is   12.1
+arch value is   ia32
+platform value is   win32
+The Object protoprotype
+name value is   node
+lts value is   Erbium
+sourceUrl value is   https://nodejs.org/download/release/v12.13.0/node-v12.13.0.tar.gz
+headersUrl value is   https://nodejs.org/download/release/v12.13.0/node-v12.13.0-headers.tar.gz
+libUrl value is   https://nodejs.org/download/release/v12.13.0/win-x86/node.lib
+_rawDebug value is   function _rawDebug(...args) {
+    binding._rawDebug(format.apply(null, args));
+  }
+moduleLoadList value is   Internal Binding native_module,Internal Binding errors,Internal Binding buffer,NativeModule internal/errors,Internal Binding config,Internal Binding constants,Internal Binding util,Internal Binding types,NativeModule internal/util,NativeModule internal/util/types,NativeModule internal/assert,NativeModule internal/util/inspect,NativeModule events,Internal Binding string_decoder,NativeModule internal/validators,NativeModule internal/buffer,Internal Binding icu,NativeModule buffer,NativeModule internal/process/per_thread,NativeModule internal/process/main_thread_only,Internal Binding process_methods,Internal Binding credentials,NativeModule internal/process/stdio,Internal Binding async_wrap,Internal Binding task_queue,NativeModule internal/async_hooks,NativeModule internal/process/promises,NativeModule internal/fixed_queue,NativeModule internal/process/task_queues,Internal Binding trace_events,NativeModule internal/console/constructor,NativeModule internal/console/global,NativeModule internal/util/inspector,Internal Binding inspector,NativeModule internal/querystring,NativeModule internal/constants,NativeModule path,Internal Binding url,NativeModule internal/url,NativeModule internal/encoding,Internal Binding timers,NativeModule internal/linkedlist,NativeModule internal/priority_queue,NativeModule internal/util/debuglog,NativeModule internal/timers,NativeModule timers,NativeModule internal/process/execution,NativeModule internal/process/warning,Internal Binding options,NativeModule internal/options,NativeModule internal/bootstrap/pre_execution,NativeModule internal/inspector_async_hook,Internal Binding fs,NativeModule internal/fs/utils,Internal Binding fs_dir,NativeModule internal/fs/dir,NativeModule fs,NativeModule internal/idna,NativeModule url,NativeModule internal/modules/cjs/helpers,NativeModule internal/source_map/source_map_cache,Internal Binding contextify,NativeModule vm,NativeModule internal/modules/cjs/loader,Internal Binding module_wrap,NativeModule internal/streams/pipeline,NativeModule internal/streams/end-of-stream,NativeModule internal/streams/legacy,NativeModule internal/streams/destroy,NativeModule internal/streams/state,NativeModule _stream_writable,NativeModule _stream_passthrough,NativeModule stream,NativeModule internal/streams/buffer_list,NativeModule _stream_readable,NativeModule _stream_duplex,NativeModule _stream_transform,Internal Binding zlib,NativeModule zlib,NativeModule module,NativeModule util,NativeModule constants,NativeModule internal/fs/streams,Internal Binding os,NativeModule os,Internal Binding natives,Internal Binding uv,NativeModule internal/fs/sync_write_stream
+binding value is   function binding(module) {
+    module = String(module);
+    // Deprecated specific process.binding() modules, but not all, allow
+    // selective fallback to internalBinding for the deprecated ones.
+    if (internalBindingWhitelist.has(module)) {
+      return internalBinding(module);
+    }
+    // eslint-disable-next-line no-restricted-syntax
+    throw new Error(`No such module: ${module}`);
+  }
+_linkedBinding value is   function _linkedBinding(module) {
+    module = String(module);
+    let mod = bindingObj[module];
+    if (typeof mod !== 'object')
+      mod = bindingObj[module] = getLinkedBinding(module);
+    return mod;
+  }
+The Object protoprotype
+warning value is   function onWarning(warning) {
+  if (!(warning instanceof Error)) return;
+  const isDeprecation = warning.name === 'DeprecationWarning';
+  if (isDeprecation && process.noDeprecation) return;
+  const trace = process.traceProcessWarnings ||
+                (isDeprecation && process.traceDeprecation);
+  var msg = `(${process.release.name}:${process.pid}) `;
+  if (warning.code)
+    msg += `[${warning.code}] `;
+  if (trace && warning.stack) {
+    msg += `${warning.stack}`;
+  } else {
+    const toString =
+      typeof warning.toString === 'function' ?
+        warning.toString : Error.prototype.toString;
+    msg += `${toString.apply(warning)}`;
+  }
+  if (typeof warning.detail === 'string') {
+    msg += `\n${warning.detail}`;
+  }
+  const warningFile = lazyOption();
+  if (warningFile) {
+    return writeToFile(msg);
+  }
+  writeOut(msg);
+}
+newListener value is   function startListeningIfSignal(type) {
+    if (isSignal(type) && !signalWraps.has(type)) {
+      if (Signal === undefined)
+        Signal = internalBinding('signal_wrap').Signal;
+      const wrap = new Signal();
+
+      wrap.unref();
+
+      wrap.onsignal = process.emit.bind(process, type, type);
+
+      const signum = signals[type];
+      const err = wrap.start(signum);
+      if (err) {
+        wrap.close();
+        throw errnoException(err, 'uv_signal_start');
+      }
+
+      signalWraps.set(type, wrap);
+    }
+  }
+removeListener value is   function stopListeningIfSignal(type) {
+    const wrap = signalWraps.get(type);
+    if (wrap !== undefined && process.listenerCount(type) === 0) {
+      wrap.close();
+      signalWraps.delete(type);
+    }
+  }
+_eventsCount value is   3
+_maxListeners value is   undefined
+domain value is   null
+_exiting value is   false
+The Object protoprotype
+The Object protoprotype
+cflags value is   
+default_configuration value is   Release
+defines value is   
+include_dirs value is   
+libraries value is   
+The Object protoprotype
+asan value is   0
+build_v8_with_gn value is   false
+coverage value is   false
+debug_nghttp2 value is   false
+enable_lto value is   false
+enable_pgo_generate value is   false
+enable_pgo_use value is   false
+force_dynamic_crt value is   0
+host_arch value is   x64
+icu_data_in value is   ..\..\deps/icu-small\source/data/in\icudt64l.dat
+icu_endianness value is   l
+icu_gyp_path value is   tools/icu/icu-generic.gyp
+icu_locales value is   en,root
+icu_path value is   deps/icu-small
+icu_small value is   true
+icu_ver_major value is   64
+is_debug value is   0
+napi_build_version value is   5
+nasm_version value is   2.14
+node_byteorder value is   little
+node_code_cache value is   yes
+node_debug_lib value is   false
+node_enable_d8 value is   false
+node_install_npm value is   true
+node_module_version value is   72
+node_no_browser_globals value is   false
+node_prefix value is   /usr/local
+node_release_urlbase value is   https://nodejs.org/download/release/
+node_report value is   true
+node_shared value is   false
+node_shared_cares value is   false
+node_shared_http_parser value is   false
+node_shared_libuv value is   false
+node_shared_nghttp2 value is   false
+node_shared_openssl value is   false
+node_shared_zlib value is   false
+node_tag value is   
+node_target_type value is   executable
+node_use_bundled_v8 value is   true
+node_use_dtrace value is   false
+node_use_etw value is   true
+node_use_large_pages value is   false
+node_use_large_pages_script_lld value is   false
+node_use_node_snapshot value is   true
+node_use_openssl value is   true
+node_use_v8_platform value is   true
+node_with_ltcg value is   true
+node_without_node_options value is   false
+openssl_fips value is   
+openssl_is_fips value is   false
+shlib_suffix value is   so.72
+target_arch value is   ia32
+v8_enable_gdbjit value is   0
+v8_enable_i18n_support value is   1
+v8_enable_inspector value is   1
+v8_no_strict_aliasing value is   1
+v8_optimized_debug value is   1
+v8_promise_internal_field_count value is   1
+v8_random_seed value is   0
+v8_trace_maps value is   0
+v8_use_siphash value is   1
+v8_use_snapshot value is   1
+want_separate_host_toolset value is   0
+abort value is   function abort() { [native code] }
+umask value is   function umask(mask) {
+    if (mask !== undefined) {
+      mask = parseMode(mask, 'mask');
+    }
+    return binding.umask(mask);
+  }
+chdir value is   function(d) {
+  cwd = null
+  chdir.call(process, d)
+}
+cwd value is   function() {
+  if (!cwd)
+    cwd = origCwd.call(process)
+  return cwd
+}
+_debugProcess value is   function _debugProcess() { [native code] }
+_debugEnd value is   function _debugEnd() { [native code] }
+_startProfilerIdleNotifier value is   function _startProfilerIdleNotifier() { [native code] }
+_stopProfilerIdleNotifier value is   function _stopProfilerIdleNotifier() { [native code] }
+dlopen value is   function dlopen() { [native code] }
+uptime value is   function uptime() { [native code] }
+_getActiveRequests value is   function _getActiveRequests() { [native code] }
+_getActiveHandles value is   function _getActiveHandles() { [native code] }
+reallyExit value is   function reallyExit() { [native code] }
+_kill value is   function _kill() { [native code] }
+hrtime value is   function hrtime(time) {
+    _hrtime(hrValues);
+
+    if (time !== undefined) {
+      if (!Array.isArray(time)) {
+        throw new ERR_INVALID_ARG_TYPE('time', 'Array', time);
+      }
+      if (time.length !== 2) {
+        throw new ERR_OUT_OF_RANGE('time', 2, time.length);
+      }
+
+      const sec = (hrValues[0] * 0x100000000 + hrValues[1]) - time[0];
+      const nsec = hrValues[2] - time[1];
+      const needsBorrow = nsec < 0;
+      return [needsBorrow ? sec - 1 : sec, needsBorrow ? nsec + 1e9 : nsec];
+    }
+
+    return [
+      hrValues[0] * 0x100000000 + hrValues[1],
+      hrValues[2]
+    ];
+  }
+cpuUsage value is   function cpuUsage(prevValue) {
+    // If a previous value was passed in, ensure it has the correct shape.
+    if (prevValue) {
+      if (!previousValueIsValid(prevValue.user)) {
+        if (typeof prevValue !== 'object')
+          throw new ERR_INVALID_ARG_TYPE('prevValue', 'object', prevValue);
+
+        if (typeof prevValue.user !== 'number') {
+          throw new ERR_INVALID_ARG_TYPE('prevValue.user',
+                                         'number', prevValue.user);
+        }
+        throw new ERR_INVALID_OPT_VALUE.RangeError('prevValue.user',
+                                                   prevValue.user);
+      }
+
+      if (!previousValueIsValid(prevValue.system)) {
+        if (typeof prevValue.system !== 'number') {
+          throw new ERR_INVALID_ARG_TYPE('prevValue.system',
+                                         'number', prevValue.system);
+        }
+        throw new ERR_INVALID_OPT_VALUE.RangeError('prevValue.system',
+                                                   prevValue.system);
+      }
+    }
+
+    // Call the native function to get the current values.
+    const errmsg = _cpuUsage(cpuValues);
+    if (errmsg) {
+      throw new ERR_CPU_USAGE(errmsg);
+    }
+
+    // If a previous value was passed in, return diff of current from previous.
+    if (prevValue) {
+      return {
+        user: cpuValues[0] - prevValue.user,
+        system: cpuValues[1] - prevValue.system
+      };
+    }
+
+    // If no previous value passed in, return current value.
+    return {
+      user: cpuValues[0],
+      system: cpuValues[1]
+    };
+  }
+resourceUsage value is   function resourceUsage() {
+    _resourceUsage(resourceValues);
+    return {
+      userCPUTime: resourceValues[0],
+      systemCPUTime: resourceValues[1],
+      maxRSS: resourceValues[2],
+      sharedMemorySize: resourceValues[3],
+      unsharedDataSize: resourceValues[4],
+      unsharedStackSize: resourceValues[5],
+      minorPageFault: resourceValues[6],
+      majorPageFault: resourceValues[7],
+      swappedOut: resourceValues[8],
+      fsRead: resourceValues[9],
+      fsWrite: resourceValues[10],
+      ipcSent: resourceValues[11],
+      ipcReceived: resourceValues[12],
+      signalsCount: resourceValues[13],
+      voluntaryContextSwitches: resourceValues[14],
+      involuntaryContextSwitches: resourceValues[15]
+    };
+  }
+memoryUsage value is   function memoryUsage() {
+    _memoryUsage(memValues);
+    return {
+      rss: memValues[0],
+      heapTotal: memValues[1],
+      heapUsed: memValues[2],
+      external: memValues[3]
+    };
+  }
+kill value is   function kill(pid, sig) {
+    var err;
+
+    // eslint-disable-next-line eqeqeq
+    if (pid != (pid | 0)) {
+      throw new ERR_INVALID_ARG_TYPE('pid', 'number', pid);
+    }
+
+    // Preserve null signal
+    if (sig === (sig | 0)) {
+      // XXX(joyeecheung): we have to use process._kill here because
+      // it's monkey-patched by tests.
+      err = process._kill(pid, sig);
+    } else {
+      sig = sig || 'SIGTERM';
+      if (constants[sig]) {
+        err = process._kill(pid, constants[sig]);
+      } else {
+        throw new ERR_UNKNOWN_SIGNAL(sig);
+      }
+    }
+
+    if (err)
+      throw errnoException(err, 'kill');
+
+    return true;
+  }
+exit value is   function exit(code) {
+    if (code || code === 0)
+      process.exitCode = code;
+
+    if (!process._exiting) {
+      process._exiting = true;
+      process.emit('exit', process.exitCode || 0);
+    }
+    // FIXME(joyeecheung): This is an undocumented API that gets monkey-patched
+    // in the user land. Either document it, or deprecate it in favor of a
+    // better public alternative.
+    process.reallyExit(process.exitCode || 0);
+  }
+The Object protoprotype
+The Object protoprotype
+objectMode value is   false
+highWaterMark value is   16384
+finalCalled value is   false
+needDrain value is   false
+ending value is   false
+ended value is   false
+finished value is   false
+destroyed value is   false
+decodeStrings value is   true
+defaultEncoding value is   utf8
+length value is   0
+writing value is   false
+corked value is   0
+sync value is   false
+bufferProcessing value is   false
+onwrite value is   function () { [native code] }
+writecb value is   null
+writelen value is   0
+bufferedRequest value is   null
+lastBufferedRequest value is   null
+pendingcb value is   152
+prefinished value is   false
+errorEmitted value is   false
+emitClose value is   true
+autoDestroy value is   true
+bufferedRequestCount value is   0
+The Object protoprotype
+next value is   null
+entry value is   null
+finish value is   function () { [native code] }
+getBuffer value is   function getBuffer() {
+  var current = this.bufferedRequest;
+  const out = [];
+  while (current) {
+    out.push(current);
+    current = current.next;
+  }
+  return out;
+}
+writable value is   true
+The Object protoprotype
+_eventsCount value is   0
+_maxListeners value is   undefined
+fd value is   1
+readable value is   false
+autoClose value is   false
+_type value is   fs
+_isStdio value is   true
+destroySoon value is   function destroy(err, cb) {
+  const readableDestroyed = this._readableState &&
+    this._readableState.destroyed;
+  const writableDestroyed = this._writableState &&
+    this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorNT, this, err);
+      }
+    }
+
+    return this;
+  }
+
+  // We set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  }
+
+  // If this is a duplex stream mark the writable part as destroyed as well
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, (err) => {
+    if (!cb && err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else {
+        process.nextTick(emitCloseNT, this);
+      }
+    } else if (cb) {
+      process.nextTick(emitCloseNT, this);
+      cb(err);
+    } else {
+      process.nextTick(emitCloseNT, this);
+    }
+  });
+
+  return this;
+}
+_destroy value is   function dummyDestroy(err, cb) {
+  cb(err);
+
+  // We need to emit 'close' anyway so that the closing
+  // of the stream is observable. We just make sure we
+  // are not going to do it twice.
+  // The 'close' event is needed so that finished and
+  // pipeline work correctly.
+  if (!this._writableState.emitClose) {
+    process.nextTick(() => {
+      this.emit('close');
+    });
+  }
+}
+_write value is   function(chunk, encoding, cb) {
+  writeSync(this.fd, chunk, 0, chunk.length);
+  cb();
+  return true;
+}
+pipe value is   function() {
+  errorOrDestroy(this, new ERR_STREAM_CANNOT_PIPE());
+}
+write value is   function(chunk, encoding, cb) {
+  const state = this._writableState;
+  var ret = false;
+  const isBuf = !state.objectMode && Stream._isUint8Array(chunk);
+
+  // Do not use Object.getPrototypeOf as it is slower since V8 7.3.
+  if (isBuf && !(chunk instanceof Buffer)) {
+    chunk = Stream._uint8ArrayToBuffer(chunk);
+  }
+
+  if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (isBuf)
+    encoding = 'buffer';
+  else if (!encoding)
+    encoding = state.defaultEncoding;
+
+  if (typeof cb !== 'function')
+    cb = nop;
+
+  if (state.ending)
+    writeAfterEnd(this, cb);
+  else if (isBuf || validChunk(this, state, chunk, cb)) {
+    state.pendingcb++;
+    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
+  }
+
+  return ret;
+}
+cork value is   function() {
+  this._writableState.corked++;
+}
+uncork value is   function() {
+  const state = this._writableState;
+
+  if (state.corked) {
+    state.corked--;
+
+    if (!state.writing &&
+        !state.corked &&
+        !state.bufferProcessing &&
+        state.bufferedRequest)
+      clearBuffer(this, state);
+  }
+}
+setDefaultEncoding value is   function setDefaultEncoding(encoding) {
+  // node::ParseEncoding() requires lower case.
+  if (typeof encoding === 'string')
+    encoding = encoding.toLowerCase();
+  if (!Buffer.isEncoding(encoding))
+    throw new ERR_UNKNOWN_ENCODING(encoding);
+  this._writableState.defaultEncoding = encoding;
+  return this;
+}
+_writev value is   null
+end value is   function(chunk, encoding, cb) {
+  const state = this._writableState;
+
+  if (typeof chunk === 'function') {
+    cb = chunk;
+    chunk = null;
+    encoding = null;
+  } else if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (chunk !== null && chunk !== undefined)
+    this.write(chunk, encoding);
+
+  // .end() fully uncorks
+  if (state.corked) {
+    state.corked = 1;
+    this.uncork();
+  }
+
+  // Ignore unnecessary end() calls.
+  if (!state.ending)
+    endWritable(this, state, cb);
+
+  return this;
+}
+destroy value is   function destroy(err, cb) {
+  const readableDestroyed = this._readableState &&
+    this._readableState.destroyed;
+  const writableDestroyed = this._writableState &&
+    this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorNT, this, err);
+      }
+    }
+
+    return this;
+  }
+
+  // We set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  }
+
+  // If this is a duplex stream mark the writable part as destroyed as well
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, (err) => {
+    if (!cb && err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else {
+        process.nextTick(emitCloseNT, this);
+      }
+    } else if (cb) {
+      process.nextTick(emitCloseNT, this);
+      cb(err);
+    } else {
+      process.nextTick(emitCloseNT, this);
+    }
+  });
+
+  return this;
+}
+_undestroy value is   function undestroy() {
+  if (this._readableState) {
+    this._readableState.destroyed = false;
+    this._readableState.reading = false;
+    this._readableState.ended = false;
+    this._readableState.endEmitted = false;
+  }
+
+  if (this._writableState) {
+    this._writableState.destroyed = false;
+    this._writableState.ended = false;
+    this._writableState.ending = false;
+    this._writableState.finalCalled = false;
+    this._writableState.prefinished = false;
+    this._writableState.finished = false;
+    this._writableState.errorEmitted = false;
+  }
+}
+setMaxListeners value is   function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || Number.isNaN(n)) {
+    throw new ERR_OUT_OF_RANGE('n', 'a non-negative number', n);
+  }
+  this._maxListeners = n;
+  return this;
+}
+getMaxListeners value is   function getMaxListeners() {
+  return _getMaxListeners(this);
+}
+emit value is   function emit(type, ...args) {
+  let doError = (type === 'error');
+
+  const events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    let er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      try {
+        const capture = {};
+        // eslint-disable-next-line no-restricted-syntax
+        Error.captureStackTrace(capture, EventEmitter.prototype.emit);
+        Object.defineProperty(er, kEnhanceStackBeforeInspector, {
+          value: enhanceStackTrace.bind(this, er, capture),
+          configurable: true
+        });
+      } catch {}
+
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+
+    let stringifiedEr;
+    const { inspect } = require('internal/util/inspect');
+    try {
+      stringifiedEr = inspect(er);
+    } catch {
+      stringifiedEr = er;
+    }
+
+    // At least give some kind of context to the user
+    const err = new ERR_UNHANDLED_ERROR(stringifiedEr);
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  const handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    apply(handler, this, args);
+  } else {
+    const len = handler.length;
+    const listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      apply(listeners[i], this, args);
+  }
+
+  return true;
+}
+addListener value is   function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+}
+on value is   function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+}
+prependListener value is   function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    }
+once value is   function once(type, listener) {
+  checkListener(listener);
+
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+}
+prependOnceListener value is   function prependOnceListener(type, listener) {
+      checkListener(listener);
+
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    }
+removeListener value is   function removeListener(type, listener) {
+      let originalListener;
+
+      checkListener(listener);
+
+      const events = this._events;
+      if (events === undefined)
+        return this;
+
+      const list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        let position = -1;
+
+        for (var i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          if (spliceOne === undefined)
+            spliceOne = require('internal/util').spliceOne;
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    }
+off value is   function removeListener(type, listener) {
+      let originalListener;
+
+      checkListener(listener);
+
+      const events = this._events;
+      if (events === undefined)
+        return this;
+
+      const list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        let position = -1;
+
+        for (var i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          if (spliceOne === undefined)
+            spliceOne = require('internal/util').spliceOne;
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    }
+removeAllListeners value is   function removeAllListeners(type) {
+      const events = this._events;
+      if (events === undefined)
+        return this;
+
+      // Not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // Emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        for (const key of Object.keys(events)) {
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      const listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (var i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    }
+listeners value is   function listeners(type) {
+  return _listeners(this, type, true);
+}
+rawListeners value is   function rawListeners(type) {
+  return _listeners(this, type, false);
+}
+listenerCount value is   function listenerCount(type) {
+  const events = this._events;
+
+  if (events !== undefined) {
+    const evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+eventNames value is   function eventNames() {
+  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
+}
+The Object protoprotype
+connecting value is   false
+_hadError value is   false
+_parent value is   null
+_host value is   null
+The Object protoprotype
+objectMode value is   false
+highWaterMark value is   16384
+The Object protoprotype
+head value is   null
+tail value is   null
+length value is   0
+length value is   0
+pipes value is   null
+pipesCount value is   0
+flowing value is   null
+ended value is   false
+endEmitted value is   false
+reading value is   false
+sync value is   true
+needReadable value is   false
+emittedReadable value is   false
+readableListening value is   false
+resumeScheduled value is   false
+paused value is   true
+emitClose value is   false
+autoDestroy value is   false
+destroyed value is   false
+defaultEncoding value is   utf8
+awaitDrain value is   0
+readingMore value is   false
+decoder value is   null
+encoding value is   null
+readable value is   false
+The Object protoprotype
+end value is   function onReadableStreamEnd() {
+  if (!this.allowHalfOpen) {
+    this.write = writeAfterFIN;
+    if (this.writable)
+      this.end();
+  }
+
+  if (!this.destroyed && !this.writable && !this.writableLength)
+    this.destroy();
+}
+_eventsCount value is   1
+_maxListeners value is   undefined
+The Object protoprotype
+objectMode value is   false
+highWaterMark value is   16384
+finalCalled value is   false
+needDrain value is   false
+ending value is   false
+ended value is   false
+finished value is   false
+destroyed value is   false
+decodeStrings value is   false
+defaultEncoding value is   utf8
+length value is   0
+writing value is   false
+corked value is   0
+sync value is   true
+bufferProcessing value is   false
+onwrite value is   function () { [native code] }
+writecb value is   null
+writelen value is   0
+bufferedRequest value is   null
+lastBufferedRequest value is   null
+pendingcb value is   0
+prefinished value is   false
+errorEmitted value is   false
+emitClose value is   false
+autoDestroy value is   false
+bufferedRequestCount value is   0
+The Object protoprotype
+next value is   null
+entry value is   null
+finish value is   function () { [native code] }
+getBuffer value is   function getBuffer() {
+  var current = this.bufferedRequest;
+  const out = [];
+  while (current) {
+    out.push(current);
+    current = current.next;
+  }
+  return out;
+}
+writable value is   true
+allowHalfOpen value is   false
+_sockname value is   null
+_pendingData value is   null
+_pendingEncoding value is   
+server value is   null
+_server value is   null
+columns value is   80
+rows value is   30
+_type value is   tty
+fd value is   2
+_isStdio value is   true
+destroySoon value is   function destroy(err, cb) {
+  const readableDestroyed = this._readableState &&
+    this._readableState.destroyed;
+  const writableDestroyed = this._writableState &&
+    this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorNT, this, err);
+      }
+    }
+
+    return this;
+  }
+
+  // We set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  }
+
+  // If this is a duplex stream mark the writable part as destroyed as well
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, (err) => {
+    if (!cb && err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else {
+        process.nextTick(emitCloseNT, this);
+      }
+    } else if (cb) {
+      process.nextTick(emitCloseNT, this);
+      cb(err);
+    } else {
+      process.nextTick(emitCloseNT, this);
+    }
+  });
+
+  return this;
+}
+_destroy value is   function dummyDestroy(err, cb) {
+  cb(err);
+
+  // We need to emit 'close' anyway so that the closing
+  // of the stream is observable. We just make sure we
+  // are not going to do it twice.
+  // The 'close' event is needed so that finished and
+  // pipeline work correctly.
+  if (!this._writableState.emitClose) {
+    process.nextTick(() => {
+      this.emit('close');
+    });
+  }
+}
+isTTY value is   true
+getColorDepth value is   function getColorDepth(env = process.env) {
+  // Use level 0-3 to support the same levels as `chalk` does. This is done for
+  // consistency throughout the ecosystem.
+  if (env.FORCE_COLOR !== undefined) {
+    switch (env.FORCE_COLOR) {
+      case '':
+      case '1':
+      case 'true':
+        warnOnDeactivatedColors(env);
+        return COLORS_16;
+      case '2':
+        warnOnDeactivatedColors(env);
+        return COLORS_256;
+      case '3':
+        warnOnDeactivatedColors(env);
+        return COLORS_16m;
+      default:
+        return COLORS_2;
+    }
+  }
+
+  if (env.NODE_DISABLE_COLORS !== undefined ||
+      // See https://no-color.org/
+      env.NO_COLOR !== undefined ||
+      // The "dumb" special terminal, as defined by terminfo, doesn't support
+      // ANSI color control codes.
+      // See http://invisible-island.net/ncurses/terminfo.ti.html#toc-_Specials
+      env.TERM === 'dumb') {
+    return COLORS_2;
+  }
+
+  if (process.platform === 'win32') {
+    // Lazy load for startup performance.
+    if (OSRelease === undefined) {
+      const { release } = require('os');
+      OSRelease = release().split('.');
+    }
+    // Windows 10 build 10586 is the first Windows release that supports 256
+    // colors. Windows 10 build 14931 is the first release that supports
+    // 16m/TrueColor.
+    if (+OSRelease[0] >= 10) {
+      const build = +OSRelease[2];
+      if (build >= 14931)
+        return COLORS_16m;
+      if (build >= 10586)
+        return COLORS_256;
+    }
+
+    return COLORS_16;
+  }
+
+  if (env.TMUX) {
+    return COLORS_256;
+  }
+
+  if (env.CI) {
+    if ('TRAVIS' in env || 'CIRCLECI' in env || 'APPVEYOR' in env ||
+      'GITLAB_CI' in env || env.CI_NAME === 'codeship') {
+      return COLORS_256;
+    }
+    return COLORS_2;
+  }
+
+  if ('TEAMCITY_VERSION' in env) {
+    return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ?
+      COLORS_16 : COLORS_2;
+  }
+
+  switch (env.TERM_PROGRAM) {
+    case 'iTerm.app':
+      if (!env.TERM_PROGRAM_VERSION ||
+        /^[0-2]\./.test(env.TERM_PROGRAM_VERSION)) {
+        return COLORS_256;
+      }
+      return COLORS_16m;
+    case 'HyperTerm':
+    case 'MacTerm':
+      return COLORS_16m;
+    case 'Apple_Terminal':
+      return COLORS_256;
+  }
+
+  if (env.TERM) {
+    if (/^xterm-256/.test(env.TERM))
+      return COLORS_256;
+
+    const termEnv = env.TERM.toLowerCase();
+
+    if (TERM_ENVS[termEnv]) {
+      return TERM_ENVS[termEnv];
+    }
+    for (const term of TERM_ENVS_REG_EXP) {
+      if (term.test(termEnv)) {
+        return COLORS_16;
+      }
+    }
+  }
+
+  if (env.COLORTERM) {
+    if (env.COLORTERM === 'truecolor' || env.COLORTERM === '24bit')
+      return COLORS_16m;
+    return COLORS_16;
+  }
+
+  return COLORS_2;
+}
+hasColors value is   function hasColors(count, env) {
+  if (env === undefined &&
+      (count === undefined || (typeof count === 'object' && count !== null))) {
+    env = count;
+    count = 16;
+  } else {
+    if (typeof count !== 'number') {
+      throw new ERR_INVALID_ARG_TYPE('count', 'number', count);
+    }
+    if (count < 2) {
+      throw new ERR_OUT_OF_RANGE('count', '>= 2', count);
+    }
+  }
+  return count <= 2 ** getColorDepth(env);
+}
+_refreshSize value is   function() {
+  const oldCols = this.columns;
+  const oldRows = this.rows;
+  const winSize = new Array(2);
+  const err = this._handle.getWindowSize(winSize);
+  if (err) {
+    this.emit('error', errors.errnoException(err, 'getWindowSize'));
+    return;
+  }
+  const [newCols, newRows] = winSize;
+  if (oldCols !== newCols || oldRows !== newRows) {
+    this.columns = newCols;
+    this.rows = newRows;
+    this.emit('resize');
+  }
+}
+cursorTo value is   function(x, y, callback) {
+  if (readline === undefined) readline = require('readline');
+  return readline.cursorTo(this, x, y, callback);
+}
+moveCursor value is   function(dx, dy, callback) {
+  if (readline === undefined) readline = require('readline');
+  return readline.moveCursor(this, dx, dy, callback);
+}
+clearLine value is   function(dir, callback) {
+  if (readline === undefined) readline = require('readline');
+  return readline.clearLine(this, dir, callback);
+}
+clearScreenDown value is   function(callback) {
+  if (readline === undefined) readline = require('readline');
+  return readline.clearScreenDown(this, callback);
+}
+getWindowSize value is   function() {
+  return [this.columns, this.rows];
+}
+_unrefTimer value is   function _unrefTimer() {
+  for (var s = this; s !== null; s = s._parent) {
+    if (s[kTimeout])
+      s[kTimeout].refresh();
+  }
+}
+_final value is   function(cb) {
+  // If still connecting - defer handling `_final` until 'connect' will happen
+  if (this.pending) {
+    debug('_final: not yet connected');
+    return this.once('connect', () => this._final(cb));
+  }
+
+  if (!this._handle)
+    return cb();
+
+  debug('_final: not ended, call shutdown()');
+
+  const req = new ShutdownWrap();
+  req.oncomplete = afterShutdown;
+  req.handle = this._handle;
+  req.callback = cb;
+  const err = this._handle.shutdown(req);
+
+  if (err === 1)  // synchronous finish
+    return afterShutdown.call(req, 0);
+  else if (err !== 0)
+    return this.destroy(errnoException(err, 'shutdown'));
+}
+setTimeout value is   function setStreamTimeout(msecs, callback) {
+  if (this.destroyed)
+    return;
+
+  this.timeout = msecs;
+
+  // Type checking identical to timers.enroll()
+  msecs = getTimerDuration(msecs, 'msecs');
+
+  // Attempt to clear an existing timer in both cases -
+  //  even if it will be rescheduled we don't want to leak an existing timer.
+  clearTimeout(this[kTimeout]);
+
+  if (msecs === 0) {
+    if (callback !== undefined) {
+      if (typeof callback !== 'function')
+        throw new ERR_INVALID_CALLBACK(callback);
+      this.removeListener('timeout', callback);
+    }
+  } else {
+    this[kTimeout] = setUnrefTimeout(this._onTimeout.bind(this), msecs);
+    if (this[kSession]) this[kSession][kUpdateTimer]();
+
+    if (callback !== undefined) {
+      if (typeof callback !== 'function')
+        throw new ERR_INVALID_CALLBACK(callback);
+      this.once('timeout', callback);
+    }
+  }
+  return this;
+}
+_onTimeout value is   function() {
+  const handle = this._handle;
+  const lastWriteQueueSize = this[kLastWriteQueueSize];
+  if (lastWriteQueueSize > 0 && handle) {
+    // `lastWriteQueueSize !== writeQueueSize` means there is
+    // an active write in progress, so we suppress the timeout.
+    const { writeQueueSize } = handle;
+    if (lastWriteQueueSize !== writeQueueSize) {
+      this[kLastWriteQueueSize] = writeQueueSize;
+      this._unrefTimer();
+      return;
+    }
+  }
+  debug('_onTimeout');
+  this.emit('timeout');
+}
+setNoDelay value is   function(enable) {
+  if (!this._handle) {
+    this.once('connect',
+              enable ? this.setNoDelay : () => this.setNoDelay(enable));
+    return this;
+  }
+
+  // Backwards compatibility: assume true when `enable` is omitted
+  if (this._handle.setNoDelay)
+    this._handle.setNoDelay(enable === undefined ? true : !!enable);
+
+  return this;
+}
+setKeepAlive value is   function(setting, msecs) {
+  if (!this._handle) {
+    this.once('connect', () => this.setKeepAlive(setting, msecs));
+    return this;
+  }
+
+  if (this._handle.setKeepAlive)
+    this._handle.setKeepAlive(setting, ~~(msecs / 1000));
+
+  return this;
+}
+address value is   function() {
+  return this._getsockname();
+}
+_read value is   function(n) {
+  debug('_read');
+
+  if (this.connecting || !this._handle) {
+    debug('_read wait for connection');
+    this.once('connect', () => this._read(n));
+  } else if (!this._handle.reading) {
+    tryReadStart(this);
+  }
+}
+end value is   function(data, encoding, callback) {
+  stream.Duplex.prototype.end.call(this, data, encoding, callback);
+  DTRACE_NET_STREAM_END(this);
+  return this;
+}
+pause value is   function() {
+  if (this[kBuffer] && !this.connecting && this._handle &&
+      this._handle.reading) {
+    this._handle.reading = false;
+    if (!this.destroyed) {
+      const err = this._handle.readStop();
+      if (err)
+        this.destroy(errnoException(err, 'read'));
+    }
+  }
+  return stream.Duplex.prototype.pause.call(this);
+}
+resume value is   function() {
+  if (this[kBuffer] && !this.connecting && this._handle &&
+      !this._handle.reading) {
+    tryReadStart(this);
+  }
+  return stream.Duplex.prototype.resume.call(this);
+}
+read value is   function(n) {
+  if (this[kBuffer] && !this.connecting && this._handle &&
+      !this._handle.reading) {
+    tryReadStart(this);
+  }
+  return stream.Duplex.prototype.read.call(this, n);
+}
+_getpeername value is   function() {
+  if (!this._peername) {
+    if (!this._handle || !this._handle.getpeername) {
+      return {};
+    }
+    var out = {};
+    var err = this._handle.getpeername(out);
+    if (err) return {};  // FIXME(bnoordhuis) Throw?
+    this._peername = out;
+  }
+  return this._peername;
+}
+bytesRead value is   0
+remoteAddress value is   undefined
+remoteFamily value is   undefined
+remotePort value is   undefined
+_getsockname value is   function() {
+  if (!this._handle || !this._handle.getsockname) {
+    return {};
+  }
+  if (!this._sockname) {
+    var out = {};
+    var err = this._handle.getsockname(out);
+    if (err) return {};  // FIXME(bnoordhuis) Throw?
+    this._sockname = out;
+  }
+  return this._sockname;
+}
+localAddress value is   undefined
+localPort value is   undefined
+_writeGeneric value is   function(writev, data, encoding, cb) {
+  // If we are still connecting, then buffer this for later.
+  // The Writable logic will buffer up any more writes while
+  // waiting for this one to be done.
+  if (this.connecting) {
+    this._pendingData = data;
+    this._pendingEncoding = encoding;
+    this.once('connect', function connect() {
+      this._writeGeneric(writev, data, encoding, cb);
+    });
+    return;
+  }
+  this._pendingData = null;
+  this._pendingEncoding = '';
+
+  if (!this._handle) {
+    cb(new ERR_SOCKET_CLOSED());
+    return false;
+  }
+
+  this._unrefTimer();
+
+  let req;
+  if (writev)
+    req = writevGeneric(this, data, cb);
+  else
+    req = writeGeneric(this, data, encoding, cb);
+  if (req.async)
+    this[kLastWriteQueueSize] = req.bytes;
+}
+_writev value is   function(chunks, cb) {
+  this._writeGeneric(true, chunks, '', cb);
+}
+_write value is   function(data, encoding, cb) {
+  this._writeGeneric(false, data, encoding, cb);
+}
+_bytesDispatched value is   0
+bytesWritten value is   0
+connect value is   function(...args) {
+  let normalized;
+  // If passed an array, it's treated as an array of arguments that have
+  // already been normalized (so we don't normalize more than once). This has
+  // been solved before in https://github.com/nodejs/node/pull/12342, but was
+  // reverted as it had unintended side effects.
+  if (Array.isArray(args[0]) && args[0][normalizedArgsSymbol]) {
+    normalized = args[0];
+  } else {
+    normalized = normalizeArgs(args);
+  }
+  const options = normalized[0];
+  const cb = normalized[1];
+
+  if (this.write !== Socket.prototype.write)
+    this.write = Socket.prototype.write;
+
+  if (this.destroyed) {
+    this._undestroy();
+    this._handle = null;
+    this._peername = null;
+    this._sockname = null;
+  }
+
+  const { path } = options;
+  const pipe = !!path;
+  debug('pipe', pipe, path);
+
+  if (!this._handle) {
+    this._handle = pipe ?
+      new Pipe(PipeConstants.SOCKET) :
+      new TCP(TCPConstants.SOCKET);
+    initSocketHandle(this);
+  }
+
+  if (cb !== null) {
+    this.once('connect', cb);
+  }
+
+  this._unrefTimer();
+
+  this.connecting = true;
+  this.writable = true;
+
+  if (pipe) {
+    validateString(path, 'options.path');
+    defaultTriggerAsyncIdScope(
+      this[async_id_symbol], internalConnect, this, path
+    );
+  } else {
+    lookupAndConnect(this, options);
+  }
+  return this;
+}
+ref value is   function() {
+  if (!this._handle) {
+    this.once('connect', this.ref);
+    return this;
+  }
+
+  if (typeof this._handle.ref === 'function') {
+    this._handle.ref();
+  }
+
+  return this;
+}
+unref value is   function() {
+  if (!this._handle) {
+    this.once('connect', this.unref);
+    return this;
+  }
+
+  if (typeof this._handle.unref === 'function') {
+    this._handle.unref();
+  }
+
+  return this;
+}
+write value is   function(chunk, encoding, cb) {
+  const state = this._writableState;
+  var ret = false;
+  const isBuf = !state.objectMode && Stream._isUint8Array(chunk);
+
+  // Do not use Object.getPrototypeOf as it is slower since V8 7.3.
+  if (isBuf && !(chunk instanceof Buffer)) {
+    chunk = Stream._uint8ArrayToBuffer(chunk);
+  }
+
+  if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (isBuf)
+    encoding = 'buffer';
+  else if (!encoding)
+    encoding = state.defaultEncoding;
+
+  if (typeof cb !== 'function')
+    cb = nop;
+
+  if (state.ending)
+    writeAfterEnd(this, cb);
+  else if (isBuf || validChunk(this, state, chunk, cb)) {
+    state.pendingcb++;
+    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
+  }
+
+  return ret;
+}
+cork value is   function() {
+  this._writableState.corked++;
+}
+uncork value is   function() {
+  const state = this._writableState;
+
+  if (state.corked) {
+    state.corked--;
+
+    if (!state.writing &&
+        !state.corked &&
+        !state.bufferProcessing &&
+        state.bufferedRequest)
+      clearBuffer(this, state);
+  }
+}
+setDefaultEncoding value is   function setDefaultEncoding(encoding) {
+  // node::ParseEncoding() requires lower case.
+  if (typeof encoding === 'string')
+    encoding = encoding.toLowerCase();
+  if (!Buffer.isEncoding(encoding))
+    throw new ERR_UNKNOWN_ENCODING(encoding);
+  this._writableState.defaultEncoding = encoding;
+  return this;
+}
+destroy value is   function destroy(err, cb) {
+  const readableDestroyed = this._readableState &&
+    this._readableState.destroyed;
+  const writableDestroyed = this._writableState &&
+    this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorNT, this, err);
+      }
+    }
+
+    return this;
+  }
+
+  // We set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  }
+
+  // If this is a duplex stream mark the writable part as destroyed as well
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, (err) => {
+    if (!cb && err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else {
+        process.nextTick(emitCloseNT, this);
+      }
+    } else if (cb) {
+      process.nextTick(emitCloseNT, this);
+      cb(err);
+    } else {
+      process.nextTick(emitCloseNT, this);
+    }
+  });
+
+  return this;
+}
+_undestroy value is   function undestroy() {
+  if (this._readableState) {
+    this._readableState.destroyed = false;
+    this._readableState.reading = false;
+    this._readableState.ended = false;
+    this._readableState.endEmitted = false;
+  }
+
+  if (this._writableState) {
+    this._writableState.destroyed = false;
+    this._writableState.ended = false;
+    this._writableState.ending = false;
+    this._writableState.finalCalled = false;
+    this._writableState.prefinished = false;
+    this._writableState.finished = false;
+    this._writableState.errorEmitted = false;
+  }
+}
+push value is   function(chunk, encoding) {
+  return readableAddChunk(this, chunk, encoding, false);
+}
+unshift value is   function(chunk, encoding) {
+  return readableAddChunk(this, chunk, encoding, true);
+}
+isPaused value is   function() {
+  return this._readableState.flowing === false;
+}
+setEncoding value is   function(enc) {
+  if (!StringDecoder)
+    StringDecoder = require('string_decoder').StringDecoder;
+  const decoder = new StringDecoder(enc);
+  this._readableState.decoder = decoder;
+  // If setEncoding(null), decoder.encoding equals utf8
+  this._readableState.encoding = this._readableState.decoder.encoding;
+
+  const buffer = this._readableState.buffer;
+  // Iterate over current buffer to convert already stored Buffers:
+  let content = '';
+  for (const data of buffer) {
+    content += decoder.write(data);
+  }
+  buffer.clear();
+  if (content !== '')
+    buffer.push(content);
+  this._readableState.length = content.length;
+  return this;
+}
+pipe value is   function(dest, pipeOpts) {
+  const src = this;
+  const state = this._readableState;
+
+  switch (state.pipesCount) {
+    case 0:
+      state.pipes = dest;
+      break;
+    case 1:
+      state.pipes = [state.pipes, dest];
+      break;
+    default:
+      state.pipes.push(dest);
+      break;
+  }
+  state.pipesCount += 1;
+  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
+
+  const doEnd = (!pipeOpts || pipeOpts.end !== false) &&
+              dest !== process.stdout &&
+              dest !== process.stderr;
+
+  const endFn = doEnd ? onend : unpipe;
+  if (state.endEmitted)
+    process.nextTick(endFn);
+  else
+    src.once('end', endFn);
+
+  dest.on('unpipe', onunpipe);
+  function onunpipe(readable, unpipeInfo) {
+    debug('onunpipe');
+    if (readable === src) {
+      if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
+        unpipeInfo.hasUnpiped = true;
+        cleanup();
+      }
+    }
+  }
+
+  function onend() {
+    debug('onend');
+    dest.end();
+  }
+
+  let ondrain;
+
+  var cleanedUp = false;
+  function cleanup() {
+    debug('cleanup');
+    // Cleanup event handlers once the pipe is broken
+    dest.removeListener('close', onclose);
+    dest.removeListener('finish', onfinish);
+    if (ondrain) {
+      dest.removeListener('drain', ondrain);
+    }
+    dest.removeListener('error', onerror);
+    dest.removeListener('unpipe', onunpipe);
+    src.removeListener('end', onend);
+    src.removeListener('end', unpipe);
+    src.removeListener('data', ondata);
+
+    cleanedUp = true;
+
+    // If the reader is waiting for a drain event from this
+    // specific writer, then it would cause it to never start
+    // flowing again.
+    // So, if this is awaiting a drain, then we just call it now.
+    // If we don't know, then assume that we are waiting for one.
+    if (ondrain && state.awaitDrain &&
+        (!dest._writableState || dest._writableState.needDrain))
+      ondrain();
+  }
+
+  src.on('data', ondata);
+  function ondata(chunk) {
+    debug('ondata');
+    const ret = dest.write(chunk);
+    debug('dest.write', ret);
+    if (ret === false) {
+      // If the user unpiped during `dest.write()`, it is possible
+      // to get stuck in a permanently paused state if that write
+      // also returned false.
+      // => Check whether `dest` is still a piping destination.
+      if (((state.pipesCount === 1 && state.pipes === dest) ||
+           (state.pipesCount > 1 && state.pipes.includes(dest))) &&
+          !cleanedUp) {
+        debug('false write response, pause', state.awaitDrain);
+        state.awaitDrain++;
+      }
+      if (!ondrain) {
+        // When the dest drains, it reduces the awaitDrain counter
+        // on the source.  This would be more elegant with a .once()
+        // handler in flow(), but adding and removing repeatedly is
+        // too slow.
+        ondrain = pipeOnDrain(src);
+        dest.on('drain', ondrain);
+      }
+      src.pause();
+    }
+  }
+
+  // If the dest has an error, then stop piping into it.
+  // However, don't suppress the throwing behavior for this.
+  function onerror(er) {
+    debug('onerror', er);
+    unpipe();
+    dest.removeListener('error', onerror);
+    if (EE.listenerCount(dest, 'error') === 0)
+      errorOrDestroy(dest, er);
+  }
+
+  // Make sure our error handler is attached before userland ones.
+  prependListener(dest, 'error', onerror);
+
+  // Both close and finish should trigger unpipe, but only once.
+  function onclose() {
+    dest.removeListener('finish', onfinish);
+    unpipe();
+  }
+  dest.once('close', onclose);
+  function onfinish() {
+    debug('onfinish');
+    dest.removeListener('close', onclose);
+    unpipe();
+  }
+  dest.once('finish', onfinish);
+
+  function unpipe() {
+    debug('unpipe');
+    src.unpipe(dest);
+  }
+
+  // Tell the dest that it's being piped to
+  dest.emit('pipe', src);
+
+  // Start the flow if it hasn't been started already.
+  if (!state.flowing) {
+    debug('pipe resume');
+    src.resume();
+  }
+
+  return dest;
+}
+unpipe value is   function(dest) {
+  const state = this._readableState;
+  const unpipeInfo = { hasUnpiped: false };
+
+  // If we're not piping anywhere, then do nothing.
+  if (state.pipesCount === 0)
+    return this;
+
+  // Just one destination.  most common case.
+  if (state.pipesCount === 1) {
+    // Passed in one, but it's not the right one.
+    if (dest && dest !== state.pipes)
+      return this;
+
+    if (!dest)
+      dest = state.pipes;
+
+    // got a match.
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+    if (dest)
+      dest.emit('unpipe', this, unpipeInfo);
+    return this;
+  }
+
+  // Slow case with multiple pipe destinations.
+
+  if (!dest) {
+    // remove all.
+    var dests = state.pipes;
+    var len = state.pipesCount;
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+
+    for (var i = 0; i < len; i++)
+      dests[i].emit('unpipe', this, { hasUnpiped: false });
+    return this;
+  }
+
+  // Try to find the right one.
+  const index = state.pipes.indexOf(dest);
+  if (index === -1)
+    return this;
+
+  state.pipes.splice(index, 1);
+  state.pipesCount -= 1;
+  if (state.pipesCount === 1)
+    state.pipes = state.pipes[0];
+
+  dest.emit('unpipe', this, unpipeInfo);
+
+  return this;
+}
+on value is   function(ev, fn) {
+  const res = Stream.prototype.on.call(this, ev, fn);
+  const state = this._readableState;
+
+  if (ev === 'data') {
+    // Update readableListening so that resume() may be a no-op
+    // a few lines down. This is needed to support once('readable').
+    state.readableListening = this.listenerCount('readable') > 0;
+
+    // Try start flowing on next tick if stream isn't explicitly paused
+    if (state.flowing !== false)
+      this.resume();
+  } else if (ev === 'readable') {
+    if (!state.endEmitted && !state.readableListening) {
+      state.readableListening = state.needReadable = true;
+      state.flowing = false;
+      state.emittedReadable = false;
+      debug('on readable', state.length, state.reading);
+      if (state.length) {
+        emitReadable(this);
+      } else if (!state.reading) {
+        process.nextTick(nReadingNextTick, this);
+      }
+    }
+  }
+
+  return res;
+}
+addListener value is   function(ev, fn) {
+  const res = Stream.prototype.on.call(this, ev, fn);
+  const state = this._readableState;
+
+  if (ev === 'data') {
+    // Update readableListening so that resume() may be a no-op
+    // a few lines down. This is needed to support once('readable').
+    state.readableListening = this.listenerCount('readable') > 0;
+
+    // Try start flowing on next tick if stream isn't explicitly paused
+    if (state.flowing !== false)
+      this.resume();
+  } else if (ev === 'readable') {
+    if (!state.endEmitted && !state.readableListening) {
+      state.readableListening = state.needReadable = true;
+      state.flowing = false;
+      state.emittedReadable = false;
+      debug('on readable', state.length, state.reading);
+      if (state.length) {
+        emitReadable(this);
+      } else if (!state.reading) {
+        process.nextTick(nReadingNextTick, this);
+      }
+    }
+  }
+
+  return res;
+}
+removeListener value is   function(ev, fn) {
+  const res = Stream.prototype.removeListener.call(this, ev, fn);
+
+  if (ev === 'readable') {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+}
+off value is   function(ev, fn) {
+  const res = Stream.prototype.removeListener.call(this, ev, fn);
+
+  if (ev === 'readable') {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+}
+removeAllListeners value is   function(ev) {
+  const res = Stream.prototype.removeAllListeners.apply(this, arguments);
+
+  if (ev === 'readable' || ev === undefined) {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+}
+wrap value is   function(stream) {
+  const state = this._readableState;
+  var paused = false;
+
+  stream.on('end', () => {
+    debug('wrapped end');
+    if (state.decoder && !state.ended) {
+      var chunk = state.decoder.end();
+      if (chunk && chunk.length)
+        this.push(chunk);
+    }
+
+    this.push(null);
+  });
+
+  stream.on('data', (chunk) => {
+    debug('wrapped data');
+    if (state.decoder)
+      chunk = state.decoder.write(chunk);
+
+    // Don't skip over falsy values in objectMode
+    if (state.objectMode && (chunk === null || chunk === undefined))
+      return;
+    else if (!state.objectMode && (!chunk || !chunk.length))
+      return;
+
+    const ret = this.push(chunk);
+    if (!ret) {
+      paused = true;
+      stream.pause();
+    }
+  });
+
+  // Proxy all the other methods. Important when wrapping filters and duplexes.
+  for (const i in stream) {
+    if (this[i] === undefined && typeof stream[i] === 'function') {
+      this[i] = function methodWrap(method) {
+        return function methodWrapReturnFunction() {
+          return stream[method].apply(stream, arguments);
+        };
+      }(i);
+    }
+  }
+
+  // Proxy certain important events.
+  for (var n = 0; n < kProxyEvents.length; n++) {
+    stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
+  }
+
+  // When we try to consume some more bytes, simply unpause the
+  // underlying stream.
+  this._read = (n) => {
+    debug('wrapped _read', n);
+    if (paused) {
+      paused = false;
+      stream.resume();
+    }
+  };
+
+  return this;
+}
+setMaxListeners value is   function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || Number.isNaN(n)) {
+    throw new ERR_OUT_OF_RANGE('n', 'a non-negative number', n);
+  }
+  this._maxListeners = n;
+  return this;
+}
+getMaxListeners value is   function getMaxListeners() {
+  return _getMaxListeners(this);
+}
+emit value is   function emit(type, ...args) {
+  let doError = (type === 'error');
+
+  const events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    let er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      try {
+        const capture = {};
+        // eslint-disable-next-line no-restricted-syntax
+        Error.captureStackTrace(capture, EventEmitter.prototype.emit);
+        Object.defineProperty(er, kEnhanceStackBeforeInspector, {
+          value: enhanceStackTrace.bind(this, er, capture),
+          configurable: true
+        });
+      } catch {}
+
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+
+    let stringifiedEr;
+    const { inspect } = require('internal/util/inspect');
+    try {
+      stringifiedEr = inspect(er);
+    } catch {
+      stringifiedEr = er;
+    }
+
+    // At least give some kind of context to the user
+    const err = new ERR_UNHANDLED_ERROR(stringifiedEr);
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  const handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    apply(handler, this, args);
+  } else {
+    const len = handler.length;
+    const listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      apply(listeners[i], this, args);
+  }
+
+  return true;
+}
+prependListener value is   function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    }
+once value is   function once(type, listener) {
+  checkListener(listener);
+
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+}
+prependOnceListener value is   function prependOnceListener(type, listener) {
+      checkListener(listener);
+
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    }
+listeners value is   function listeners(type) {
+  return _listeners(this, type, true);
+}
+rawListeners value is   function rawListeners(type) {
+  return _listeners(this, type, false);
+}
+listenerCount value is   function listenerCount(type) {
+  const events = this._events;
+
+  if (events !== undefined) {
+    const evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+eventNames value is   function eventNames() {
+  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
+}
+The Object protoprotype
+connecting value is   false
+_hadError value is   false
+_parent value is   null
+_host value is   null
+The Object protoprotype
+objectMode value is   false
+highWaterMark value is   0
+The Object protoprotype
+head value is   null
+tail value is   null
+length value is   0
+length value is   0
+pipes value is   null
+pipesCount value is   0
+flowing value is   null
+ended value is   false
+endEmitted value is   false
+reading value is   false
+sync value is   false
+needReadable value is   true
+emittedReadable value is   false
+readableListening value is   false
+resumeScheduled value is   false
+paused value is   true
+emitClose value is   false
+autoDestroy value is   false
+destroyed value is   false
+defaultEncoding value is   utf8
+awaitDrain value is   0
+readingMore value is   false
+decoder value is   null
+encoding value is   null
+readable value is   true
+The Object protoprotype
+end value is   function onReadableStreamEnd() {
+  if (!this.allowHalfOpen) {
+    this.write = writeAfterFIN;
+    if (this.writable)
+      this.end();
+  }
+
+  if (!this.destroyed && !this.writable && !this.writableLength)
+    this.destroy();
+}
+pause value is   () => {
+      process.nextTick(onpause);
+    }
+_eventsCount value is   2
+_maxListeners value is   undefined
+The Object protoprotype
+objectMode value is   false
+highWaterMark value is   0
+finalCalled value is   false
+needDrain value is   false
+ending value is   false
+ended value is   false
+finished value is   false
+destroyed value is   false
+decodeStrings value is   false
+defaultEncoding value is   utf8
+length value is   0
+writing value is   false
+corked value is   0
+sync value is   true
+bufferProcessing value is   false
+onwrite value is   function () { [native code] }
+writecb value is   null
+writelen value is   0
+bufferedRequest value is   null
+lastBufferedRequest value is   null
+pendingcb value is   0
+prefinished value is   false
+errorEmitted value is   false
+emitClose value is   false
+autoDestroy value is   false
+bufferedRequestCount value is   0
+The Object protoprotype
+next value is   null
+entry value is   null
+finish value is   function () { [native code] }
+getBuffer value is   function getBuffer() {
+  var current = this.bufferedRequest;
+  const out = [];
+  while (current) {
+    out.push(current);
+    current = current.next;
+  }
+  return out;
+}
+writable value is   false
+allowHalfOpen value is   false
+_sockname value is   null
+_pendingData value is   null
+_pendingEncoding value is   
+server value is   null
+_server value is   null
+isRaw value is   false
+isTTY value is   true
+fd value is   0
+setRawMode value is   function(flag) {
+  flag = !!flag;
+  const err = this._handle.setRawMode(flag);
+  if (err) {
+    this.emit('error', errors.errnoException(err, 'setRawMode'));
+    return this;
+  }
+  this.isRaw = flag;
+  return this;
+}
+_unrefTimer value is   function _unrefTimer() {
+  for (var s = this; s !== null; s = s._parent) {
+    if (s[kTimeout])
+      s[kTimeout].refresh();
+  }
+}
+_final value is   function(cb) {
+  // If still connecting - defer handling `_final` until 'connect' will happen
+  if (this.pending) {
+    debug('_final: not yet connected');
+    return this.once('connect', () => this._final(cb));
+  }
+
+  if (!this._handle)
+    return cb();
+
+  debug('_final: not ended, call shutdown()');
+
+  const req = new ShutdownWrap();
+  req.oncomplete = afterShutdown;
+  req.handle = this._handle;
+  req.callback = cb;
+  const err = this._handle.shutdown(req);
+
+  if (err === 1)  // synchronous finish
+    return afterShutdown.call(req, 0);
+  else if (err !== 0)
+    return this.destroy(errnoException(err, 'shutdown'));
+}
+setTimeout value is   function setStreamTimeout(msecs, callback) {
+  if (this.destroyed)
+    return;
+
+  this.timeout = msecs;
+
+  // Type checking identical to timers.enroll()
+  msecs = getTimerDuration(msecs, 'msecs');
+
+  // Attempt to clear an existing timer in both cases -
+  //  even if it will be rescheduled we don't want to leak an existing timer.
+  clearTimeout(this[kTimeout]);
+
+  if (msecs === 0) {
+    if (callback !== undefined) {
+      if (typeof callback !== 'function')
+        throw new ERR_INVALID_CALLBACK(callback);
+      this.removeListener('timeout', callback);
+    }
+  } else {
+    this[kTimeout] = setUnrefTimeout(this._onTimeout.bind(this), msecs);
+    if (this[kSession]) this[kSession][kUpdateTimer]();
+
+    if (callback !== undefined) {
+      if (typeof callback !== 'function')
+        throw new ERR_INVALID_CALLBACK(callback);
+      this.once('timeout', callback);
+    }
+  }
+  return this;
+}
+_onTimeout value is   function() {
+  const handle = this._handle;
+  const lastWriteQueueSize = this[kLastWriteQueueSize];
+  if (lastWriteQueueSize > 0 && handle) {
+    // `lastWriteQueueSize !== writeQueueSize` means there is
+    // an active write in progress, so we suppress the timeout.
+    const { writeQueueSize } = handle;
+    if (lastWriteQueueSize !== writeQueueSize) {
+      this[kLastWriteQueueSize] = writeQueueSize;
+      this._unrefTimer();
+      return;
+    }
+  }
+  debug('_onTimeout');
+  this.emit('timeout');
+}
+setNoDelay value is   function(enable) {
+  if (!this._handle) {
+    this.once('connect',
+              enable ? this.setNoDelay : () => this.setNoDelay(enable));
+    return this;
+  }
+
+  // Backwards compatibility: assume true when `enable` is omitted
+  if (this._handle.setNoDelay)
+    this._handle.setNoDelay(enable === undefined ? true : !!enable);
+
+  return this;
+}
+setKeepAlive value is   function(setting, msecs) {
+  if (!this._handle) {
+    this.once('connect', () => this.setKeepAlive(setting, msecs));
+    return this;
+  }
+
+  if (this._handle.setKeepAlive)
+    this._handle.setKeepAlive(setting, ~~(msecs / 1000));
+
+  return this;
+}
+address value is   function() {
+  return this._getsockname();
+}
+_read value is   function(n) {
+  debug('_read');
+
+  if (this.connecting || !this._handle) {
+    debug('_read wait for connection');
+    this.once('connect', () => this._read(n));
+  } else if (!this._handle.reading) {
+    tryReadStart(this);
+  }
+}
+end value is   function(data, encoding, callback) {
+  stream.Duplex.prototype.end.call(this, data, encoding, callback);
+  DTRACE_NET_STREAM_END(this);
+  return this;
+}
+pause value is   function() {
+  if (this[kBuffer] && !this.connecting && this._handle &&
+      this._handle.reading) {
+    this._handle.reading = false;
+    if (!this.destroyed) {
+      const err = this._handle.readStop();
+      if (err)
+        this.destroy(errnoException(err, 'read'));
+    }
+  }
+  return stream.Duplex.prototype.pause.call(this);
+}
+resume value is   function() {
+  if (this[kBuffer] && !this.connecting && this._handle &&
+      !this._handle.reading) {
+    tryReadStart(this);
+  }
+  return stream.Duplex.prototype.resume.call(this);
+}
+read value is   function(n) {
+  if (this[kBuffer] && !this.connecting && this._handle &&
+      !this._handle.reading) {
+    tryReadStart(this);
+  }
+  return stream.Duplex.prototype.read.call(this, n);
+}
+destroySoon value is   function() {
+  if (this.writable)
+    this.end();
+
+  if (this.writableFinished)
+    this.destroy();
+  else
+    this.once('finish', this.destroy);
+}
+_destroy value is   function(exception, cb) {
+  debug('destroy');
+
+  this.connecting = false;
+
+  this.readable = this.writable = false;
+
+  for (var s = this; s !== null; s = s._parent) {
+    clearTimeout(s[kTimeout]);
+  }
+
+  debug('close');
+  if (this._handle) {
+    if (this !== process.stderr)
+      debug('close handle');
+    var isException = exception ? true : false;
+    // `bytesRead` and `kBytesWritten` should be accessible after `.destroy()`
+    this[kBytesRead] = this._handle.bytesRead;
+    this[kBytesWritten] = this._handle.bytesWritten;
+
+    this._handle.close(() => {
+      debug('emit close');
+      this.emit('close', isException);
+    });
+    this._handle.onread = noop;
+    this._handle = null;
+    this._sockname = null;
+    cb(exception);
+  } else {
+    cb(exception);
+    process.nextTick(emitCloseNT, this);
+  }
+
+  if (this._server) {
+    debug('has server');
+    this._server._connections--;
+    if (this._server._emitCloseIfDrained) {
+      this._server._emitCloseIfDrained();
+    }
+  }
+}
+_getpeername value is   function() {
+  if (!this._peername) {
+    if (!this._handle || !this._handle.getpeername) {
+      return {};
+    }
+    var out = {};
+    var err = this._handle.getpeername(out);
+    if (err) return {};  // FIXME(bnoordhuis) Throw?
+    this._peername = out;
+  }
+  return this._peername;
+}
+bytesRead value is   0
+remoteAddress value is   undefined
+remoteFamily value is   undefined
+remotePort value is   undefined
+_getsockname value is   function() {
+  if (!this._handle || !this._handle.getsockname) {
+    return {};
+  }
+  if (!this._sockname) {
+    var out = {};
+    var err = this._handle.getsockname(out);
+    if (err) return {};  // FIXME(bnoordhuis) Throw?
+    this._sockname = out;
+  }
+  return this._sockname;
+}
+localAddress value is   undefined
+localPort value is   undefined
+_writeGeneric value is   function(writev, data, encoding, cb) {
+  // If we are still connecting, then buffer this for later.
+  // The Writable logic will buffer up any more writes while
+  // waiting for this one to be done.
+  if (this.connecting) {
+    this._pendingData = data;
+    this._pendingEncoding = encoding;
+    this.once('connect', function connect() {
+      this._writeGeneric(writev, data, encoding, cb);
+    });
+    return;
+  }
+  this._pendingData = null;
+  this._pendingEncoding = '';
+
+  if (!this._handle) {
+    cb(new ERR_SOCKET_CLOSED());
+    return false;
+  }
+
+  this._unrefTimer();
+
+  let req;
+  if (writev)
+    req = writevGeneric(this, data, cb);
+  else
+    req = writeGeneric(this, data, encoding, cb);
+  if (req.async)
+    this[kLastWriteQueueSize] = req.bytes;
+}
+_writev value is   function(chunks, cb) {
+  this._writeGeneric(true, chunks, '', cb);
+}
+_write value is   function(data, encoding, cb) {
+  this._writeGeneric(false, data, encoding, cb);
+}
+_bytesDispatched value is   0
+bytesWritten value is   0
+connect value is   function(...args) {
+  let normalized;
+  // If passed an array, it's treated as an array of arguments that have
+  // already been normalized (so we don't normalize more than once). This has
+  // been solved before in https://github.com/nodejs/node/pull/12342, but was
+  // reverted as it had unintended side effects.
+  if (Array.isArray(args[0]) && args[0][normalizedArgsSymbol]) {
+    normalized = args[0];
+  } else {
+    normalized = normalizeArgs(args);
+  }
+  const options = normalized[0];
+  const cb = normalized[1];
+
+  if (this.write !== Socket.prototype.write)
+    this.write = Socket.prototype.write;
+
+  if (this.destroyed) {
+    this._undestroy();
+    this._handle = null;
+    this._peername = null;
+    this._sockname = null;
+  }
+
+  const { path } = options;
+  const pipe = !!path;
+  debug('pipe', pipe, path);
+
+  if (!this._handle) {
+    this._handle = pipe ?
+      new Pipe(PipeConstants.SOCKET) :
+      new TCP(TCPConstants.SOCKET);
+    initSocketHandle(this);
+  }
+
+  if (cb !== null) {
+    this.once('connect', cb);
+  }
+
+  this._unrefTimer();
+
+  this.connecting = true;
+  this.writable = true;
+
+  if (pipe) {
+    validateString(path, 'options.path');
+    defaultTriggerAsyncIdScope(
+      this[async_id_symbol], internalConnect, this, path
+    );
+  } else {
+    lookupAndConnect(this, options);
+  }
+  return this;
+}
+ref value is   function() {
+  if (!this._handle) {
+    this.once('connect', this.ref);
+    return this;
+  }
+
+  if (typeof this._handle.ref === 'function') {
+    this._handle.ref();
+  }
+
+  return this;
+}
+unref value is   function() {
+  if (!this._handle) {
+    this.once('connect', this.unref);
+    return this;
+  }
+
+  if (typeof this._handle.unref === 'function') {
+    this._handle.unref();
+  }
+
+  return this;
+}
+write value is   function(chunk, encoding, cb) {
+  const state = this._writableState;
+  var ret = false;
+  const isBuf = !state.objectMode && Stream._isUint8Array(chunk);
+
+  // Do not use Object.getPrototypeOf as it is slower since V8 7.3.
+  if (isBuf && !(chunk instanceof Buffer)) {
+    chunk = Stream._uint8ArrayToBuffer(chunk);
+  }
+
+  if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (isBuf)
+    encoding = 'buffer';
+  else if (!encoding)
+    encoding = state.defaultEncoding;
+
+  if (typeof cb !== 'function')
+    cb = nop;
+
+  if (state.ending)
+    writeAfterEnd(this, cb);
+  else if (isBuf || validChunk(this, state, chunk, cb)) {
+    state.pendingcb++;
+    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
+  }
+
+  return ret;
+}
+cork value is   function() {
+  this._writableState.corked++;
+}
+uncork value is   function() {
+  const state = this._writableState;
+
+  if (state.corked) {
+    state.corked--;
+
+    if (!state.writing &&
+        !state.corked &&
+        !state.bufferProcessing &&
+        state.bufferedRequest)
+      clearBuffer(this, state);
+  }
+}
+setDefaultEncoding value is   function setDefaultEncoding(encoding) {
+  // node::ParseEncoding() requires lower case.
+  if (typeof encoding === 'string')
+    encoding = encoding.toLowerCase();
+  if (!Buffer.isEncoding(encoding))
+    throw new ERR_UNKNOWN_ENCODING(encoding);
+  this._writableState.defaultEncoding = encoding;
+  return this;
+}
+destroy value is   function destroy(err, cb) {
+  const readableDestroyed = this._readableState &&
+    this._readableState.destroyed;
+  const writableDestroyed = this._writableState &&
+    this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorNT, this, err);
+      }
+    }
+
+    return this;
+  }
+
+  // We set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  }
+
+  // If this is a duplex stream mark the writable part as destroyed as well
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, (err) => {
+    if (!cb && err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorAndCloseNT, this, err);
+      } else {
+        process.nextTick(emitCloseNT, this);
+      }
+    } else if (cb) {
+      process.nextTick(emitCloseNT, this);
+      cb(err);
+    } else {
+      process.nextTick(emitCloseNT, this);
+    }
+  });
+
+  return this;
+}
+_undestroy value is   function undestroy() {
+  if (this._readableState) {
+    this._readableState.destroyed = false;
+    this._readableState.reading = false;
+    this._readableState.ended = false;
+    this._readableState.endEmitted = false;
+  }
+
+  if (this._writableState) {
+    this._writableState.destroyed = false;
+    this._writableState.ended = false;
+    this._writableState.ending = false;
+    this._writableState.finalCalled = false;
+    this._writableState.prefinished = false;
+    this._writableState.finished = false;
+    this._writableState.errorEmitted = false;
+  }
+}
+push value is   function(chunk, encoding) {
+  return readableAddChunk(this, chunk, encoding, false);
+}
+unshift value is   function(chunk, encoding) {
+  return readableAddChunk(this, chunk, encoding, true);
+}
+isPaused value is   function() {
+  return this._readableState.flowing === false;
+}
+setEncoding value is   function(enc) {
+  if (!StringDecoder)
+    StringDecoder = require('string_decoder').StringDecoder;
+  const decoder = new StringDecoder(enc);
+  this._readableState.decoder = decoder;
+  // If setEncoding(null), decoder.encoding equals utf8
+  this._readableState.encoding = this._readableState.decoder.encoding;
+
+  const buffer = this._readableState.buffer;
+  // Iterate over current buffer to convert already stored Buffers:
+  let content = '';
+  for (const data of buffer) {
+    content += decoder.write(data);
+  }
+  buffer.clear();
+  if (content !== '')
+    buffer.push(content);
+  this._readableState.length = content.length;
+  return this;
+}
+pipe value is   function(dest, pipeOpts) {
+  const src = this;
+  const state = this._readableState;
+
+  switch (state.pipesCount) {
+    case 0:
+      state.pipes = dest;
+      break;
+    case 1:
+      state.pipes = [state.pipes, dest];
+      break;
+    default:
+      state.pipes.push(dest);
+      break;
+  }
+  state.pipesCount += 1;
+  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
+
+  const doEnd = (!pipeOpts || pipeOpts.end !== false) &&
+              dest !== process.stdout &&
+              dest !== process.stderr;
+
+  const endFn = doEnd ? onend : unpipe;
+  if (state.endEmitted)
+    process.nextTick(endFn);
+  else
+    src.once('end', endFn);
+
+  dest.on('unpipe', onunpipe);
+  function onunpipe(readable, unpipeInfo) {
+    debug('onunpipe');
+    if (readable === src) {
+      if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
+        unpipeInfo.hasUnpiped = true;
+        cleanup();
+      }
+    }
+  }
+
+  function onend() {
+    debug('onend');
+    dest.end();
+  }
+
+  let ondrain;
+
+  var cleanedUp = false;
+  function cleanup() {
+    debug('cleanup');
+    // Cleanup event handlers once the pipe is broken
+    dest.removeListener('close', onclose);
+    dest.removeListener('finish', onfinish);
+    if (ondrain) {
+      dest.removeListener('drain', ondrain);
+    }
+    dest.removeListener('error', onerror);
+    dest.removeListener('unpipe', onunpipe);
+    src.removeListener('end', onend);
+    src.removeListener('end', unpipe);
+    src.removeListener('data', ondata);
+
+    cleanedUp = true;
+
+    // If the reader is waiting for a drain event from this
+    // specific writer, then it would cause it to never start
+    // flowing again.
+    // So, if this is awaiting a drain, then we just call it now.
+    // If we don't know, then assume that we are waiting for one.
+    if (ondrain && state.awaitDrain &&
+        (!dest._writableState || dest._writableState.needDrain))
+      ondrain();
+  }
+
+  src.on('data', ondata);
+  function ondata(chunk) {
+    debug('ondata');
+    const ret = dest.write(chunk);
+    debug('dest.write', ret);
+    if (ret === false) {
+      // If the user unpiped during `dest.write()`, it is possible
+      // to get stuck in a permanently paused state if that write
+      // also returned false.
+      // => Check whether `dest` is still a piping destination.
+      if (((state.pipesCount === 1 && state.pipes === dest) ||
+           (state.pipesCount > 1 && state.pipes.includes(dest))) &&
+          !cleanedUp) {
+        debug('false write response, pause', state.awaitDrain);
+        state.awaitDrain++;
+      }
+      if (!ondrain) {
+        // When the dest drains, it reduces the awaitDrain counter
+        // on the source.  This would be more elegant with a .once()
+        // handler in flow(), but adding and removing repeatedly is
+        // too slow.
+        ondrain = pipeOnDrain(src);
+        dest.on('drain', ondrain);
+      }
+      src.pause();
+    }
+  }
+
+  // If the dest has an error, then stop piping into it.
+  // However, don't suppress the throwing behavior for this.
+  function onerror(er) {
+    debug('onerror', er);
+    unpipe();
+    dest.removeListener('error', onerror);
+    if (EE.listenerCount(dest, 'error') === 0)
+      errorOrDestroy(dest, er);
+  }
+
+  // Make sure our error handler is attached before userland ones.
+  prependListener(dest, 'error', onerror);
+
+  // Both close and finish should trigger unpipe, but only once.
+  function onclose() {
+    dest.removeListener('finish', onfinish);
+    unpipe();
+  }
+  dest.once('close', onclose);
+  function onfinish() {
+    debug('onfinish');
+    dest.removeListener('close', onclose);
+    unpipe();
+  }
+  dest.once('finish', onfinish);
+
+  function unpipe() {
+    debug('unpipe');
+    src.unpipe(dest);
+  }
+
+  // Tell the dest that it's being piped to
+  dest.emit('pipe', src);
+
+  // Start the flow if it hasn't been started already.
+  if (!state.flowing) {
+    debug('pipe resume');
+    src.resume();
+  }
+
+  return dest;
+}
+unpipe value is   function(dest) {
+  const state = this._readableState;
+  const unpipeInfo = { hasUnpiped: false };
+
+  // If we're not piping anywhere, then do nothing.
+  if (state.pipesCount === 0)
+    return this;
+
+  // Just one destination.  most common case.
+  if (state.pipesCount === 1) {
+    // Passed in one, but it's not the right one.
+    if (dest && dest !== state.pipes)
+      return this;
+
+    if (!dest)
+      dest = state.pipes;
+
+    // got a match.
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+    if (dest)
+      dest.emit('unpipe', this, unpipeInfo);
+    return this;
+  }
+
+  // Slow case with multiple pipe destinations.
+
+  if (!dest) {
+    // remove all.
+    var dests = state.pipes;
+    var len = state.pipesCount;
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+
+    for (var i = 0; i < len; i++)
+      dests[i].emit('unpipe', this, { hasUnpiped: false });
+    return this;
+  }
+
+  // Try to find the right one.
+  const index = state.pipes.indexOf(dest);
+  if (index === -1)
+    return this;
+
+  state.pipes.splice(index, 1);
+  state.pipesCount -= 1;
+  if (state.pipesCount === 1)
+    state.pipes = state.pipes[0];
+
+  dest.emit('unpipe', this, unpipeInfo);
+
+  return this;
+}
+on value is   function(ev, fn) {
+  const res = Stream.prototype.on.call(this, ev, fn);
+  const state = this._readableState;
+
+  if (ev === 'data') {
+    // Update readableListening so that resume() may be a no-op
+    // a few lines down. This is needed to support once('readable').
+    state.readableListening = this.listenerCount('readable') > 0;
+
+    // Try start flowing on next tick if stream isn't explicitly paused
+    if (state.flowing !== false)
+      this.resume();
+  } else if (ev === 'readable') {
+    if (!state.endEmitted && !state.readableListening) {
+      state.readableListening = state.needReadable = true;
+      state.flowing = false;
+      state.emittedReadable = false;
+      debug('on readable', state.length, state.reading);
+      if (state.length) {
+        emitReadable(this);
+      } else if (!state.reading) {
+        process.nextTick(nReadingNextTick, this);
+      }
+    }
+  }
+
+  return res;
+}
+addListener value is   function(ev, fn) {
+  const res = Stream.prototype.on.call(this, ev, fn);
+  const state = this._readableState;
+
+  if (ev === 'data') {
+    // Update readableListening so that resume() may be a no-op
+    // a few lines down. This is needed to support once('readable').
+    state.readableListening = this.listenerCount('readable') > 0;
+
+    // Try start flowing on next tick if stream isn't explicitly paused
+    if (state.flowing !== false)
+      this.resume();
+  } else if (ev === 'readable') {
+    if (!state.endEmitted && !state.readableListening) {
+      state.readableListening = state.needReadable = true;
+      state.flowing = false;
+      state.emittedReadable = false;
+      debug('on readable', state.length, state.reading);
+      if (state.length) {
+        emitReadable(this);
+      } else if (!state.reading) {
+        process.nextTick(nReadingNextTick, this);
+      }
+    }
+  }
+
+  return res;
+}
+removeListener value is   function(ev, fn) {
+  const res = Stream.prototype.removeListener.call(this, ev, fn);
+
+  if (ev === 'readable') {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+}
+off value is   function(ev, fn) {
+  const res = Stream.prototype.removeListener.call(this, ev, fn);
+
+  if (ev === 'readable') {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+}
+removeAllListeners value is   function(ev) {
+  const res = Stream.prototype.removeAllListeners.apply(this, arguments);
+
+  if (ev === 'readable' || ev === undefined) {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+}
+wrap value is   function(stream) {
+  const state = this._readableState;
+  var paused = false;
+
+  stream.on('end', () => {
+    debug('wrapped end');
+    if (state.decoder && !state.ended) {
+      var chunk = state.decoder.end();
+      if (chunk && chunk.length)
+        this.push(chunk);
+    }
+
+    this.push(null);
+  });
+
+  stream.on('data', (chunk) => {
+    debug('wrapped data');
+    if (state.decoder)
+      chunk = state.decoder.write(chunk);
+
+    // Don't skip over falsy values in objectMode
+    if (state.objectMode && (chunk === null || chunk === undefined))
+      return;
+    else if (!state.objectMode && (!chunk || !chunk.length))
+      return;
+
+    const ret = this.push(chunk);
+    if (!ret) {
+      paused = true;
+      stream.pause();
+    }
+  });
+
+  // Proxy all the other methods. Important when wrapping filters and duplexes.
+  for (const i in stream) {
+    if (this[i] === undefined && typeof stream[i] === 'function') {
+      this[i] = function methodWrap(method) {
+        return function methodWrapReturnFunction() {
+          return stream[method].apply(stream, arguments);
+        };
+      }(i);
+    }
+  }
+
+  // Proxy certain important events.
+  for (var n = 0; n < kProxyEvents.length; n++) {
+    stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
+  }
+
+  // When we try to consume some more bytes, simply unpause the
+  // underlying stream.
+  this._read = (n) => {
+    debug('wrapped _read', n);
+    if (paused) {
+      paused = false;
+      stream.resume();
+    }
+  };
+
+  return this;
+}
+setMaxListeners value is   function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || Number.isNaN(n)) {
+    throw new ERR_OUT_OF_RANGE('n', 'a non-negative number', n);
+  }
+  this._maxListeners = n;
+  return this;
+}
+getMaxListeners value is   function getMaxListeners() {
+  return _getMaxListeners(this);
+}
+emit value is   function emit(type, ...args) {
+  let doError = (type === 'error');
+
+  const events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    let er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      try {
+        const capture = {};
+        // eslint-disable-next-line no-restricted-syntax
+        Error.captureStackTrace(capture, EventEmitter.prototype.emit);
+        Object.defineProperty(er, kEnhanceStackBeforeInspector, {
+          value: enhanceStackTrace.bind(this, er, capture),
+          configurable: true
+        });
+      } catch {}
+
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+
+    let stringifiedEr;
+    const { inspect } = require('internal/util/inspect');
+    try {
+      stringifiedEr = inspect(er);
+    } catch {
+      stringifiedEr = er;
+    }
+
+    // At least give some kind of context to the user
+    const err = new ERR_UNHANDLED_ERROR(stringifiedEr);
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  const handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    apply(handler, this, args);
+  } else {
+    const len = handler.length;
+    const listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      apply(listeners[i], this, args);
+  }
+
+  return true;
+}
+prependListener value is   function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    }
+once value is   function once(type, listener) {
+  checkListener(listener);
+
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+}
+prependOnceListener value is   function prependOnceListener(type, listener) {
+      checkListener(listener);
+
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    }
+listeners value is   function listeners(type) {
+  return _listeners(this, type, true);
+}
+rawListeners value is   function rawListeners(type) {
+  return _listeners(this, type, false);
+}
+listenerCount value is   function listenerCount(type) {
+  const events = this._events;
+
+  if (events !== undefined) {
+    const evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+eventNames value is   function eventNames() {
+  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
+}
+openStdin value is   function() {
+    process.stdin.resume();
+    return process.stdin;
+  }
+allowedNodeEnvironmentFlags value is   [object Set]
+assert value is   function deprecated(...args) {
+    if (!warned) {
+      warned = true;
+      if (code !== undefined) {
+        if (!codesWarned.has(code)) {
+          process.emitWarning(msg, 'DeprecationWarning', code, deprecated);
+          codesWarned.add(code);
+        }
+      } else {
+        process.emitWarning(msg, 'DeprecationWarning', deprecated);
+      }
+    }
+    if (new.target) {
+      return Reflect.construct(fn, args, new.target);
+    }
+    return fn.apply(this, args);
+  }
+The Object protoprotype
+inspector value is   true
+debug value is   false
+uv value is   true
+ipv6 value is   true
+tls_alpn value is   true
+tls_sni value is   true
+tls_ocsp value is   true
+tls value is   true
+cached_builtins value is   true
+_fatalException value is   (er, fromPromise) => {
+    // It's possible that defaultTriggerAsyncId was set for a constructor
+    // call that threw and was never cleared. So clear it now.
+    clearDefaultTriggerAsyncId();
+
+    // If diagnostic reporting is enabled, call into its handler to see
+    // whether it is interested in handling the situation.
+    // Ignore if the error is scoped inside a domain.
+    // use == in the checks as we want to allow for null and undefined
+    if (er == null || er.domain == null) {
+      try {
+        const report = internalBinding('report');
+        if (report != null && report.shouldReportOnUncaughtException()) {
+          report.writeReport(er ? er.message : 'Exception',
+                             'Exception',
+                             null,
+                             er ? er.stack : undefined);
+        }
+      } catch {}  // Ignore the exception. Diagnostic reporting is unavailable.
+    }
+
+    const type = fromPromise ? 'unhandledRejection' : 'uncaughtException';
+    if (exceptionHandlerState.captureFn !== null) {
+      exceptionHandlerState.captureFn(er);
+    } else if (!process.emit('uncaughtException', er, type)) {
+      // If someone handled it, then great. Otherwise, die in C++ land
+      // since that means that we'll exit the process, emit the 'exit' event.
+      try {
+        if (!process._exiting) {
+          process._exiting = true;
+          process.exitCode = 1;
+          process.emit('exit', 1);
+        }
+      } catch {
+        // Nothing to be done about it at this point.
+      }
+      return false;
+    }
+
+    // If we handled an error, then make sure any ticks get processed
+    // by ensuring that the next Immediate cycle isn't empty.
+    require('timers').setImmediate(noop);
+
+    // Emit the after() hooks now that the exception has been handled.
+    if (afterHooksExist()) {
+      do {
+        emitAfter(executionAsyncId());
+      } while (hasAsyncIdStack());
+    // Or completely empty the id stack.
+    } else {
+      clearAsyncIdStack();
+    }
+
+    return true;
+  }
+setUncaughtExceptionCaptureCallback value is   function setUncaughtExceptionCaptureCallback(fn) {
+  if (fn === null) {
+    exceptionHandlerState.captureFn = fn;
+    shouldAbortOnUncaughtToggle[0] = 1;
+    return;
+  }
+  if (typeof fn !== 'function') {
+    throw new ERR_INVALID_ARG_TYPE('fn', ['Function', 'null'], fn);
+  }
+  if (exceptionHandlerState.captureFn !== null) {
+    throw new ERR_UNCAUGHT_EXCEPTION_CAPTURE_ALREADY_SET();
+  }
+  exceptionHandlerState.captureFn = fn;
+  shouldAbortOnUncaughtToggle[0] = 0;
+}
+hasUncaughtExceptionCaptureCallback value is   function hasUncaughtExceptionCaptureCallback() {
+  return exceptionHandlerState.captureFn !== null;
+}
+emitWarning value is   function emitWarning(warning, type, code, ctor, now) {
+  let detail;
+  if (type !== null && typeof type === 'object' && !Array.isArray(type)) {
+    ctor = type.ctor;
+    code = type.code;
+    if (typeof type.detail === 'string')
+      detail = type.detail;
+    type = type.type || 'Warning';
+  } else if (typeof type === 'function') {
+    ctor = type;
+    code = undefined;
+    type = 'Warning';
+  }
+  if (type !== undefined && typeof type !== 'string') {
+    throw new ERR_INVALID_ARG_TYPE('type', 'string', type);
+  }
+  if (typeof code === 'function') {
+    ctor = code;
+    code = undefined;
+  } else if (code !== undefined && typeof code !== 'string') {
+    throw new ERR_INVALID_ARG_TYPE('code', 'string', code);
+  }
+  if (typeof warning === 'string') {
+    // Improve error creation performance by skipping the error frames.
+    // They are added in the `captureStackTrace()` function below.
+    const tmpStackLimit = Error.stackTraceLimit;
+    Error.stackTraceLimit = 0;
+    // eslint-disable-next-line no-restricted-syntax
+    warning = new Error(warning);
+    Error.stackTraceLimit = tmpStackLimit;
+    warning.name = String(type || 'Warning');
+    if (code !== undefined) warning.code = code;
+    if (detail !== undefined) warning.detail = detail;
+    // eslint-disable-next-line no-restricted-syntax
+    Error.captureStackTrace(warning, ctor || process.emitWarning);
+  } else if (!(warning instanceof Error)) {
+    throw new ERR_INVALID_ARG_TYPE('warning', ['Error', 'string'], warning);
+  }
+  if (warning.name === 'DeprecationWarning') {
+    if (process.noDeprecation)
+      return;
+    if (process.throwDeprecation)
+      throw warning;
+  }
+  if (now) process.emit('warning', warning);
+  else process.nextTick(doEmitWarning(warning));
+}
+nextTick value is   function nextTick(callback) {
+  if (typeof callback !== 'function')
+    throw new ERR_INVALID_CALLBACK(callback);
+
+  if (process._exiting)
+    return;
+
+  var args;
+  switch (arguments.length) {
+    case 1: break;
+    case 2: args = [arguments[1]]; break;
+    case 3: args = [arguments[1], arguments[2]]; break;
+    case 4: args = [arguments[1], arguments[2], arguments[3]]; break;
+    default:
+      args = new Array(arguments.length - 1);
+      for (var i = 1; i < arguments.length; i++)
+        args[i - 1] = arguments[i];
+  }
+
+  if (queue.isEmpty())
+    setHasTickScheduled(true);
+  const asyncId = newAsyncId();
+  const triggerAsyncId = getDefaultTriggerAsyncId();
+  const tickObject = {
+    [async_id_symbol]: asyncId,
+    [trigger_async_id_symbol]: triggerAsyncId,
+    callback,
+    args
+  };
+  if (initHooksExist())
+    emitInit(asyncId, 'TickObject', triggerAsyncId, tickObject);
+  queue.push(tickObject);
+}
+_tickCallback value is   function runNextTicks() {
+  if (!hasTickScheduled() && !hasRejectionToWarn())
+    runMicrotasks();
+  if (!hasTickScheduled() && !hasRejectionToWarn())
+    return;
+
+  processTicksAndRejections();
+}
+The Object protoprotype
+ALLUSERSPROFILE value is   C:\ProgramData
+AMDAPPSDKROOT value is   C:\Program Files\AMD APP\
+APPDATA value is   C:\Users\jifkui\AppData\Roaming
+asl.log value is   Destination=file
+ChocolateyInstall value is   C:\ProgramData\chocolatey
+ChocolateyLastPathUpdate value is   132163512079126222
+CommonProgramFiles value is   C:\Program Files\Common Files
+COMPUTERNAME value is   JIFKUI
+ComSpec value is   C:\Windows\system32\cmd.exe
+FP_NO_HOST_CHECK value is   NO
+FSHARPINSTALLDIR value is   C:\Program Files\Microsoft SDKs\F#\4.1\Framework\v4.0\
+GIT_LFS_PATH value is   E:\Program Files\Git LFS
+GSTREAMER_1_0_ROOT_X86_64 value is   F:\gstreamer\1.0\x86_64\
+GTK_BASEPATH value is   C:\Program Files\GtkSharp\2.12\
+HOME value is   C:\Users\jifkui
+HOMEDRIVE value is   C:
+HOMEPATH value is   \Users\jifkui
+INIT_CWD value is   H:\jifukuistudy\sourcecode\vue-master
+JAVA_HOME value is   C:\Program Files\Java\jdk1.8.0_161
+LOCALAPPDATA value is   C:\Users\jifkui\AppData\Local
+LOGONSERVER value is   \\JIFKUI
+NODE value is   E:\nodejs\node.exe
+NODE_EXE value is   E:\nodejs\\node.exe
+NODE_PATH value is   E:\nodejs\node_modules
+NPM_CLI_JS value is   E:\nodejs\\node_modules\npm\bin\npm-cli.js
+npm_config_access value is   
+npm_config_allow_same_version value is   
+npm_config_also value is   
+npm_config_always_auth value is   
+npm_config_argv value is   {"remain":[],"cooked":["run","build"],"original":["run","build"]}
+npm_config_audit value is   true
+npm_config_audit_level value is   low
+npm_config_auth_type value is   legacy
+npm_config_before value is   
+npm_config_bin_links value is   true
+npm_config_browser value is   
+npm_config_ca value is   
+npm_config_cache value is   C:\Users\jifkui\AppData\Roaming\npm-cache
+npm_config_cache_lock_retries value is   10
+npm_config_cache_lock_stale value is   60000
+npm_config_cache_lock_wait value is   10000
+npm_config_cache_max value is   Infinity
+npm_config_cache_min value is   10
+npm_config_cafile value is   
+npm_config_cert value is   
+npm_config_cidr value is   
+npm_config_color value is   true
+npm_config_commit_hooks value is   true
+npm_config_depth value is   Infinity
+npm_config_description value is   true
+npm_config_dev value is   
+npm_config_dry_run value is   
+npm_config_editor value is   notepad.exe
+npm_config_engine_strict value is   
+npm_config_fetch_retries value is   2
+npm_config_fetch_retry_factor value is   10
+npm_config_fetch_retry_maxtimeout value is   60000
+npm_config_fetch_retry_mintimeout value is   10000
+npm_config_force value is   
+npm_config_format_package_lock value is   true
+npm_config_git value is   git
+npm_config_git_tag_version value is   true
+npm_config_global value is   
+npm_config_globalconfig value is   E:\nodejs\npm_global_modules\node_modules\etc\npmrc
+npm_config_globalignorefile value is   E:\nodejs\npm_global_modules\node_modules\etc\npmignore
+npm_config_global_style value is   
+npm_config_group value is   
+npm_config_ham_it_up value is   
+npm_config_heading value is   npm
+npm_config_https_proxy value is   
+npm_config_if_present value is   
+npm_config_ignore_prepublish value is   
+npm_config_ignore_scripts value is   
+npm_config_init_author_email value is   
+npm_config_init_author_name value is   
+npm_config_init_author_url value is   
+npm_config_init_license value is   ISC
+npm_config_init_module value is   C:\Users\jifkui\.npm-init.js
+npm_config_init_version value is   1.0.0
+npm_config_json value is   
+npm_config_key value is   
+npm_config_legacy_bundling value is   
+npm_config_link value is   
+npm_config_local_address value is   
+npm_config_loglevel value is   notice
+npm_config_logs_max value is   10
+npm_config_long value is   
+npm_config_maxsockets value is   50
+npm_config_message value is   %s
+npm_config_metrics_registry value is   https://registry.npmjs.org/
+npm_config_node_gyp value is   E:\nodejs\node_modules\npm\node_modules\node-gyp\bin\node-gyp.js
+npm_config_node_options value is   
+npm_config_node_version value is   12.13.0
+npm_config_noproxy value is   
+npm_config_offline value is   
+npm_config_onload_script value is   
+npm_config_only value is   
+npm_config_optional value is   true
+npm_config_otp value is   
+npm_config_package_lock value is   true
+npm_config_package_lock_only value is   
+npm_config_parseable value is   
+npm_config_prefer_offline value is   
+npm_config_prefer_online value is   
+npm_config_prefix value is   E:\nodejs\npm_global_modules\node_modules
+npm_config_preid value is   
+npm_config_production value is   
+npm_config_progress value is   true
+npm_config_proxy value is   
+npm_config_read_only value is   
+npm_config_rebuild_bundle value is   true
+npm_config_registry value is   https://registry.npmjs.org/
+npm_config_rollback value is   true
+npm_config_save value is   true
+npm_config_save_bundle value is   
+npm_config_save_dev value is   
+npm_config_save_exact value is   
+npm_config_save_optional value is   
+npm_config_save_prefix value is   ^
+npm_config_save_prod value is   
+npm_config_scope value is   
+npm_config_scripts_prepend_node_path value is   warn-only
+npm_config_script_shell value is   
+npm_config_searchexclude value is   
+npm_config_searchlimit value is   20
+npm_config_searchopts value is   
+npm_config_searchstaleness value is   900
+npm_config_send_metrics value is   
+npm_config_shell value is   C:\Windows\system32\cmd.exe
+npm_config_shrinkwrap value is   true
+npm_config_sign_git_commit value is   
+npm_config_sign_git_tag value is   
+npm_config_sso_poll_frequency value is   500
+npm_config_sso_type value is   oauth
+npm_config_strict_ssl value is   true
+npm_config_tag value is   latest
+npm_config_tag_version_prefix value is   v
+npm_config_timing value is   
+npm_config_tmp value is   C:\Users\jifkui\AppData\Local\Temp
+npm_config_umask value is   0000
+npm_config_unicode value is   
+npm_config_unsafe_perm value is   true
+npm_config_update_notifier value is   true
+npm_config_usage value is   
+npm_config_user value is   
+npm_config_userconfig value is   C:\Users\jifkui\.npmrc
+npm_config_user_agent value is   npm/6.12.0 node/v12.13.0 win32 ia32
+npm_config_version value is   
+npm_config_versions value is   
+npm_config_viewer value is   browser
+npm_execpath value is   E:\nodejs\node_modules\npm\bin\npm-cli.js
+npm_lifecycle_event value is   build
+npm_lifecycle_script value is   node build/build.js
+npm_node_execpath value is   E:\nodejs\node.exe
+npm_package_author_name value is   Evan You
+npm_package_bugs_url value is   https://github.com/vuejs/vue/issues
+npm_package_config_commitizen_path value is   ./node_modules/cz-conventional-changelog
+npm_package_description value is   Reactive, component-oriented view layer for modern web interfaces.
+npm_package_devDependencies_babel_core value is   ^6.25.0
+npm_package_devDependencies_babel_eslint value is   ^7.2.3
+npm_package_devDependencies_babel_helper_vue_jsx_merge_props value is   ^2.0.2
+npm_package_devDependencies_babel_loader value is   ^7.0.0
+npm_package_devDependencies_babel_plugin_istanbul value is   ^4.1.4
+npm_package_devDependencies_babel_plugin_syntax_dynamic_import value is   ^6.18.0
+npm_package_devDependencies_babel_plugin_syntax_jsx value is   ^6.18.0
+npm_package_devDependencies_babel_plugin_transform_vue_jsx value is   ^3.4.3
+npm_package_devDependencies_babel_preset_es2015 value is   ^6.24.1
+npm_package_devDependencies_babel_preset_flow_vue value is   ^1.0.0
+npm_package_devDependencies_buble value is   ^0.16.0
+npm_package_devDependencies_chalk value is   ^1.1.3
+npm_package_devDependencies_chromedriver value is   ^2.30.1
+npm_package_devDependencies_codecov_io value is   ^0.1.6
+npm_package_devDependencies_commitizen value is   ^2.9.6
+npm_package_devDependencies_conventional_changelog value is   ^1.1.3
+npm_package_devDependencies_cross_spawn value is   ^5.1.0
+npm_package_devDependencies_cz_conventional_changelog value is   ^2.0.0
+npm_package_devDependencies_de_indent value is   ^1.0.2
+npm_package_devDependencies_es6_promise value is   ^4.1.0
+npm_package_devDependencies_eslint value is   ^3.0.0
+npm_package_devDependencies_eslint_loader value is   ^1.7.1
+npm_package_devDependencies_eslint_plugin_flowtype value is   ^2.34.0
+npm_package_devDependencies_eslint_plugin_jasmine value is   ^2.8.4
+npm_package_devDependencies_eslint_plugin_vue_libs value is   ^1.2.0
+npm_package_devDependencies_file_loader value is   ^0.11.2
+npm_package_devDependencies_flow_bin value is   ^0.54.0
+npm_package_devDependencies_hash_sum value is   ^1.0.2
+npm_package_devDependencies_he value is   ^1.1.1
+npm_package_devDependencies_http_server value is   ^0.10.0
+npm_package_devDependencies_jasmine value is   ^2.6.0
+npm_package_devDependencies_jasmine_core value is   ^2.6.3
+npm_package_devDependencies_karma value is   ^1.7.0
+npm_package_devDependencies_karma_chrome_launcher value is   ^2.1.1
+npm_package_devDependencies_karma_coverage value is   ^1.1.1
+npm_package_devDependencies_karma_firefox_launcher value is   ^1.0.1
+npm_package_devDependencies_karma_jasmine value is   ^1.1.0
+npm_package_devDependencies_karma_mocha_reporter value is   ^2.2.3
+npm_package_devDependencies_karma_phantomjs_launcher value is   ^1.0.4
+npm_package_devDependencies_karma_safari_launcher value is   ^1.0.0
+npm_package_devDependencies_karma_sauce_launcher value is   ^1.1.0
+npm_package_devDependencies_karma_sourcemap_loader value is   ^0.3.7
+npm_package_devDependencies_karma_webpack value is   ^2.0.3
+npm_package_devDependencies_lodash value is   ^4.17.4
+npm_package_devDependencies_lodash_template value is   ^4.4.0
+npm_package_devDependencies_lodash_uniq value is   ^4.5.0
+npm_package_devDependencies_lru_cache value is   ^4.1.1
+npm_package_devDependencies_nightwatch value is   ^0.9.16
+npm_package_devDependencies_nightwatch_helpers value is   ^1.2.0
+npm_package_devDependencies_phantomjs_prebuilt value is   ^2.1.14
+npm_package_devDependencies_resolve value is   ^1.3.3
+npm_package_devDependencies_rollup value is   ^0.50.0
+npm_package_devDependencies_rollup_plugin_alias value is   ^1.3.1
+npm_package_devDependencies_rollup_plugin_babel value is   ^3.0.2
+npm_package_devDependencies_rollup_plugin_buble value is   ^0.16.0
+npm_package_devDependencies_rollup_plugin_commonjs value is   ^8.0.2
+npm_package_devDependencies_rollup_plugin_flow_no_whitespace value is   ^1.0.0
+npm_package_devDependencies_rollup_plugin_node_resolve value is   ^3.0.0
+npm_package_devDependencies_rollup_plugin_replace value is   ^2.0.0
+npm_package_devDependencies_rollup_watch value is   ^4.0.0
+npm_package_devDependencies_selenium_server value is   ^2.53.1
+npm_package_devDependencies_serialize_javascript value is   ^1.3.0
+npm_package_devDependencies_shelljs value is   ^0.7.8
+npm_package_devDependencies_typescript value is   ^2.5.2
+npm_package_devDependencies_uglify_js value is   ^3.0.15
+npm_package_devDependencies_webpack value is   ^2.6.1
+npm_package_devDependencies_weex_js_runtime value is   ^0.22.0
+npm_package_devDependencies__types_node value is   ^8.0.33
+npm_package_devDependencies__types_webpack value is   ^3.0.13
+npm_package_files_0 value is   src
+npm_package_files_1 value is   dist/*.js
+npm_package_files_2 value is   types/*.d.ts
+npm_package_gitHead value is   5d2d5addfc20a8939cd4071abe9eff96597219cf
+npm_package_homepage value is   https://github.com/vuejs/vue#readme
+npm_package_jsdelivr value is   dist/vue.js
+npm_package_keywords_0 value is   vue
+npm_package_license value is   MIT
+npm_package_main value is   dist/vue.runtime.common.js
+npm_package_module value is   dist/vue.runtime.esm.js
+npm_package_name value is   vue
+npm_package_readmeFilename value is   README.md
+npm_package_repository_type value is   git
+npm_package_repository_url value is   git+https://github.com/vuejs/vue.git
+npm_package_scripts_bench_ssr value is   npm run build:ssr && node benchmarks/ssr/renderToString.js && node benchmarks/ssr/renderToStream.js
+npm_package_scripts_build value is   node build/build.js
+npm_package_scripts_build_ssr value is   npm run build -- web-runtime-cjs,web-server-renderer
+npm_package_scripts_build_weex value is   npm run build -- weex
+npm_package_scripts_commit value is   git-cz
+npm_package_scripts_dev value is   rollup -w -c build/config.js --environment TARGET:web-full-dev
+npm_package_scripts_dev_cjs value is   rollup -w -c build/config.js --environment TARGET:web-runtime-cjs
+npm_package_scripts_dev_compiler value is   rollup -w -c build/config.js --environment TARGET:web-compiler 
+npm_package_scripts_dev_esm value is   rollup -w -c build/config.js --environment TARGET:web-runtime-esm
+npm_package_scripts_dev_ssr value is   rollup -w -c build/config.js --environment TARGET:web-server-renderer
+npm_package_scripts_dev_test value is   karma start test/unit/karma.dev.config.js
+npm_package_scripts_dev_weex value is   rollup -w -c build/config.js --environment TARGET:weex-framework
+npm_package_scripts_dev_weex_compiler value is   rollup -w -c build/config.js --environment TARGET:weex-compiler 
+npm_package_scripts_dev_weex_factory value is   rollup -w -c build/config.js --environment TARGET:weex-factory
+npm_package_scripts_flow value is   flow check
+npm_package_scripts_lint value is   eslint src build test
+npm_package_scripts_release value is   bash build/release.sh
+npm_package_scripts_release_note value is   node build/gen-release-note.js
+npm_package_scripts_release_weex value is   bash build/release-weex.sh
+npm_package_scripts_sauce value is   karma start test/unit/karma.sauce.config.js
+npm_package_scripts_setup value is   node build/install-hooks.js
+npm_package_scripts_test value is   npm run lint && flow check && npm run test:types && npm run test:cover && npm run test:e2e -- --env phantomjs && npm run test:ssr && npm run test:weex
+npm_package_scripts_test_cover value is   karma start test/unit/karma.cover.config.js
+npm_package_scripts_test_e2e value is   npm run build -- web-full-prod,web-server-basic-renderer && node test/e2e/runner.js
+npm_package_scripts_test_sauce value is   npm run sauce -- 0 && npm run sauce -- 1 && npm run sauce -- 2
+npm_package_scripts_test_ssr value is   npm run build:ssr && jasmine JASMINE_CONFIG_PATH=test/ssr/jasmine.json
+npm_package_scripts_test_types value is   tsc -p ./types/test/tsconfig.json
+npm_package_scripts_test_unit value is   karma start test/unit/karma.unit.config.js
+npm_package_scripts_test_weex value is   npm run build:weex && jasmine JASMINE_CONFIG_PATH=test/weex/jasmine.json
+npm_package_typings value is   types/index.d.ts
+npm_package_unpkg value is   dist/vue.js
+npm_package_version value is   2.5.0
+NPM_PREFIX_NPM_CLI_JS value is   E:\nodejs\npm_global_modules\node_modules\node_modules\npm\bin\npm-cli.js
+NUMBER_OF_PROCESSORS value is   4
+OneDrive value is   C:\Users\jifkui\OneDrive
+OPENSSL_CONF value is   C:\OpenSSL-Win32\bin\openssl.cfg
+OS value is   Windows_NT
+Path value is   E:\nodejs\node_modules\npm\node_modules\npm-lifecycle\node-gyp-bin;H:\jifukuistudy\sourcecode\vue-master\node_modules\.bin;C:\Python27\;C:\Python27\Scripts;E:\Program Files\NetSarang\Xshell 6\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\AMD APP\bin\x86;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Windows Live\Shared;C:\Program Files\ATI Technologies\ATI.ACE\Core-Static;E:\Git\bin;E:\nodejs;C:\Program Files\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Git\cmd;C:\Program Files\IDM Computer Solutions\UltraEdit;G:\opencv\opencv_jifukui\install\x86\vc15\bin;C:\Program Files\openocd\0.6.0\bin;%JAVA_HOME\bin%;E:\Program Files\IDM Computer Solutions\UltraCompare;C:\OpenSSL-Win32\bin;G:\工作文件\交换机\iperf-3.1.3-win32\iperf-3.1.3-win32;C:\Python27;C:\Python27\Scripts;E:\MongoDB\Server\3.2\bin;C:\Program Files\Microsoft Visual Studio\Shared\Python36_86;E:\nodejs\npm_global_modules\node_modules;E:\Program Files\Microsoft VS Code\bin;E:\ios-webkit-debug-proxy-win32;E:\Program Files\Git LFS;C:\Users\jifkui\AppData\Local\bin\NASM;E:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;E:\Program Files\ATMEL Corporation\AT91-ISP v1.13\Library\;E:\Program Files\ATMEL Corporation\AT91-ISP v1.13\sam-ba 2.9;E:\CMake\bin;C:\Program Files\openocd\0.6.0\bin;F:\FFmpeg\ffmpeg-20180402-197a4e8-win32-shared\ffmpeg-20180402-197a4e8-win32-shared\bin;E:\Users\jifkui\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\jifkui\AppData\Roaming\npm
+PATHEXT value is   .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+PROCESSOR_ARCHITECTURE value is   x86
+PROCESSOR_IDENTIFIER value is   x86 Family 21 Model 16 Stepping 1, AuthenticAMD
+PROCESSOR_LEVEL value is   21
+PROCESSOR_REVISION value is   1001
+ProgramData value is   C:\ProgramData
+ProgramFiles value is   C:\Program Files
+PROMPT value is   $P$G
+PSModulePath value is   C:\Windows\system32\WindowsPowerShell\v1.0\Modules\
+PUBLIC value is   C:\Users\Public
+SESSIONNAME value is   Console
+SystemDrive value is   C:
+SystemRoot value is   C:\Windows
+TEMP value is   C:\Users\jifkui\AppData\Local\Temp
+TMP value is   C:\Users\jifkui\AppData\Local\Temp
+USERDOMAIN value is   JIFKUI
+USERNAME value is   jifkui
+USERPROFILE value is   C:\Users\jifkui
+VS140COMNTOOLS value is   C:\Program Files\Microsoft Visual Studio 14.0\Common7\Tools\
+windir value is   C:\Windows
+windows_tracing_flags value is   3
+windows_tracing_logfile value is   C:\BVTBin\Tests\installpackage\csilogfile.log
+title value is   npm
+argv value is   E:\nodejs\node.exe,H:\jifukuistudy\sourcecode\vue-master\build\build.js
+execArgv value is   
+pid value is   12248
+ppid value is   13964
+execPath value is   E:\nodejs\node.exe
+debugPort value is   9229
+argv0 value is   node
+_preload_modules value is   
+The Object protoprotype
+id value is   .
+path value is   H:\jifukuistudy\sourcecode\vue-master\build
+The Object protoprotype
+parent value is   null
+filename value is   H:\jifukuistudy\sourcecode\vue-master\build\build.js
+loaded value is   false
+children value is   [object Object],[object Object],[object Object]
+paths value is   H:\jifukuistudy\sourcecode\vue-master\build\node_modules,H:\jifukuistudy\sourcecode\vue-master\node_modules,H:\jifukuistudy\sourcecode\node_modules,H:\jifukuistudy\node_modules,H:\node_modules
+load value is   function(filename) {
+  debug('load %j for module %j', filename, this.id);
+
+  assert(!this.loaded);
+  this.filename = filename;
+  this.paths = Module._nodeModulePaths(path.dirname(filename));
+
+  const extension = findLongestRegisteredExtension(filename);
+  Module._extensions[extension](this, filename);
+  this.loaded = true;
+
+  if (experimentalModules) {
+    const ESMLoader = asyncESM.ESMLoader;
+    const url = `${pathToFileURL(filename)}`;
+    const module = ESMLoader.moduleMap.get(url);
+    // Create module entry at load time to snapshot exports correctly
+    const exports = this.exports;
+    // Called from cjs translator
+    if (module !== undefined && module.module !== undefined) {
+      if (module.module.getStatus() >= kInstantiated)
+        module.module.setExport('default', exports);
+    } else { // preemptively cache
+      ESMLoader.moduleMap.set(
+        url,
+        new ModuleJob(ESMLoader, url, () =>
+          new ModuleWrap(function() {
+            this.setExport('default', exports);
+          }, ['default'], url)
+        )
+      );
+    }
+  }
+}
+require value is   function(id) {
+  validateString(id, 'id');
+  if (id === '') {
+    throw new ERR_INVALID_ARG_VALUE('id', id,
+                                    'must be a non-empty string');
+  }
+  requireDepth++;
+  try {
+    return Module._load(id, this, /* isMain */ false);
+  } finally {
+    requireDepth--;
+  }
+}
+_compile value is   function(content, filename) {
+  let moduleURL;
+  let redirects;
+  if (manifest) {
+    moduleURL = pathToFileURL(filename);
+    redirects = manifest.getRedirector(moduleURL);
+    manifest.assertIntegrity(moduleURL, content);
+  }
+
+  content = stripShebang(content);
+  maybeCacheSourceMap(filename, content, this);
+
+  let compiledWrapper;
+  if (patched) {
+    const wrapper = Module.wrap(content);
+    compiledWrapper = vm.runInThisContext(wrapper, {
+      filename,
+      lineOffset: 0,
+      displayErrors: true,
+      importModuleDynamically: experimentalModules ? async (specifier) => {
+        const loader = await asyncESM.loaderPromise;
+        return loader.import(specifier, normalizeReferrerURL(filename));
+      } : undefined,
+    });
+  } else {
+    let compiled;
+    try {
+      compiled = compileFunction(
+        content,
+        filename,
+        0,
+        0,
+        undefined,
+        false,
+        undefined,
+        [],
+        [
+          'exports',
+          'require',
+          'module',
+          '__filename',
+          '__dirname',
+        ]
+      );
+    } catch (err) {
+      if (experimentalModules) {
+        enrichCJSError(err);
+      }
+      throw err;
+    }
+
+    if (experimentalModules) {
+      const { callbackMap } = internalBinding('module_wrap');
+      callbackMap.set(compiled.cacheKey, {
+        importModuleDynamically: async (specifier) => {
+          const loader = await asyncESM.loaderPromise;
+          return loader.import(specifier, normalizeReferrerURL(filename));
+        }
+      });
+    }
+    compiledWrapper = compiled.function;
+  }
+
+  var inspectorWrapper = null;
+  if (getOptionValue('--inspect-brk') && process._eval == null) {
+    if (!resolvedArgv) {
+      // We enter the repl if we're not given a filename argument.
+      if (process.argv[1]) {
+        resolvedArgv = Module._resolveFilename(process.argv[1], null, false);
+      } else {
+        resolvedArgv = 'repl';
+      }
+    }
+
+    // Set breakpoint on module start
+    if (!hasPausedEntry && filename === resolvedArgv) {
+      hasPausedEntry = true;
+      inspectorWrapper = internalBinding('inspector').callAndPauseOnStart;
+    }
+  }
+  const dirname = path.dirname(filename);
+  const require = makeRequireFunction(this, redirects);
+  var result;
+  const exports = this.exports;
+  const thisValue = exports;
+  const module = this;
+  if (requireDepth === 0) statCache = new Map();
+  if (inspectorWrapper) {
+    result = inspectorWrapper(compiledWrapper, thisValue, exports,
+                              require, module, filename, dirname);
+  } else {
+    result = compiledWrapper.call(thisValue, exports, require, module,
+                                  filename, dirname);
+  }
+  if (requireDepth === 0) statCache = null;
+  return result;
+}
+setMaxListeners value is   function setMaxListeners(n) {
+  if (typeof n !== 'number' || n < 0 || Number.isNaN(n)) {
+    throw new ERR_OUT_OF_RANGE('n', 'a non-negative number', n);
+  }
+  this._maxListeners = n;
+  return this;
+}
+getMaxListeners value is   function getMaxListeners() {
+  return _getMaxListeners(this);
+}
+emit value is   function emit(type, ...args) {
+  let doError = (type === 'error');
+
+  const events = this._events;
+  if (events !== undefined)
+    doError = (doError && events.error === undefined);
+  else if (!doError)
+    return false;
+
+  // If there is no 'error' event listener then throw.
+  if (doError) {
+    let er;
+    if (args.length > 0)
+      er = args[0];
+    if (er instanceof Error) {
+      try {
+        const capture = {};
+        // eslint-disable-next-line no-restricted-syntax
+        Error.captureStackTrace(capture, EventEmitter.prototype.emit);
+        Object.defineProperty(er, kEnhanceStackBeforeInspector, {
+          value: enhanceStackTrace.bind(this, er, capture),
+          configurable: true
+        });
+      } catch {}
+
+      // Note: The comments on the `throw` lines are intentional, they show
+      // up in Node's output if this results in an unhandled exception.
+      throw er; // Unhandled 'error' event
+    }
+
+    let stringifiedEr;
+    const { inspect } = require('internal/util/inspect');
+    try {
+      stringifiedEr = inspect(er);
+    } catch {
+      stringifiedEr = er;
+    }
+
+    // At least give some kind of context to the user
+    const err = new ERR_UNHANDLED_ERROR(stringifiedEr);
+    err.context = er;
+    throw err; // Unhandled 'error' event
+  }
+
+  const handler = events[type];
+
+  if (handler === undefined)
+    return false;
+
+  if (typeof handler === 'function') {
+    apply(handler, this, args);
+  } else {
+    const len = handler.length;
+    const listeners = arrayClone(handler, len);
+    for (var i = 0; i < len; ++i)
+      apply(listeners[i], this, args);
+  }
+
+  return true;
+}
+addListener value is   function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+}
+on value is   function addListener(type, listener) {
+  return _addListener(this, type, listener, false);
+}
+prependListener value is   function prependListener(type, listener) {
+      return _addListener(this, type, listener, true);
+    }
+once value is   function once(type, listener) {
+  checkListener(listener);
+
+  this.on(type, _onceWrap(this, type, listener));
+  return this;
+}
+prependOnceListener value is   function prependOnceListener(type, listener) {
+      checkListener(listener);
+
+      this.prependListener(type, _onceWrap(this, type, listener));
+      return this;
+    }
+removeListener value is   function removeListener(type, listener) {
+      let originalListener;
+
+      checkListener(listener);
+
+      const events = this._events;
+      if (events === undefined)
+        return this;
+
+      const list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        let position = -1;
+
+        for (var i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          if (spliceOne === undefined)
+            spliceOne = require('internal/util').spliceOne;
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    }
+off value is   function removeListener(type, listener) {
+      let originalListener;
+
+      checkListener(listener);
+
+      const events = this._events;
+      if (events === undefined)
+        return this;
+
+      const list = events[type];
+      if (list === undefined)
+        return this;
+
+      if (list === listener || list.listener === listener) {
+        if (--this._eventsCount === 0)
+          this._events = Object.create(null);
+        else {
+          delete events[type];
+          if (events.removeListener)
+            this.emit('removeListener', type, list.listener || listener);
+        }
+      } else if (typeof list !== 'function') {
+        let position = -1;
+
+        for (var i = list.length - 1; i >= 0; i--) {
+          if (list[i] === listener || list[i].listener === listener) {
+            originalListener = list[i].listener;
+            position = i;
+            break;
+          }
+        }
+
+        if (position < 0)
+          return this;
+
+        if (position === 0)
+          list.shift();
+        else {
+          if (spliceOne === undefined)
+            spliceOne = require('internal/util').spliceOne;
+          spliceOne(list, position);
+        }
+
+        if (list.length === 1)
+          events[type] = list[0];
+
+        if (events.removeListener !== undefined)
+          this.emit('removeListener', type, originalListener || listener);
+      }
+
+      return this;
+    }
+removeAllListeners value is   function removeAllListeners(type) {
+      const events = this._events;
+      if (events === undefined)
+        return this;
+
+      // Not listening for removeListener, no need to emit
+      if (events.removeListener === undefined) {
+        if (arguments.length === 0) {
+          this._events = Object.create(null);
+          this._eventsCount = 0;
+        } else if (events[type] !== undefined) {
+          if (--this._eventsCount === 0)
+            this._events = Object.create(null);
+          else
+            delete events[type];
+        }
+        return this;
+      }
+
+      // Emit removeListener for all listeners on all events
+      if (arguments.length === 0) {
+        for (const key of Object.keys(events)) {
+          if (key === 'removeListener') continue;
+          this.removeAllListeners(key);
+        }
+        this.removeAllListeners('removeListener');
+        this._events = Object.create(null);
+        this._eventsCount = 0;
+        return this;
+      }
+
+      const listeners = events[type];
+
+      if (typeof listeners === 'function') {
+        this.removeListener(type, listeners);
+      } else if (listeners !== undefined) {
+        // LIFO order
+        for (var i = listeners.length - 1; i >= 0; i--) {
+          this.removeListener(type, listeners[i]);
+        }
+      }
+
+      return this;
+    }
+listeners value is   function listeners(type) {
+  return _listeners(this, type, true);
+}
+rawListeners value is   function rawListeners(type) {
+  return _listeners(this, type, false);
+}
+listenerCount value is   function listenerCount(type) {
+  const events = this._events;
+
+  if (events !== undefined) {
+    const evlistener = events[type];
+
+    if (typeof evlistener === 'function') {
+      return 1;
+    } else if (evlistener !== undefined) {
+      return evlistener.length;
+    }
+  }
+
+  return 0;
+}
+eventNames value is   function eventNames() {
+  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
+}
+the process.arg is E:\nodejs\node.exe
+process value is undefined
+[1m[34mdist\vue.runtime.common.js[39m[22m 240.09kb
+[1m[34mdist\vue.common.js[39m[22m 345.47kb
+[1m[34mdist\vue.runtime.esm.js[39m[22m 240.07kb
+[1m[34mdist\vue.esm.js[39m[22m 345.45kb
+[1m[34mdist\vue.runtime.js[39m[22m 237.92kb
+[1m[34mdist\vue.runtime.min.js[39m[22m 62.36kb (gzipped: 21.37kb)
+[1m[34mdist\vue.js[39m[22m 342.36kb
+[1m[34mdist\vue.min.js[39m[22m 90.14kb (gzipped: 31.13kb)
+[1m[34mpackages\vue-template-compiler\build.js[39m[22m 197.54kb
+[1m[34mpackages\vue-template-compiler\browser.js[39m[22m 280.33kb
+[1m[34mpackages\vue-server-renderer\build.js[39m[22m 282.02kb
+[1m[34mpackages\vue-server-renderer\basic.js[39m[22m 337.94kb
+[1m[34mpackages\vue-server-renderer\server-plugin.js[39m[22m 2.71kb
+[1m[34mpackages\vue-server-renderer\client-plugin.js[39m[22m 2.80kb

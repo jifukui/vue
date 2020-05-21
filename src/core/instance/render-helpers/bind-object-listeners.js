@@ -1,9 +1,10 @@
 /* @flow */
 
 import { warn, extend, isPlainObject } from 'core/util/index'
-/**合并事件的监听器
- * data：
- * value：
+/**
+ * 这段程序还不知道是做什么用的
+ * @param {*} data 
+ * @param {*} value 
  */
 export function bindObjectListeners (data: any, value: any): VNodeData 
 {

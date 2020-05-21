@@ -4,6 +4,8 @@
  * 
  * @param {*} children 要渲染的子对象
  * @param {*} context  要渲染的内容
+ * 如果children的值为都直接返回空的对象
+ * 
  */
 export function resolveSlots (
   children: ?Array<VNode>,

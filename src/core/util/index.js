@@ -1,5 +1,5 @@
 /* @flow */
-/**这个文件没有什么用只是引入了很多的接口 */
+/** 这个文件没有什么用只是引入了很多的接口 */
 export * from 'shared/util'
 export * from './lang'
 export * from './env'
