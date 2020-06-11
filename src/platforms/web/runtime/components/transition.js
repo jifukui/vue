@@ -10,7 +10,9 @@ import {
   isAsyncPlaceholder,
   getFirstComponentChild
 } from 'core/vdom/helpers/index'
-
+/**
+ * 定义转换属性
+ */
 export const transitionProps = {
   name: String,
   appear: Boolean,
@@ -39,7 +41,10 @@ function getRealChild (vnode: ?VNode): ?VNode {
     return vnode
   }
 }
-
+/**
+ * 
+ * @param {*} comp 
+ */
 export function extractTransitionData (comp: Component): Object {
   const data = {}
   const options: ComponentOptions = comp.$options
@@ -55,7 +60,11 @@ export function extractTransitionData (comp: Component): Object {
   }
   return data
 }
-
+/**
+ * 
+ * @param {*} h 
+ * @param {*} rawChild 
+ */
 function placeholder (h: Function, rawChild: VNode): ?VNode {
   if (/\d-keep-alive$/.test(rawChild.tag)) {
     return h('keep-alive', {
@@ -63,7 +72,10 @@ function placeholder (h: Function, rawChild: VNode): ?VNode {
     })
   }
 }
-
+/**
+ * 
+ * @param {*} vnode 
+ */
 function hasParentTransition (vnode: VNode): ?boolean {
   while ((vnode = vnode.parent)) {
     if (vnode.data.transition) {
@@ -71,7 +83,11 @@ function hasParentTransition (vnode: VNode): ?boolean {
     }
   }
 }
-
+/**
+ * 判断是否是相同的子节点
+ * @param {*} child 
+ * @param {*} oldChild 
+ */
 function isSameChild (child: VNode, oldChild: VNode): boolean {
   return oldChild.key === child.key && oldChild.tag === child.tag
 }

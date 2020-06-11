@@ -39,14 +39,15 @@ let postTransforms
 let platformIsPreTag
 let platformMustUseProp
 let platformGetTagNamespace
-/**定义属性的格式 */
+/** 定义属性的格式 */
 type Attr = { name: string; value: string };
+
 /**
  * 产生抽象元素
  * 根据对标签的解析产生对应的抽象结构
- * @param {*} tag 
- * @param {*} attrs 
- * @param {*} parent 
+ * @param {*} tag 元素标签
+ * @param {*} attrs 元素属性
+ * @param {*} parent 元素的父节点
  */
 export function createASTElement (
   tag: string,
@@ -64,9 +65,6 @@ export function createASTElement (
   }
 }
 
-/**
- * Convert HTML string to AST.
- */
 /**
  * 将HTML文本转换为抽象结构
  * @param {*} template HTML字符串，即模板字符串
@@ -387,10 +385,8 @@ export function parse (
  * 如果值不为NULL设置值的pre属性的值为真
  * @param {*} el 
  */
-function processPre (el) 
-{
-  if (getAndRemoveAttr(el, 'v-pre') != null) 
-  {
+function processPre (el) {
+  if (getAndRemoveAttr(el, 'v-pre') != null) {
     el.pre = true
   }
 }
@@ -398,27 +394,22 @@ function processPre (el)
  * 原始属性的处理
  * @param {*} el 
  */
-function processRawAttrs (el) 
-{
-  /**获取对象的属性数组 */
+function processRawAttrs (el) {
+  /** 获取对象的属性数组 */
   const l = el.attrsList.length
-  /**对于数组长度大于0的处理
+  /** 对于数组长度大于0的处理
    * 将属性名和属性值组成的数组存储在el的attrs数组中
    */
-  if (l) 
-  {
+  if (l) {
     const attrs = el.attrs = new Array(l)
-    for (let i = 0; i < l; i++) 
-    {
+    for (let i = 0; i < l; i++) {
       attrs[i] = {
         name: el.attrsList[i].name,
         value: JSON.stringify(el.attrsList[i].value)
       }
     }
-  } 
-  /**对于el的预处理属性为假的处理，设置元素的plain属性为真 */
-  else if (!el.pre) 
-  {
+  } else if (!el.pre) {
+    /** 对于el的预处理属性为假的处理，设置元素的plain属性为真 */
     // non root node in pre blocks with no attributes
     el.plain = true
   }
@@ -428,8 +419,7 @@ function processRawAttrs (el)
  * @param {*} element 
  * @param {*} options 
  */
-export function processElement (element: ASTElement, options: CompilerOptions) 
-{
+export function processElement (element: ASTElement, options: CompilerOptions) {
   processKey(element)
 
   // determine whether this is a plain element after
@@ -439,8 +429,7 @@ export function processElement (element: ASTElement, options: CompilerOptions)
   processRef(element)
   processSlot(element)
   processComponent(element)
-  for (let i = 0; i < transforms.length; i++) 
-  {
+  for (let i = 0; i < transforms.length; i++) {
     element = transforms[i](element, options) || element
   }
   processAttrs(element)
@@ -450,13 +439,10 @@ export function processElement (element: ASTElement, options: CompilerOptions)
  * 如果此属性存在设置此元素的key属性的值为返回的表达式
  * @param {*} el 
  */
-function processKey (el) 
-{
+function processKey (el) {
   const exp = getBindingAttr(el, 'key')
-  if (exp) 
-  {
-    if (process.env.NODE_ENV !== 'production' && el.tag === 'template') 
-    {
+  if (exp) {
+    if (process.env.NODE_ENV !== 'production' && el.tag === 'template') {
       warn(`<template> cannot be keyed. Place the key on real elements instead.`)
     }
     el.key = exp
@@ -466,16 +452,14 @@ function processKey (el)
  * 处理ref属性
  * @param {*} el 
  */
-function processRef (el) 
-{
-  /**获取此对象ref属性的值 */
+function processRef (el) {
+  /** 获取此对象ref属性的值 */
   const ref = getBindingAttr(el, 'ref')
-  /**对于值不为假的处理
+  /** 对于值不为假的处理
    * 设置el的ref属性为ref属性的值
    * 设置refInFor，即是否有for属性
    */
-  if (ref) 
-  {
+  if (ref) {
     el.ref = ref
     el.refInFor = checkInFor(el)
   }
@@ -484,14 +468,11 @@ function processRef (el)
  * for指令的处理
  * @param {*} el 
  */
-export function processFor (el: ASTElement) 
-{
+export function processFor (el: ASTElement) {
   let exp
-  if ((exp = getAndRemoveAttr(el, 'v-for'))) 
-  {
+  if ((exp = getAndRemoveAttr(el, 'v-for'))) {
     const inMatch = exp.match(forAliasRE)
-    if (!inMatch) 
-    {
+    if (!inMatch) {
       process.env.NODE_ENV !== 'production' && warn(
         `Invalid v-for expression: ${exp}`
       )
@@ -500,17 +481,13 @@ export function processFor (el: ASTElement)
     el.for = inMatch[2].trim()
     const alias = inMatch[1].trim()
     const iteratorMatch = alias.match(forIteratorRE)
-    if (iteratorMatch) 
-    {
+    if (iteratorMatch) {
       el.alias = iteratorMatch[1].trim()
       el.iterator1 = iteratorMatch[2].trim()
-      if (iteratorMatch[3]) 
-      {
+      if (iteratorMatch[3]) {
         el.iterator2 = iteratorMatch[3].trim()
       }
-    } 
-    else 
-    {
+    } else {
       el.alias = alias
     }
   }
@@ -519,26 +496,20 @@ export function processFor (el: ASTElement)
  * 处理v-if指令
  * @param {*} el 
  */
-function processIf (el) 
-{
+function processIf (el) {
   const exp = getAndRemoveAttr(el, 'v-if')
-  if (exp) 
-  {
+  if (exp) {
     el.if = exp
     addIfCondition(el, {
       exp: exp,
       block: el
     })
-  } 
-  else 
-  {
-    if (getAndRemoveAttr(el, 'v-else') != null) 
-    {
+  } else {
+    if (getAndRemoveAttr(el, 'v-else') != null) {
       el.else = true
     }
     const elseif = getAndRemoveAttr(el, 'v-else-if')
-    if (elseif) 
-    {
+    if (elseif) {
       el.elseif = elseif
     }
   }
@@ -548,19 +519,15 @@ function processIf (el)
  * @param {*} el 
  * @param {*} parent 
  */
-function processIfConditions (el, parent) 
-{
+function processIfConditions (el, parent) {
   const prev = findPrevElement(parent.children)
-  if (prev && prev.if) 
-  {
+  if (prev && prev.if) {
     addIfCondition(prev, 
       {
       exp: el.elseif,
       block: el
     })
-  } 
-  else if (process.env.NODE_ENV !== 'production') 
-  {
+  } else if (process.env.NODE_ENV !== 'production') {
     warn(
       `v-${el.elseif ? ('else-if="' + el.elseif + '"') : 'else'} ` +
       `used on element <${el.tag}> without corresponding v-if.`
@@ -568,22 +535,16 @@ function processIfConditions (el, parent)
   }
 }
 /**
- * 
+ * 查找前面的元素
  * @param {*} children 
  */
-function findPrevElement (children: Array<any>): ASTElement | void 
-{
+function findPrevElement (children: Array<any>): ASTElement | void {
   let i = children.length
-  while (i--) 
-  {
-    if (children[i].type === 1) 
-    {
+  while (i--) {
+    if (children[i].type === 1) {
       return children[i]
-    } 
-    else 
-    {
-      if (process.env.NODE_ENV !== 'production' && children[i].text !== ' ') 
-      {
+    } else {
+      if (process.env.NODE_ENV !== 'production' && children[i].text !== ' ') {
         warn(
           `text "${children[i].text.trim()}" between v-if and v-else(-if) ` +
           `will be ignored.`
@@ -598,31 +559,27 @@ function findPrevElement (children: Array<any>): ASTElement | void
  * @param {*} el 
  * @param {*} condition 
  */
-export function addIfCondition (el: ASTElement, condition: ASTIfCondition) 
-{
-  if (!el.ifConditions) 
-  {
+export function addIfCondition (el: ASTElement, condition: ASTIfCondition) {
+  if (!el.ifConditions) {
     el.ifConditions = []
   }
   el.ifConditions.push(condition)
 }
 /**
- * 
+ * 处理一次
  * @param {*} el 
  */
-function processOnce (el) 
-{
+function processOnce (el) {
   /**
    * 获取v-once属性，并设置对象的once属性为此属性中是否存在v-once
    */
   const once = getAndRemoveAttr(el, 'v-once')
-  if (once != null) 
-  {
+  if (once != null) {
     el.once = true
   }
 }
 /**
- * 
+ * 处理槽
  * @param {*} el 
  */
 function processSlot (el) {
@@ -668,28 +625,23 @@ function processSlot (el) {
  * 组件处理
  * @param {*} el 
  */
-function processComponent (el) 
-{
+function processComponent (el) {
   let binding
-  if ((binding = getBindingAttr(el, 'is'))) 
-  {
+  if ((binding = getBindingAttr(el, 'is'))) {
     el.component = binding
   }
-  if (getAndRemoveAttr(el, 'inline-template') != null) 
-  {
+  if (getAndRemoveAttr(el, 'inline-template') != null) {
     el.inlineTemplate = true
   }
 }
 /**
- * 
+ * 处理属性
  * @param {*} el 
  */
-function processAttrs (el) 
-{
+function processAttrs (el) {
   const list = el.attrsList
   let i, l, name, rawName, value, modifiers, isProp
-  for (i = 0, l = list.length; i < l; i++) 
-  {
+  for (i = 0, l = list.length; i < l; i++) {
     name = rawName = list[i].name
     value = list[i].value
     if (dirRE.test(name)) {
@@ -767,10 +719,8 @@ function processAttrs (el)
  */
 function checkInFor (el: ASTElement): boolean {
   let parent = el
-  while (parent) 
-  {
-    if (parent.for !== undefined) 
-    {
+  while (parent) {
+    if (parent.for !== undefined) {
       return true
     }
     parent = parent.parent
@@ -781,11 +731,9 @@ function checkInFor (el: ASTElement): boolean {
  * 
  * @param {*} name 
  */
-function parseModifiers (name: string): Object | void 
-{
+function parseModifiers (name: string): Object | void {
   const match = name.match(modifierRE)
-  if (match) 
-  {
+  if (match) {
     const ret = {}
     match.forEach(m => { ret[m.slice(1)] = true })
     return ret
@@ -795,16 +743,13 @@ function parseModifiers (name: string): Object | void
  * 将属性数组中的name属性值为键value属性值为值的映射表
  * @param {*} attrs 属性数组
  */
-function makeAttrsMap (attrs: Array<Object>): Object 
-{
+function makeAttrsMap (attrs: Array<Object>): Object {
   const map = {}
-  for (let i = 0, l = attrs.length; i < l; i++) 
-  {
+  for (let i = 0, l = attrs.length; i < l; i++) {
     if (
       process.env.NODE_ENV !== 'production' &&
       map[attrs[i].name] && !isIE && !isEdge
-    ) 
-    {
+    ) {
       warn('duplicate attribute: ' + attrs[i].name)
     }
     map[attrs[i].name] = attrs[i].value
@@ -817,16 +762,14 @@ function makeAttrsMap (attrs: Array<Object>): Object
  * 判断是否是文本标签即是否是script和style标签
  * @param {*} el 
  */
-function isTextTag (el): boolean 
-{
+function isTextTag (el): boolean {
   return el.tag === 'script' || el.tag === 'style'
 }
 /**
  * 
  * @param {*} el DOM对象的抽象形式
  */
-function isForbiddenTag (el): boolean 
-{
+function isForbiddenTag (el): boolean {
   return (
     el.tag === 'style' ||
     (el.tag === 'script' && (
@@ -843,14 +786,11 @@ const ieNSPrefix = /^NS\d+:/
  * 
  * @param {*} attrs 
  */
-function guardIESVGBug (attrs) 
-{
+function guardIESVGBug (attrs) {
   const res = []
-  for (let i = 0; i < attrs.length; i++) 
-  {
+  for (let i = 0; i < attrs.length; i++) {
     const attr = attrs[i]
-    if (!ieNSBug.test(attr.name)) 
-    {
+    if (!ieNSBug.test(attr.name)) {
       attr.name = attr.name.replace(ieNSPrefix, '')
       res.push(attr)
     }
@@ -862,13 +802,10 @@ function guardIESVGBug (attrs)
  * @param {*} el 
  * @param {*} value 
  */
-function checkForAliasModel (el, value) 
-{
+function checkForAliasModel (el, value) {
   let _el = el
-  while (_el) 
-  {
-    if (_el.for && _el.alias === value) 
-    {
+  while (_el) {
+    if (_el.for && _el.alias === value) {
       warn(
         `<${el.tag} v-model="${value}">: ` +
         `You are binding v-model directly to a v-for iteration alias. ` +

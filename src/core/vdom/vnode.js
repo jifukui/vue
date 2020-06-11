@@ -27,21 +27,21 @@
  * functionalScopeId：
 */
 export default class VNode {
-  /**标签 */
+  /** 标签 */
   tag: string | void;
-  /**数据 */
+  /** 数据 */
   data: VNodeData | void;
-  /**子 */
+  /** 子 */
   children: ?Array<VNode>;
-  /**文本 */
+  /** 文本 */
   text: string | void;
-  /**节点元素 */
+  /** 节点元素 */
   elm: Node | void;
   /** */
   ns: string | void;
   /** */
   context: Component | void; // rendered in this component's scope
-  /**键 */
+  /** 键 */
   key: string | number | void;
   componentOptions: VNodeComponentOptions | void;
   componentInstance: Component | void; // component instance
@@ -61,7 +61,7 @@ export default class VNode {
   functionalContext: Component | void; // real context vm for functional nodes
   functionalOptions: ?ComponentOptions; // for SSR caching
   functionalScopeId: ?string; // functioanl scope id support
-/**构造函数，下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型 */
+/** 构造函数，下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型 */
   constructor (
     tag?: string,
     data?: VNodeData,
@@ -99,26 +99,23 @@ export default class VNode {
 
   // DEPRECATED: alias for componentInstance for backwards compat.
   /* istanbul ignore next */
-  get child (): Component | void 
-  {
+  get child (): Component | void {
     return this.componentInstance
   }
 }
-/**创建一个空的虚拟节点
+/** 创建一个空的虚拟节点
  * 使用构造函数创建一个虚拟节点
  * 设置节点的text属性为text值
  * 设置节点的isComment为真
  */
-export const createEmptyVNode = (text: string = '') => 
-{
+export const createEmptyVNode = (text: string = '') => {
   const node = new VNode()
   node.text = text
   node.isComment = true
   return node
 }
-/**创建一个文本节点 */
-export function createTextVNode (val: string | number) 
-{
+/** 创建一个文本节点 */
+export function createTextVNode (val: string | number) {
   return new VNode(undefined, undefined, undefined, String(val))
 }
 
@@ -126,7 +123,7 @@ export function createTextVNode (val: string | number)
 // used for static nodes and slot nodes because they may be reused across
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
-/**节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
+/** 节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
  * vnode:
  * deep:是否深度拷贝
  */
@@ -146,19 +143,16 @@ export function cloneVNode (vnode: VNode, deep?: boolean): VNode {
   cloned.key = vnode.key
   cloned.isComment = vnode.isComment
   cloned.isCloned = true
-  if (deep && vnode.children) 
-  {
+  if (deep && vnode.children) {
     cloned.children = cloneVNodes(vnode.children)
   }
   return cloned
 }
-/**将一个节点数组进行拷贝 */
-export function cloneVNodes (vnodes: Array<VNode>, deep?: boolean): Array<VNode> 
-{
+/** 将一个节点数组进行拷贝 */
+export function cloneVNodes (vnodes: Array<VNode>, deep?: boolean): Array<VNode> {
   const len = vnodes.length
   const res = new Array(len)
-  for (let i = 0; i < len; i++) 
-  {
+  for (let i = 0; i < len; i++) {
     res[i] = cloneVNode(vnodes[i], deep)
   }
   return res

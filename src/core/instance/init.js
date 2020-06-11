@@ -35,7 +35,7 @@ export function initMixin (Vue: Class<Component>) {
    * 如果对象的$options.el属性有参数进行挂载
    * 完成Vue对象的初始化的相关工作直到元素被挂载到DOM对象上
    */
-  /** Vue原型的_init函数 */
+  /** Vue原型的 _init函数 */
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     /** 定义使用的Vue实例的编号 */
@@ -44,38 +44,33 @@ export function initMixin (Vue: Class<Component>) {
     let startTag
     // 结束标签
     let endTag
-    // 不是产品模式且config.performance和mark的值为真的处理
+    // 不是产品模式且config.performance和mark的值为真的处理,
+    // 这里一般不会执行
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
       mark(startTag)
     }
     vm._isVue = true
-    /**options存在且options是组件初始化化此组件
+    /** options存在且options是组件初始化化此组件
      * 反之设置此Vue对象的options值为传入的options参数与此对象继承的options对象进行合并
      * 对于是组件的
      */
-    if (options && options._isComponent) 
-    {
-      /**初始化内部组件 */
+    if (options && options._isComponent) {
+      /** 初始化内部组件 */
       initInternalComponent(vm, options)
-    } 
-    else 
-    {
-      /**递归合并对象的options属性 */
+    } else {
+      /** 递归合并对象的options属性 */
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
         vm
       )
     }
-    /**如果不是生产模式的处理 */
-    if (process.env.NODE_ENV !== 'production') 
-    {
+    /** 如果不是生产模式的处理 */
+    if (process.env.NODE_ENV !== 'production') {
       initProxy(vm)
-    } 
-    else 
-    {
+    } else {
       vm._renderProxy = vm
     }
     vm._self = vm
@@ -87,16 +82,14 @@ export function initMixin (Vue: Class<Component>) {
     initState(vm)
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
-    /**如果不是生产模式且 */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) 
-    {
+    /** 如果不是生产模式且 */
+    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false)
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-    /**进行挂载 */
-    if (vm.$options.el) 
-    {
+    /** 进行挂载 */
+    if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
   }
@@ -106,8 +99,7 @@ export function initMixin (Vue: Class<Component>) {
  * @param {*} vm 组件
  * @param {*} options 父组件对象
  */
-function initInternalComponent (vm: Component, options: InternalComponentOptions) 
-{
+function initInternalComponent (vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
   /** 内部组件的父组件 */
@@ -126,6 +118,7 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
   opts._parentElm = options._parentElm
   /** 引用的元素 */
   opts._refElm = options._refElm
+  /** 对于具有渲染属性的处理  */
   if (options.render) {
     opts.render = options.render
     opts.staticRenderFns = options.staticRenderFns

@@ -100,10 +100,6 @@ Vue.prototype.$mount = function (
 }
 
 /**
- * Get outerHTML of elements, taking care
- * of SVG elements in IE as well.
- */
-/**
  * 返回此DOM元素的HTML样式
  * @param {*} el 
  */

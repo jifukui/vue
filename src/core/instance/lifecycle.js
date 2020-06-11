@@ -33,46 +33,43 @@ export let isUpdatingChildComponent: boolean = false
  * 初始化组件的预销毁状态为否
  * @param {*} vm Vue对象
  */
-export function initLifecycle (vm: Component) 
-{
+export function initLifecycle (vm: Component) {
   const options = vm.$options
   let parent = options.parent
-  /**对于父组件存在且abstract属性为假的处理
+  /** 对于父组件存在且abstract属性为假的处理
    * 如果父组件的.$options.abstract的值为真且parent.$parent的值为真的处理
    * 更新parent的是使上述条件不成立
    * 在主组件的子组件队列中添加此组件
    */
-  if (parent && !options.abstract) 
-  {
-    while (parent.$options.abstract && parent.$parent) 
-    {
+  if (parent && !options.abstract) {
+    while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
     parent.$children.push(vm)
   }
-  /**设置此组件的一些默认值 */
-  /**此组件的父组件 */
+  /** 设置此组件的一些默认值 */
+  /** 此组件的父组件 */
   vm.$parent = parent
-  /**此组件是否是根组件 */
+  /** 此组件是否是根组件 */
   vm.$root = parent ? parent.$root : vm
-  /**此组件的子组件 */
+  /** 此组件的子组件 */
   vm.$children = []
   /** */
   vm.$refs = {}
-  /**此组件的监听器 */
+  /** 此组件的监听器 */
   vm._watcher = null
-  /**此组件的活跃状态 */
+  /** 此组件的活跃状态 */
   vm._inactive = null
-  /**此组件的暂停状态 */
+  /** 此组件的暂停状态 */
   vm._directInactive = false
-  /**此组件的挂载状态 */
+  /** 此组件的挂载状态 */
   vm._isMounted = false
-  /**此组件的销毁状态 */
+  /** 此组件的销毁状态 */
   vm._isDestroyed = false
-  /**此组件的预销毁状态 */
+  /** 此组件的预销毁状态 */
   vm._isBeingDestroyed = false
 }
-/**组件的生命周期混合，实现组件的更新，强制更新和销毁的实现 */
+/** 组件的生命周期混合，实现组件的更新，强制更新和销毁的实现 */
 export function lifecycleMixin (Vue: Class<Component>) 
 {
   /**添加组件的更新哈数
@@ -207,7 +204,7 @@ export function lifecycleMixin (Vue: Class<Component>)
     }
   }
 }
-/**挂载组件,Vue对象$mount的具体实现
+/** 挂载组件,Vue对象$mount的具体实现
  * vm:组件对象
  * el:挂载的元素
  * hydrating：这个值一般很少用
@@ -216,27 +213,21 @@ export function mountComponent (
   vm: Component,
   el: ?Element,
   hydrating?: boolean
-): Component 
-{
+): Component {
   vm.$el = el
   /** */
-  if (!vm.$options.render) 
-  {
+  if (!vm.$options.render) {
     vm.$options.render = createEmptyVNode
-    if (process.env.NODE_ENV !== 'production') 
-    {
+    if (process.env.NODE_ENV !== 'production') {
       /* istanbul ignore if */
-      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||vm.$options.el || el) 
-      {
+      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||vm.$options.el || el) {
         warn(
           'You are using the runtime-only build of Vue where the template ' +
           'compiler is not available. Either pre-compile the templates into ' +
           'render functions, or use the compiler-included build.',
           vm
         )
-      } 
-      else 
-      {
+      } else {
         warn(
           'Failed to mount component: template or render function not defined.',
           vm
@@ -244,15 +235,13 @@ export function mountComponent (
       }
     }
   }
-  /**调用挂载回调函数 */
+  /** 调用挂载回调函数 */
   callHook(vm, 'beforeMount')
 
   let updateComponent
   /* istanbul ignore if */
-  if (process.env.NODE_ENV !== 'production' && config.performance && mark) 
-  {
-    updateComponent = () => 
-    {
+  if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
+    updateComponent = () => {
       const name = vm._name
       const id = vm._uid
       const startTag = `vue-perf-start:${id}`
@@ -268,12 +257,9 @@ export function mountComponent (
       mark(endTag)
       measure(`vue ${name} patch`, startTag, endTag)
     }
-  } 
-  else 
-  {
-    /**定义组件更新的方法 */
-    updateComponent = () => 
-    {
+  } else {
+    /** 定义组件更新的方法 */
+    updateComponent = () => {
       vm._update(vm._render(), hydrating)
     }
   }
@@ -283,8 +269,7 @@ export function mountComponent (
 
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
-  if (vm.$vnode == null) 
-  {
+  if (vm.$vnode == null) {
     vm._isMounted = true
     callHook(vm, 'mounted')
   }
@@ -363,7 +348,7 @@ export function updateChildComponent (
     isUpdatingChildComponent = false
   }
 }
-/**在组件树中向上获取组件的状态，即获取组件的状态 */
+/** 在组件树中向上获取组件的状态，即获取组件的状态 */
 function isInInactiveTree (vm) 
 {
   /**组件存在，如果组件的有效态为真返回真，反之返回假 */
@@ -376,7 +361,7 @@ function isInInactiveTree (vm)
   }
   return false
 }
-/**设置子组件的状态 */
+/** 设置子组件的状态 */
 export function activateChildComponent (vm: Component, direct?: boolean) 
 {
   if (direct) 
@@ -401,7 +386,7 @@ export function activateChildComponent (vm: Component, direct?: boolean)
     callHook(vm, 'activated')
   }
 }
-/**暂停组件
+/** 暂停组件
  * vm：组件对象
  * direct:暂停标志
  */
@@ -434,7 +419,7 @@ export function deactivateChildComponent (vm: Component, direct?: boolean)
     callHook(vm, 'deactivated')
   }
 }
-/**调用钩子函数
+/** 调用钩子函数
  * vm：组件
  * hook：状态字符串
  */

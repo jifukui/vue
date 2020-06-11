@@ -337,31 +337,27 @@ strats.computed = function (
   }
   return ret
 }
-/**设置strats对象的provide属性为聚合数据和方法的函数 */
+/** 设置strats对象的provide属性为聚合数据和方法的函数 */
 strats.provide = mergeDataOrFn
 
 /**
  * Default strategy.
  */
-/**childVal的值为未定义返回parent的值反之返回child的值 */
-const defaultStrat = function (parentVal: any, childVal: any): any 
-{
+/** childVal的值为未定义返回parent的值反之返回child的值 */
+const defaultStrat = function (parentVal: any, childVal: any): any {
   return childVal === undefined
     ? parentVal
     : childVal
 }
 
-/**检测组件中属性的名称是否是合法的属性名称
+/** 检测组件中属性的名称是否是合法的属性名称
  * 对于组件中使用构建的标签或者是预留的标签进行警告
  */
-function checkComponents (options: Object) 
-{
-  for (const key in options.components) 
-  {
+function checkComponents (options: Object) {
+  for (const key in options.components) {
     const lower = key.toLowerCase()
-    /**不能是slot或者是component或者是预留的标签这里应该是没有的 */
-    if (isBuiltInTag(lower) || config.isReservedTag(lower)) 
-    {
+    /** 不能是slot或者是component或者是预留的标签这里应该是没有的 */
+    if (isBuiltInTag(lower) || config.isReservedTag(lower)) {
       warn(
         'Do not use built-in or reserved HTML elements as component ' +
         'id: ' + key
@@ -369,7 +365,6 @@ function checkComponents (options: Object)
     }
   }
 }
-
 
 /**
  * options：
@@ -383,59 +378,47 @@ function checkComponents (options: Object)
 */
 /**
  * 对对象的属性名称经过规则处理
- * @param {*} options Vue对象的options属性
+ * @param {*} options Vue对象的options属性,或者传入的属性
  * @param {*} vm 组件对象
  */
-function normalizeProps (options: Object, vm: ?Component) 
-{
-  /**获取Vue对象的options属性的props属性的值 */
+function normalizeProps (options: Object, vm: ?Component) {
+  /** 获取Vue对象的options属性的props属性的值，如果没有此属性直接返回 */
   const props = options.props
-  if (!props) 
-  {
+  if (!props) {
     return
   }
   const res = {}
   let i, val, name
-  /**对于props类型为数组的处理
+  /** 对于props类型为数组的处理
    * 遍历所有属性，
    * 对于参数值为字符串将字符串转换为驼峰形式设置此属性的值的{ type: null }
    */
-  if (Array.isArray(props)) 
-  {
+  if (Array.isArray(props)) {
     i = props.length
-    while (i--) 
-    {
+    while (i--) {
       val = props[i]
-      if (typeof val === 'string') 
-      {
+      if (typeof val === 'string') {
         name = camelize(val)
         res[name] = { type: null }
-      } 
-      else if (process.env.NODE_ENV !== 'production') 
-      {
+      } else if (process.env.NODE_ENV !== 'production') {
         warn('props must be strings when using array syntax.')
       }
     }
-  } 
-  /**对于props的值为对象的处理
+  } else if (isPlainObject(props)) {
+    /** 对于props的值为对象的处理
    * 遍历所有属性
    * 获取属性值和将属性名设置为驼峰形式
    * 设置资源此属性名的值为如果是对象为对象值如果不是对象为{ type: val }
    */
-  else if (isPlainObject(props)) 
-  {
-    for (const key in props) 
-    {
+    for (const key in props) {
       val = props[key]
       name = camelize(key)
       res[name] = isPlainObject(val)
         ? val
         : { type: val }
     }
-  } 
-  /**这部分在生产模式中不会出现 */
-  else if (process.env.NODE_ENV !== 'production' && props) 
-  {
+  } else if (process.env.NODE_ENV !== 'production' && props) {
+    /** 这部分在生产模式中不会出现 */
     warn(
       `Invalid value for option "props": expected an Array or an Object, ` +
       `but got ${toRawType(props)}.`,
@@ -530,55 +513,50 @@ export function mergeOptions (
   parent: Object,
   child: Object,
   vm?: Component
-): Object 
-{
-  /**检测新赋值的参数是否正确 */
-  if (process.env.NODE_ENV !== 'production') 
-  {
+): Object {
+  /** 如果不是发布模式，检测child中的组件的名称是否正确，并给出警告 */
+  if (process.env.NODE_ENV !== 'production') {
     checkComponents(child)
   }
-  /**如果子对象的类型为函数的处理
+  /** 如果子对象的类型为函数的处理
    * 设置子对象为子对象的options属性
    */
-  if (typeof child === 'function') 
-  {
+  if (typeof child === 'function') {
     child = child.options
   }
-  /**规范化pros属性 */
+  /** 规范化pros属性 */
   normalizeProps(child, vm)
-  /**规范化注射属性 */
+
+  /** 规范化注射属性 */
   normalizeInject(child, vm)
-  /**规范化指令属性 */
+
+  /** 规范化指令属性 */
   normalizeDirectives(child)
-  /**获取子对象的extend属性如果存在 */
+
+  /** 获取子对象的extend属性如果存在 */
   const extendsFrom = child.extends
-  if (extendsFrom) 
-  {
+  if (extendsFrom) {
     parent = mergeOptions(parent, extendsFrom, vm)
   }
-  if (child.mixins) 
-  {
-    for (let i = 0, l = child.mixins.length; i < l; i++) 
-    {
+  if (child.mixins) {
+    for (let i = 0, l = child.mixins.length; i < l; i++) {
       parent = mergeOptions(parent, child.mixins[i], vm)
     }
   }
   const options = {}
   let key
-  for (key in parent) 
-  {
+  for (key in parent) {
     mergeField(key)
   }
-  for (key in child) 
-  {
-    if (!hasOwn(parent, key)) 
-    {
+  for (key in child) {
+    if (!hasOwn(parent, key)) {
       mergeField(key)
     }
   }
-  /**聚合域 */
-  function mergeField (key) 
-  {
+  /** 聚合域
+   * 
+   */
+  function mergeField (key) {
     const strat = strats[key] || defaultStrat
     options[key] = strat(parent[key], child[key], vm, key)
   }
@@ -596,33 +574,27 @@ export function resolveAsset (
   type: string,
   id: string,
   warnMissing?: boolean
-): any 
-{
+): any {
   /* istanbul ignore if */
-  if (typeof id !== 'string') 
-  {
+  if (typeof id !== 'string') {
     return
   }
   const assets = options[type]
   // check local registration variations first
-  if (hasOwn(assets, id)) 
-  {
+  if (hasOwn(assets, id)) {
     return assets[id]
   }
   const camelizedId = camelize(id)
-  if (hasOwn(assets, camelizedId)) 
-  {
+  if (hasOwn(assets, camelizedId)) {
     return assets[camelizedId]
   }
   const PascalCaseId = capitalize(camelizedId)
-  if (hasOwn(assets, PascalCaseId)) 
-  {
+  if (hasOwn(assets, PascalCaseId)) {
     return assets[PascalCaseId]
   }
   // fallback to prototype chain
   const res = assets[id] || assets[camelizedId] || assets[PascalCaseId]
-  if (process.env.NODE_ENV !== 'production' && warnMissing && !res) 
-  {
+  if (process.env.NODE_ENV !== 'production' && warnMissing && !res) {
     warn(
       'Failed to resolve ' + type.slice(0, -1) + ': ' + id,
       options

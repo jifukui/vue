@@ -20,14 +20,21 @@ import platformDirectives from './directives/index'
 import platformComponents from './components/index'
 
 // install platform specific utils
+// 配置必须使用的
 Vue.config.mustUseProp = mustUseProp
+// 配置预留的标签
 Vue.config.isReservedTag = isReservedTag
+// 配置预留的属性
 Vue.config.isReservedAttr = isReservedAttr
+// 配置获取标签名空间
 Vue.config.getTagNamespace = getTagNamespace
+// 配置未知的元素
 Vue.config.isUnknownElement = isUnknownElement
 
 // install platform runtime directives & components
+// 扩展 Vue的指令和平台指令
 extend(Vue.options.directives, platformDirectives)
+// 扩展 Vue的组件和平台组件
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
@@ -44,6 +51,9 @@ Vue.prototype.$mount = function (
 
 // devtools global hook
 /* istanbul ignore next */
+/** Vue的下一个滴答
+ * 对于配置config.devtools
+ */
 Vue.nextTick(() => {
   if (config.devtools) {
     if (devtools) {

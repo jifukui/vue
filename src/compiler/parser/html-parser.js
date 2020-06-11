@@ -13,23 +13,23 @@ import { makeMap, no } from 'shared/util'
 import { isNonPhrasingTag } from 'web/compiler/util'
 
 // Regular Expressions for parsing tags and attributes
-/**匹配属性[0]为整体匹配的值[1]为匹配到的属性[2]为等号[3]为属性的值 */
+/** 匹配属性[0]为整体匹配的值[1]为匹配到的属性[2]为等号[3]为属性的值 */
 const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
 // could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
 // but for Vue templates we can enforce a simple charset
-/**匹配a-zA-Z_一个后面接0到多个 */
+/** 匹配a-zA-Z_一个后面接0到多个 */
 const ncname = '[a-zA-Z_][\\w\\-\\.]*'
-/**匹配 */
+/** 匹配 */
 const qnameCapture = `((?:${ncname}\\:)?${ncname})`
 const startTagOpen = new RegExp(`^<${qnameCapture}`)
-/**匹配开始标签的结束标签 */
+/** 匹配开始标签的结束标签 */
 const startTagClose = /^\s*(\/?)>/
 const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
-/**匹配以<!doctype开始 +任意非>字符 并以>结束的字符 */
+/** 匹配以<!doctype开始 +任意非>字符 并以>结束的字符 */
 const doctype = /^<!DOCTYPE [^>]+>/i
-/**匹配以<!--开始的字符串 */
+/** 匹配以<!--开始的字符串 */
 const comment = /^<!--/
-/**匹配以<![开始的字符 */
+/** 匹配以<![开始的字符 */
 const conditionalComment = /^<!\[/
 
 let IS_REGEX_CAPTURING_BROKEN = false
@@ -42,7 +42,7 @@ let IS_REGEX_CAPTURING_BROKEN = false
  */
 export const isPlainTextElement = makeMap('script,style,textarea', true)
 const reCache = {}
-/**解码的映射表 */
+/** 解码的映射表 */
 const decodingMap = {
   '&lt;': '<',
   '&gt;': '>',
@@ -50,13 +50,13 @@ const decodingMap = {
   '&amp;': '&',
   '&#10;': '\n'
 }
-/**编码的属性 */
+/** 编码的属性 */
 const encodedAttr = /&(?:lt|gt|quot|amp);/g
-/**编码的属性 */
+/** 编码的属性 */
 const encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10);/g
 
 // #5992
-/**忽略新行的标签正则表达式 */
+/** 忽略新行的标签正则表达式 */
 const isIgnoreNewlineTag = makeMap('pre,textarea', true)
 const shouldIgnoreFirstNewline = (tag, html) => tag && isIgnoreNewlineTag(tag) && html[0] === '\n'
 /**
@@ -64,8 +64,7 @@ const shouldIgnoreFirstNewline = (tag, html) => tag && isIgnoreNewlineTag(tag) &
  * @param {*} value 
  * @param {*} shouldDecodeNewlines 
  */
-function decodeAttr (value, shouldDecodeNewlines) 
-{
+function decodeAttr (value, shouldDecodeNewlines) {
   const re = shouldDecodeNewlines ? encodedAttrWithNewLines : encodedAttr
   return value.replace(re, match => decodingMap[match])
 }

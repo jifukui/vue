@@ -2,20 +2,19 @@
 
 import { makeMap } from 'shared/util'
 
-/**预留属性 */
+/** 预留属性 */
 export const isReservedAttr = makeMap('style,class')
 
 // attributes that should be using props for binding
-/**接收值的属性 */
+/** 接收值的属性 */
 const acceptValue = makeMap('input,textarea,option,select,progress')
 /**
- * 
- * @param {*} tag 
- * @param {*} type 
+ * 必须使用的属性
+ * @param {*} tag
+ * @param {*} type
  * @param {*} attr 属性名称
  */
-export const mustUseProp = (tag: string, type: ?string, attr: string): boolean => 
-{
+export const mustUseProp = (tag: string, type: ?string, attr: string): boolean => {
   return (
     (attr === 'value' && acceptValue(tag)) && type !== 'button' ||
     (attr === 'selected' && tag === 'option') ||
@@ -23,9 +22,9 @@ export const mustUseProp = (tag: string, type: ?string, attr: string): boolean =
     (attr === 'muted' && tag === 'video')
   )
 }
-
+/** 枚举属性 */
 export const isEnumeratedAttr = makeMap('contenteditable,draggable,spellcheck')
-
+/** bool属性 */
 export const isBooleanAttr = makeMap(
   'allowfullscreen,async,autofocus,autoplay,checked,compact,controls,declare,' +
   'default,defaultchecked,defaultmuted,defaultselected,defer,disabled,' +
@@ -38,22 +37,21 @@ export const isBooleanAttr = makeMap(
 export const xlinkNS = 'http://www.w3.org/1999/xlink'
 /**
  * 判断是否是xlink
- * @param {*} name 
+ * @param {*} name
  */
-export const isXlink = (name: string): boolean => 
-{
+export const isXlink = (name: string): boolean => {
   return name.charAt(5) === ':' && name.slice(0, 5) === 'xlink'
 }
 /**
  * 获取xlink属性的值
- * @param {*} name 
+ * @param {*} name
  */
 export const getXlinkProp = (name: string): string => {
   return isXlink(name) ? name.slice(6, name.length) : ''
 }
 /**
  * 
- * @param {*} val 
+ * @param {*} val
  */
 export const isFalsyAttrValue = (val: any): boolean => {
   return val == null || val === false

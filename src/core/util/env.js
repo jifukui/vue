@@ -87,9 +87,6 @@ export const hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys)
 
-/**
- * Defer a task to execute it asynchronously.
- */
 /** 定义nextTick函数，异步执行的实现
  * 
 */
@@ -100,7 +97,7 @@ export const nextTick = (function () {
   let pending = false
   /** */
   let timerFunc
-  /** 定义下一个时刻处理函数 
+  /** 定义下一个时刻处理函数
    * 根据浏览器的情况进行下一时刻处理函数的处理
   */
   function nextTickHandler () {
@@ -118,14 +115,15 @@ export const nextTick = (function () {
     timerFunc = () => {
       setImmediate(nextTickHandler)
     }
-  } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) ||MessageChannel.toString() === '[object MessageChannelConstructor]')) {
+  } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) || MessageChannel.toString() === '[object MessageChannelConstructor]')) {
     const channel = new MessageChannel()
     const port = channel.port2
     channel.port1.onmessage = nextTickHandler
     timerFunc = () => {
       port.postMessage(1)
     }
-  } /** 对于没有以上两个函数的处理 */ else {
+  } else {
+    /** 对于没有以上两个函数的处理 */
     /* istanbul ignore next */
     /** 对于有Promise的处理 */
     if (typeof Promise !== 'undefined' && isNative(Promise)) {
@@ -146,7 +144,7 @@ export const nextTick = (function () {
    * ctx:参数
    */
   return function queueNextTick (cb?: Function, ctx?: Object) {
-    let _resolve;
+    let _resolve
     /** 回调函数入队 */
     callbacks.push(() => {
       if (cb) {

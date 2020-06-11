@@ -51,82 +51,76 @@ function count (line, type) {
 }
 
 /*  */
-/**\vue-master\src\shared\util */
+/** \vue-master\src\shared\util */
 // these helpers produces better vm code in JS engines due to their
 // explicitness and function inlining
-/**这个文件定义了很多接口程序
+/** 这个文件定义了很多接口程序
  * 这里的程序大多使用了%checks用于将函数作为谓词函数即函数的主体是一个表达式，不支持局部变量的声明
  */
 
-/**这个函数用于判断传入对象类型是否是未定义或者是null */
+/** 这个函数用于判断传入对象类型是否是未定义或者是null */
 
-/**判断传入的对象是否定义过 */
+/** 判断传入的对象是否定义过 */
 
-/**判断出入的对象的值是否为真 */
+/** 判断出入的对象的值是否为真 */
 
-/**判断传入对象的值是否为假 */
-
-
-/**检测传入对象的类型是否为字符串、数值或者是布尔型数据 */
+/** 判断传入对象的值是否为假 */
 
 
-/**判断传入的数据的类型是否为对象型且不为null
+/** 检测传入对象的类型是否为字符串、数值或者是布尔型数据 */
+
+
+/** 判断传入的数据的类型是否为对象型且不为null
  * mixed表示支持传入任何类型
  */
-function isObject (obj) 
-{
+function isObject (obj) {
   return obj !== null && typeof obj === 'object'
 }
 
 /**
  * Get the raw type string of a value e.g. [object Object]
  */
-/**设置_toString为返回对象的字符串形式 */
+/** 设置_toString为返回对象的字符串形式 */
 var _toString = Object.prototype.toString;
 
-/**返回对象的类型 */
-function toRawType (value) 
-{
+/** 返回对象的类型 */
+function toRawType (value) {
   return _toString.call(value).slice(8, -1)
 }
 
-/**判断传入的数据的类型是否是对象 */
-function isPlainObject (obj) 
-{
+/** 判断传入的数据的类型是否是对象 */
+function isPlainObject (obj) {
   return _toString.call(obj) === '[object Object]'
 }
-/**判断传入对象的类型是否是正则表达式 */
+/** 判断传入对象的类型是否是正则表达式 */
 
 
-/**判断传入的数据是否是有效的数组索引值 */
-function isValidArrayIndex (val) 
-{
+/** 判断传入的数据是否是有效的数组索引值 */
+function isValidArrayIndex (val) {
   var n = parseFloat(String(val));
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
-/**将任意类型转换为字符串形式
+/** 将任意类型转换为字符串形式
  * 如果是null类型输出空字符串
  * 如果是对象类型转换为缩进为2个空格的字符串
  * 其他类型调用string类型输出其值
  */
 
 
-/**将字符串转换为数字
+/** 将字符串转换为数字
  * 如果传入的字符串无法转换为数字返回此字符串，反之返回其数值
  */
 
 
-/**将传入的字符串转换为判断对象中是否存在此属性 */
+/** 将传入的字符串转换为判断对象中是否存在此属性 */
 function makeMap (
   str,
   expectsLowerCase
-) 
-{
+) {
   var map = Object.create(null);
   var list = str.split(',');
-  for (var i = 0; i < list.length; i++) 
-  {
+  for (var i = 0; i < list.length; i++) {
     map[list[i]] = true;
   }
   return expectsLowerCase
@@ -134,46 +128,37 @@ function makeMap (
     : function (val) { return map[val]; }
 }
 
-
 var isBuiltInTag = makeMap('slot,component', true);
-
 
 var isReservedAttribute = makeMap('key,ref,slot,slot-scope,is');
 
-/**移除数组中指定位置的值 */
-function remove (arr, item) 
-{
-  if (arr.length) 
-  {
+/** 移除数组中指定位置的值 */
+function remove (arr, item) {
+  if (arr.length) {
     var index = arr.indexOf(item);
-    if (index > -1) 
-    {
+    if (index > -1) {
       return arr.splice(index, 1)
     }
   }
 }
 
-/**hasOwnProperty 对象原型链是否具有指定的函数 */
+/** hasOwnProperty 对象原型链是否具有指定的函数 */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
-/**判断对象或者是数组是否具有指定的属性 */
-function hasOwn (obj, key) 
-{
+/** 判断对象或者是数组是否具有指定的属性 */
+function hasOwn (obj, key) {
   return hasOwnProperty.call(obj, key)
 }
 
-/**使用闭包
+/** 使用闭包
  * 在cache对象中添加属性
  */
-function cached (fn) 
-{
+function cached (fn) {
   var cache = Object.create(null);
-  return (function cachedFn (str) 
-  {
+  return (function cachedFn (str) {
     var hit = cache[str];
     return hit || (cache[str] = fn(str))
   })
 }
-
 
 /**下面这部分用于设置对象对应属性的属性值
  * 将-后面的字符转换为大写即驼峰式
@@ -184,7 +169,7 @@ var camelize = cached(function (str) {
 });
 
 /**
- * 这部分将传入的字符串
+ * 将字符串的首字符大写
  */
 var capitalize = cached(function (str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
@@ -199,24 +184,23 @@ var hyphenate = cached(function (str) {
 });
 
 /**
- * 
+ * 绑定函数
  * @param {*} fn 
  * @param {*} ctx 
  */
 
 
-/**将从数组转换为从start到末尾位置的数组 */
+/** 将从数组转换为从start到末尾位置的数组 */
 
 
 /**
- * 将form中的属性拷贝到to中，属于浅拷贝
+ * 扩展函数
+ * 将form对象中的数据拷贝到to中，但是这种拷贝属于浅拷贝，并返回to
  * @param {*} to 目的
  * @param {*} _from 源
  */
-function extend (to, _from) 
-{
-  for (var key in _from) 
-  {
+function extend (to, _from) {
+  for (var key in _from) {
     to[key] = _from[key];
   }
   return to
@@ -224,9 +208,8 @@ function extend (to, _from)
 
 /**
  * 将数组转换为对象
- * @param {*} arr 
+ * @param {*} arr
  */
-
 
 
 /**
@@ -246,7 +229,7 @@ function noop (a, b, c) {}
 var no = function (a, b, c) { return false; };
 
 /**
- * 定义函数返回与自己想等的值
+ *
  * @param {*} _ 
  */
 var identity = function (_) { return _; };
@@ -258,16 +241,14 @@ var identity = function (_) { return _; };
  * 产生静态的
  * @param {*} modules 
  */
-function genStaticKeys (modules) 
-{
+function genStaticKeys (modules) {
   return modules.reduce(function (keys, m) {
     return keys.concat(m.staticKeys || [])
   }, []).join(',')
 }
 
-
 /**
- * 判断连个参数是否相等
+ * 判断两个参数是否相等
  * @param {*} a 参数1
  * @param {*} b 参数2
  */
@@ -279,13 +260,12 @@ function genStaticKeys (modules)
  */
 
 
-
 /**
  * 设置这个函数只执行一次
  * @param {*} fn 函数
  */
 
-/**end \vue-master\src\shared\util */
+/** end \vue-master\src\shared\util*/
 
 /*  */
 
@@ -322,23 +302,23 @@ var isNonPhrasingTag = makeMap(
  */
 
 // Regular Expressions for parsing tags and attributes
-/**匹配属性[0]为整体匹配的值[1]为匹配到的属性[2]为等号[3]为属性的值 */
+/** 匹配属性[0]为整体匹配的值[1]为匹配到的属性[2]为等号[3]为属性的值 */
 var attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 // could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
 // but for Vue templates we can enforce a simple charset
-/**匹配a-zA-Z_一个后面接0到多个 */
+/** 匹配a-zA-Z_一个后面接0到多个 */
 var ncname = '[a-zA-Z_][\\w\\-\\.]*';
-/**匹配 */
+/** 匹配 */
 var qnameCapture = "((?:" + ncname + "\\:)?" + ncname + ")";
 var startTagOpen = new RegExp(("^<" + qnameCapture));
-/**匹配开始标签的结束标签 */
+/** 匹配开始标签的结束标签 */
 var startTagClose = /^\s*(\/?)>/;
 var endTag = new RegExp(("^<\\/" + qnameCapture + "[^>]*>"));
-/**匹配以<!doctype开始 +任意非>字符 并以>结束的字符 */
+/** 匹配以<!doctype开始 +任意非>字符 并以>结束的字符 */
 var doctype = /^<!DOCTYPE [^>]+>/i;
-/**匹配以<!--开始的字符串 */
+/** 匹配以<!--开始的字符串 */
 var comment = /^<!--/;
-/**匹配以<![开始的字符 */
+/** 匹配以<![开始的字符 */
 var conditionalComment = /^<!\[/;
 
 var IS_REGEX_CAPTURING_BROKEN = false;
@@ -351,7 +331,7 @@ var IS_REGEX_CAPTURING_BROKEN = false;
  */
 var isPlainTextElement = makeMap('script,style,textarea', true);
 var reCache = {};
-/**解码的映射表 */
+/** 解码的映射表 */
 var decodingMap = {
   '&lt;': '<',
   '&gt;': '>',
@@ -359,13 +339,13 @@ var decodingMap = {
   '&amp;': '&',
   '&#10;': '\n'
 };
-/**编码的属性 */
+/** 编码的属性 */
 var encodedAttr = /&(?:lt|gt|quot|amp);/g;
-/**编码的属性 */
+/** 编码的属性 */
 var encodedAttrWithNewLines = /&(?:lt|gt|quot|amp|#10);/g;
 
 // #5992
-/**忽略新行的标签正则表达式 */
+/** 忽略新行的标签正则表达式 */
 var isIgnoreNewlineTag = makeMap('pre,textarea', true);
 var shouldIgnoreFirstNewline = function (tag, html) { return tag && isIgnoreNewlineTag(tag) && html[0] === '\n'; };
 /**
@@ -373,8 +353,7 @@ var shouldIgnoreFirstNewline = function (tag, html) { return tag && isIgnoreNewl
  * @param {*} value 
  * @param {*} shouldDecodeNewlines 
  */
-function decodeAttr (value, shouldDecodeNewlines) 
-{
+function decodeAttr (value, shouldDecodeNewlines) {
   var re = shouldDecodeNewlines ? encodedAttrWithNewLines : encodedAttr;
   return value.replace(re, function (match) { return decodingMap[match]; })
 }
@@ -744,13 +723,22 @@ function parseHTML (html, options)
 
 /*  */
 
+// 隔离正则表达式
 var splitRE = /\r?\n/g;
+// 替换正则表达式
 var replaceRE = /./g;
+// 特殊标签
 var isSpecialTag = makeMap('script,style,template', true);
+/**
+ * 属性
+ */
 
 
-
-
+/**
+ * 组件分析
+ * @param {*} content 内容  内容字符串
+ * @param {*} options 操作  操纵对象
+ */
 function parseComponent (
   content,
   options
@@ -766,19 +754,24 @@ function parseComponent (
   };
   var depth = 0;
   var currentBlock = null;
-  /** */
+  /**
+   * 开始处理组件
+   * @param {*} tag     开始标签
+   * @param {*} attrs   属性
+   * @param {*} unary 
+   * @param {*} start   开始位置
+   * @param {*} end     结束位置
+   */
   function start (
     tag,
     attrs,
     unary,
     start,
     end
-  ) 
-  {
-    if (depth === 0) 
-    {
-      currentBlock = 
-      {
+  ) {
+    // 对于深度为0的处理，设置当前块的属性
+    if (depth === 0) {
+      currentBlock = {
         type: tag,
         content: '',
         start: end,
@@ -790,62 +783,70 @@ function parseComponent (
           return cumulated
         }, Object.create(null))
       };
-      if (isSpecialTag(tag)) 
-      {
+      /**
+       * 对于特殊的标签的处理
+       * 检测当前块和属相数组
+       */
+      if (isSpecialTag(tag)) {
         checkAttrs(currentBlock, attrs);
-        if (tag === 'style') 
-        {
+        if (tag === 'style') {
+          // 对于标签是style的处理，加入到sfc的styles数组中
           sfc.styles.push(currentBlock);
-        } 
-        else 
-        {
+        } else {
+          // 对于是其他类型的标签替换此标签的值
           sfc[tag] = currentBlock;
         }
-      } 
-      else { // custom blocks
+      } else { // custom blocks
         sfc.customBlocks.push(currentBlock);
       }
     }
-    if (!unary) 
-    {
+    // 对于unary的值不为真设置depth的值自加一
+    if (!unary) {
       depth++;
     }
   }
-
-  function checkAttrs (block, attrs) 
-  {
-    for (var i = 0; i < attrs.length; i++) 
-    {
+  /**
+   * 检测属性
+   * @param {*} block 块
+   * @param {*} attrs 属性数组
+   */
+  function checkAttrs (block, attrs) {
+    // 获取属相对象的长度
+    for (var i = 0; i < attrs.length; i++) {
+      // 获取属性值
       var attr = attrs[i];
-      if (attr.name === 'lang') 
-      {
+      // 对于属性的name为lang
+      if (attr.name === 'lang') {
         block.lang = attr.value;
       }
-      if (attr.name === 'scoped') 
-      {
+      // 对于属性的name为scoped的处理
+      if (attr.name === 'scoped') {
         block.scoped = true;
       }
-      if (attr.name === 'module') 
-      {
+      // 对于属性的name为module的处理
+      if (attr.name === 'module') {
         block.module = attr.value || true;
       }
-      if (attr.name === 'src') 
-      {
+      // 对于属性的name的值为src的处理
+      if (attr.name === 'src') {
         block.src = attr.value;
       }
     }
   }
-  /** */
-  function end (tag, start, end) 
-  {
-    if (depth === 1 && currentBlock) 
-    {
+  /**
+   * 结束分析标签
+   * @param {*} tag 标签字符串
+   * @param {*} start 开始的位置
+   * @param {*} end 结束位置
+   */
+  function end (tag, start, end) {
+    // 对于甚多值为1且当前块存在的处理
+    if (depth === 1 && currentBlock) {
       currentBlock.end = start;
       var text = deIndent(content.slice(currentBlock.start, currentBlock.end));
       // pad content so that linters and pre-processors can output correct
       // line numbers in errors and warnings
-      if (currentBlock.type !== 'template' && options.pad) 
-      {
+      if (currentBlock.type !== 'template' && options.pad) {
         text = padContent(currentBlock, options.pad) + text;
       }
       currentBlock.content = text;
@@ -853,15 +854,16 @@ function parseComponent (
     }
     depth--;
   }
-
-  function padContent (block, pad) 
-  {
-    if (pad === 'space') 
-    {
+  /**
+   * 填充内容
+   * @param {*} block 块
+   * @param {*} pad  填充内容
+   */
+  function padContent (block, pad) {
+    // 对于填充的内容是space的处理将内容的开始到block.start的值截取并将替换正则表达式转换为空格符
+    if (pad === 'space') {
       return content.slice(0, block.start).replace(replaceRE, ' ')
-    } 
-    else 
-    {
+    } else {
       var offset = content.slice(0, block.start).split(splitRE).length;
       var padChar = block.type === 'script' && !block.lang
         ? '//\n'
@@ -869,7 +871,7 @@ function parseComponent (
       return Array(offset).join(padChar)
     }
   }
-  /** */
+  /** 分许HTML */
   parseHTML(content, {
     start: start,
     end: end
@@ -910,13 +912,13 @@ function def (obj, key, val, enumerable)
 
 /**end \vue-master\src\core\util\lang.js */
 
-/**有价值的类型 */
+/** 有价值的类型 */
 var ASSET_TYPES = [
   'component',
   'directive',
   'filter'
 ];
-/**生命周期钩子函数 */
+/** 生命周期钩子函数 */
 var LIFECYCLE_HOOKS = [
   'beforeCreate',
   'created',
@@ -1434,7 +1436,7 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
  */
 
 /*  */
-/**这个文件没有什么用只是引入了很多的接口 */
+/** 这个文件没有什么用只是引入了很多的接口 */
 
 /*  */
 
@@ -1558,32 +1560,31 @@ var prototypeAccessors = { child: { configurable: true } };
 
 // DEPRECATED: alias for componentInstance for backwards compat.
 /* istanbul ignore next */
-prototypeAccessors.child.get = function () 
-{
+prototypeAccessors.child.get = function () {
   return this.componentInstance
 };
 
 Object.defineProperties( VNode.prototype, prototypeAccessors );
 
-/**创建一个空的虚拟节点
+/** 创建一个空的虚拟节点
  * 使用构造函数创建一个虚拟节点
  * 设置节点的text属性为text值
  * 设置节点的isComment为真
  */
 
-/**创建一个文本节点 */
+/** 创建一个文本节点 */
 
 
 // optimized shallow clone
 // used for static nodes and slot nodes because they may be reused across
 // multiple renders, cloning them avoids errors when DOM manipulations rely
 // on their elm reference.
-/**节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
+/** 节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
  * vnode:
  * deep:是否深度拷贝
  */
 
-/**将一个节点数组进行拷贝 */
+/** 将一个节点数组进行拷贝 */
 
 /*
  * not type checking this file because flow doesn't play well with
@@ -1636,7 +1637,7 @@ var arrayMethods = Object.create(arrayProto);[
 
 /*  */
 
-/**获取对象的所用属性名称 */
+/** 获取对象的所用属性名称 */
 var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
 
 /**
@@ -1645,7 +1646,7 @@ var arrayKeys = Object.getOwnPropertyNames(arrayMethods);
  * we don't want to force conversion because the value may be a nested value
  * under a frozen data structure. Converting it would defeat the optimization.
  */
-/**设置observerState的值 */
+/** 设置observerState的值 */
 var observerState = {
   shouldConvert: true
 };
@@ -1656,29 +1657,25 @@ var observerState = {
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
  */
-/**定义Observer类
+/** 定义Observer类
  * value:对象
  * dep:依赖
  * vmCount:
  */
-var Observer = function Observer (value) 
-{
+var Observer = function Observer (value) {
   this.value = value;
   this.dep = new Dep();
   this.vmCount = 0;
-  /**定义对象的__ob__属性 */
+  /** 定义对象的__ob__属性 */
   def(value, '__ob__', this);
-  /**对于值为数组的处理 */
-  if (Array.isArray(value)) 
-  {
+  /** 对于值为数组的处理 */
+  if (Array.isArray(value)) {
     var augment = hasProto
       ? protoAugment
       : copyAugment;
     augment(value, arrayMethods, arrayKeys);
     this.observeArray(value);
-  } 
-  else 
-  {
+  } else {
     this.walk(value);
   }
 };
@@ -1689,11 +1686,9 @@ var Observer = function Observer (value)
  * value type is Object.
  */
 /** */
-Observer.prototype.walk = function walk (obj) 
-{
+Observer.prototype.walk = function walk (obj) {
   var keys = Object.keys(obj);
-  for (var i = 0; i < keys.length; i++) 
-  {
+  for (var i = 0; i < keys.length; i++) {
     defineReactive(obj, keys[i], obj[keys[i]]);
   }
 };
@@ -1701,10 +1696,8 @@ Observer.prototype.walk = function walk (obj)
 /**
  * Observe a list of Array items.
  */
-Observer.prototype.observeArray = function observeArray (items) 
-{
-  for (var i = 0, l = items.length; i < l; i++) 
-  {
+Observer.prototype.observeArray = function observeArray (items) {
+  for (var i = 0, l = items.length; i < l; i++) {
     observe(items[i]);
   }
 };
@@ -1715,21 +1708,19 @@ Observer.prototype.observeArray = function observeArray (items)
  * Augment an target Object or Array by intercepting
  * the prototype chain using __proto__
  */
-/**设置target的__proto__属性为src */
-function protoAugment (target, src, keys) 
-{
+/** 设置target的__proto__属性为src */
+function protoAugment (target, src, keys) {
   /* eslint-disable no-proto */
   target.__proto__ = src;
   /* eslint-enable no-proto */
 }
 
-/**拷贝参数
+/** 拷贝参数
  * 将src中的keys属性拷贝到target对象中
  */
 function copyAugment (target, src, keys) 
 {
-  for (var i = 0, l = keys.length; i < l; i++) 
-  {
+  for (var i = 0, l = keys.length; i < l; i++) {
     var key = keys[i];
     def(target, key, src[key]);
   }
@@ -1745,44 +1736,38 @@ function copyAugment (target, src, keys)
  * asRootData：
  * 返回发布对象
  */
-function observe (value, asRootData) 
-{
-  /**对于value的不是对象或者value是VNode的实例的处理
+function observe (value, asRootData) {
+  /** 对于value的不是对象或者value是VNode的实例的处理
    * 直接返回
    */
-  if (!isObject(value) || value instanceof VNode) 
-  {
+  if (!isObject(value) || value instanceof VNode) {
     return
   }
-  /**设置Ob的值为Observer或者是空对象 */
+  /** 设置Ob的值为Observer或者是空对象 */
   var ob;
-  /**对于value自身具有__ob__属性且其是Observer的实例的处理
+  /** 对于value自身具有__ob__属性且其是Observer的实例的处理
    * 设置ob的值为value.__ob__
    */
-  if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) 
-  {
+  if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__;
-  } 
-  /**对于observerState的shouldConvert属性为真
+  } else if (
+    observerState.shouldConvert &&
+    !isServerRendering() &&
+    (Array.isArray(value) || isPlainObject(value)) &&
+    Object.isExtensible(value) &&
+    !value._isVue
+  ) {
+    /** 对于observerState的shouldConvert属性为真
    * 且不是服务器端渲染
    * 且value不是数组或者不是
    * 且
    * 且value的isVue属性不为真的处理
    * 根据value创建一个新的Observer对象
    */
-  else if (
-    observerState.shouldConvert &&
-    !isServerRendering() &&
-    (Array.isArray(value) || isPlainObject(value)) &&
-    Object.isExtensible(value) &&
-    !value._isVue
-  ) 
-  {
     ob = new Observer(value);
   }
-  /**如果asRootData的值和ob的值为针对处理设置ob的vmCount的值自增1 */
-  if (asRootData && ob) 
-  {
+  /** 如果asRootData的值和ob的值为针对处理设置ob的vmCount的值自增1 */
+  if (asRootData && ob) {
     ob.vmCount++;
   }
   return ob
@@ -1802,72 +1787,59 @@ function defineReactive (
   val,
   customSetter,
   shallow
-) 
-{
+) {
   var dep = new Dep();
-  /**获取对象的对应属性的属性描述符 */
+  /** 获取对象的对应属性的属性描述符 */
   var property = Object.getOwnPropertyDescriptor(obj, key);
-  /**如果属性的可配置属性为否则退出 */
-  if (property && property.configurable === false) 
-  {
+  /** 如果属性的可配置属性为否则退出 */
+  if (property && property.configurable === false) {
     return
   }
 
   // cater for pre-defined getter/setters
-  /**获取获取和设置函数 */
+  /** 获取获取和设置函数 */
   var getter = property && property.get;
   var setter = property && property.set;
 
   var childOb = !shallow && observe(val);
-  /**定义属性
+  /** 定义属性
    * obj:对象
    * key:属性
    * 定义对象的属性为可枚举和可配置以及设置函数和获取函数
    */
-  Object.defineProperty(obj, key, 
-  {
+  Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
-    get: function reactiveGetter () 
-    {
-      /**获取属性值 */
+    get: function reactiveGetter () {
+      /** 获取属性值 */
       var value = getter ? getter.call(obj) : val;
-      /**对于Dep的target的属性不为否的处理
+      /** 对于Dep的target的属性不为否的处理
        * 更新依赖数组
        */
-      if (Dep.target) 
-      {
+      if (Dep.target) {
         dep.depend();
-        if (childOb) 
-        {
+        if (childOb) {
           childOb.dep.depend();
-          if (Array.isArray(value)) 
-          {
+          if (Array.isArray(value)) {
             dependArray(value);
           }
         }
       }
       return value
     },
-    set: function reactiveSetter (newVal) 
-    {
+    set: function reactiveSetter (newVal) {
       var value = getter ? getter.call(obj) : val;
       /* 对于参数没有发生变化的处理 */
-      if (newVal === value || (newVal !== newVal && value !== value)) 
-      {
+      if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
       /* eslint-enable no-self-compare */
-      if ("development" !== 'production' && customSetter) 
-      {
+      if ("development" !== 'production' && customSetter) {
         customSetter();
       }
-      if (setter) 
-      {
+      if (setter) {
         setter.call(obj, newVal);
-      } 
-      else 
-      {
+      } else {
         val = newVal;
       }
       childOb = !shallow && observe(newVal);
@@ -1882,55 +1854,50 @@ function defineReactive (
  * @param {*} key 属性
  * @param {*} val 值
  */
-function set (target, key, val) 
-{
-  /**对于对象是数组且key为有效的索引值的处理
+function set (target, key, val) {
+  /** 对于对象是数组且key为有效的索引值的处理
    * 删除指定位置的值并向指定位置添加新的值
   */
-  if (Array.isArray(target) && isValidArrayIndex(key)) 
-  {
+  if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key);
     target.splice(key, 1, val);
     return val
   }
-  /**对于对象具有此属性的处理
+  /** 对于对象具有此属性的处理
    * 设置此对象此属性的值
    */
-  if (hasOwn(target, key)) 
-  {
+  if (hasOwn(target, key)) {
     target[key] = val;
     return val
   }
-  /**获取对象的__ob__的值存在在ob中 */
+  /** 获取对象的__ob__的值存在在ob中 */
   var ob = (target).__ob__;
-  /**对于对象的_isVue的属性为真或者ob存在且ob的vmCount的值不为0的处理
+  /** 对于对象的_isVue的属性为真或者ob存在且ob的vmCount的值不为0的处理
    * 进行警告和退出 */
-  if (target._isVue || (ob && ob.vmCount)) 
-  {
+  if (target._isVue || (ob && ob.vmCount)) {
     "development" !== 'production' && warn(
       'Avoid adding reactive properties to a Vue instance or its root $data ' +
       'at runtime - declare it upfront in the data option.'
     );
     return val
   }
-  /**ob的值为否，添加对象的此属性和属性值 */
-  if (!ob) 
-  {
+  /** ob的值为否，添加对象的此属性和属性值 */
+  if (!ob) {
     target[key] = val;
     return val
   }
-  /**定义反应处理*/
+  /** 定义反应处理*/
   defineReactive(ob.value, key, val);
-  /**定义提示 */
+  /** 定义提示 */
   ob.dep.notify();
-  /**返回参数值 */
+  /** 返回参数值 */
   return val
 }
 
 /**
  * Delete a property and trigger change if necessary.
  */
-/**删除功能,删除数组此索引位置的值或者是对象的此自身属性
+/** 删除功能,删除数组此索引位置的值或者是对象的此自身属性
  * target:数组对象或者是对象
  * key:键值或者是索引号
  */
@@ -1940,15 +1907,12 @@ function set (target, key, val)
  * Collect dependencies on array elements when the array is touched, since
  * we cannot intercept array element access like property getters.
  */
-/**依赖数组，更新对象的相关依赖数组 */
-function dependArray (value) 
-{
-  for (var e = (void 0), i = 0, l = value.length; i < l; i++) 
-  {
+/** 依赖数组，更新对象的相关依赖数组 */
+function dependArray (value) {
+  for (var e = (void 0), i = 0, l = value.length; i < l; i++) {
     e = value[i];
     e && e.__ob__ && e.__ob__.dep.depend();
-    if (Array.isArray(e)) 
-    {
+    if (Array.isArray(e)) {
       dependArray(e);
     }
   }
@@ -2271,15 +2235,14 @@ strats.computed = function (
   }
   return ret
 };
-/**设置strats对象的provide属性为聚合数据和方法的函数 */
+/** 设置strats对象的provide属性为聚合数据和方法的函数 */
 strats.provide = mergeDataOrFn;
 
 /**
  * Default strategy.
  */
-/**childVal的值为未定义返回parent的值反之返回child的值 */
-var defaultStrat = function (parentVal, childVal) 
-{
+/** childVal的值为未定义返回parent的值反之返回child的值 */
+var defaultStrat = function (parentVal, childVal) {
   return childVal === undefined
     ? parentVal
     : childVal
@@ -2322,20 +2285,20 @@ function assertObjectType (name, value, vm)
  */
 
 /*  */
-/**这个文件没有什么用只是引入了很多的接口 */
+/** 这个文件没有什么用只是引入了很多的接口 */
 
 /*  */
 
-/**预留属性 */
+/** 预留属性 */
 var isReservedAttr = makeMap('style,class');
 
 // attributes that should be using props for binding
-/**接收值的属性 */
+/** 接收值的属性 */
 var acceptValue = makeMap('input,textarea,option,select,progress');
 /**
- * 
- * @param {*} tag 
- * @param {*} type 
+ * 必须使用的属性
+ * @param {*} tag
+ * @param {*} type
  * @param {*} attr 属性名称
  */
 var mustUseProp = function (tag, type, attr) {
@@ -2346,9 +2309,9 @@ var mustUseProp = function (tag, type, attr) {
     (attr === 'muted' && tag === 'video')
   )
 };
-
+/** 枚举属性 */
 var isEnumeratedAttr = makeMap('contenteditable,draggable,spellcheck');
-
+/** bool属性 */
 var isBooleanAttr = makeMap(
   'allowfullscreen,async,autofocus,autoplay,checked,compact,controls,declare,' +
   'default,defaultchecked,defaultmuted,defaultselected,defer,disabled,' +
@@ -2361,17 +2324,17 @@ var isBooleanAttr = makeMap(
 
 /**
  * 判断是否是xlink
- * @param {*} name 
+ * @param {*} name
  */
 
 /**
  * 获取xlink属性的值
- * @param {*} name 
+ * @param {*} name
  */
 
 /**
  * 
- * @param {*} val 
+ * @param {*} val
  */
 
 /*  */
@@ -2383,7 +2346,8 @@ var isBooleanAttr = makeMap(
 
 /**
  * 如果动态样式或者是静态样式有一个存在进行样式的和合并，反之返回空字符串
- * @param {*} staticClass 静态样式 
+ * 样式合并
+ * @param {*} staticClass 静态样式
  * @param {*} dynamicClass 动态样式
  */
 
@@ -2394,8 +2358,11 @@ var isBooleanAttr = makeMap(
  */
 
 /**
- * 
- * @param {*} value 
+ * 数据字符串化
+ * 将数组和对象转换为字符串
+ * 字符串直接返回
+ * 其他类型转化为空字符串
+ * @param {*} value
  */
 
 /*  */
@@ -3552,23 +3519,23 @@ var he = createCommonjsModule(function (module, exports) {
  */
 
 // Regular Expressions for parsing tags and attributes
-/**匹配属性[0]为整体匹配的值[1]为匹配到的属性[2]为等号[3]为属性的值 */
+/** 匹配属性[0]为整体匹配的值[1]为匹配到的属性[2]为等号[3]为属性的值 */
 var attribute$1 = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 // could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
 // but for Vue templates we can enforce a simple charset
-/**匹配a-zA-Z_一个后面接0到多个 */
+/** 匹配a-zA-Z_一个后面接0到多个 */
 var ncname$1 = '[a-zA-Z_][\\w\\-\\.]*';
-/**匹配 */
+/** 匹配 */
 var qnameCapture$1 = "((?:" + ncname$1 + "\\:)?" + ncname$1 + ")";
 var startTagOpen$1 = new RegExp(("^<" + qnameCapture$1));
-/**匹配开始标签的结束标签 */
+/** 匹配开始标签的结束标签 */
 var startTagClose$1 = /^\s*(\/?)>/;
 var endTag$1 = new RegExp(("^<\\/" + qnameCapture$1 + "[^>]*>"));
-/**匹配以<!doctype开始 +任意非>字符 并以>结束的字符 */
+/** 匹配以<!doctype开始 +任意非>字符 并以>结束的字符 */
 var doctype$1 = /^<!DOCTYPE [^>]+>/i;
-/**匹配以<!--开始的字符串 */
+/** 匹配以<!--开始的字符串 */
 var comment$1 = /^<!--/;
-/**匹配以<![开始的字符 */
+/** 匹配以<![开始的字符 */
 var conditionalComment$1 = /^<!\[/;
 
 var IS_REGEX_CAPTURING_BROKEN$1 = false;
@@ -3581,7 +3548,7 @@ var IS_REGEX_CAPTURING_BROKEN$1 = false;
  */
 var isPlainTextElement$1 = makeMap('script,style,textarea', true);
 var reCache$1 = {};
-/**解码的映射表 */
+/** 解码的映射表 */
 var decodingMap$1 = {
   '&lt;': '<',
   '&gt;': '>',
@@ -3589,13 +3556,13 @@ var decodingMap$1 = {
   '&amp;': '&',
   '&#10;': '\n'
 };
-/**编码的属性 */
+/** 编码的属性 */
 var encodedAttr$1 = /&(?:lt|gt|quot|amp);/g;
-/**编码的属性 */
+/** 编码的属性 */
 var encodedAttrWithNewLines$1 = /&(?:lt|gt|quot|amp|#10);/g;
 
 // #5992
-/**忽略新行的标签正则表达式 */
+/** 忽略新行的标签正则表达式 */
 var isIgnoreNewlineTag$1 = makeMap('pre,textarea', true);
 var shouldIgnoreFirstNewline$1 = function (tag, html) { return tag && isIgnoreNewlineTag$1(tag) && html[0] === '\n'; };
 /**
@@ -3603,8 +3570,7 @@ var shouldIgnoreFirstNewline$1 = function (tag, html) { return tag && isIgnoreNe
  * @param {*} value 
  * @param {*} shouldDecodeNewlines 
  */
-function decodeAttr$1 (value, shouldDecodeNewlines) 
-{
+function decodeAttr$1 (value, shouldDecodeNewlines) {
   var re = shouldDecodeNewlines ? encodedAttrWithNewLines$1 : encodedAttr$1;
   return value.replace(re, function (match) { return decodingMap$1[match]; })
 }
@@ -4043,18 +4009,14 @@ function parseText$1 (
 function genAssignmentCode (
   value,
   assignment
-) 
-{
-  /**返回进行模块化处理结束后的值 */
+) {
+  /** 返回进行模块化处理结束后的值 */
   var res = parseModel(value);
-  /**对于值不为空的处理设置value的值为assignment的值 */
-  if (res.key === null) 
-  {
+  /** 对于值不为空的处理设置value的值为assignment的值 */
+  if (res.key === null) {
     return (value + "=" + assignment)
-  } 
-  /**对于值为空的处理 */
-  else 
-  {
+  } else {
+    /** 对于值为空的处理 */
     return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
   }
 }
@@ -4086,49 +4048,41 @@ var expressionEndPos;
  * 模块分析
  * @param {*} val 
  */
-function parseModel (val) 
-{
-  /**获取字符串的长度 */
+function parseModel (val) {
+  /** 获取字符串的长度 */
   len = val.length;
-  /**对于字符串中不存在方括号的处理 */
-  if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) 
-  {
-    /**获取最后一个点号的位置 */
+  /** 对于字符串中不存在方括号的处理 */
+  if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
+    /** 获取最后一个点号的位置 */
     index = val.lastIndexOf('.');
-    /**对于找到点号的处理
+    /** 对于找到点号的处理
      * 设置exp为属性key为值
      */
-    if (index > -1) 
-    {
+    if (index > -1) {
       return {
         exp: val.slice(0, index),
         key: '"' + val.slice(index + 1) + '"'
       }
-    } 
-    /**对于没有找到点号的处理 */
-    else 
-    {
+    } else {
+      /** 对于没有找到点号的处理 */
       return {
         exp: val,
         key: null
       }
     }
   }
-  /**对于存在方括号的处理 */
+  /** 对于存在方括号的处理 */
   str = val;
   index = expressionPos = expressionEndPos = 0;
 
-  while (!eof()) 
-  {
+  while (!eof()) {
     chr = next();
-    /**对于是头字符的处理 */
-    if (isStringStart(chr)) 
-    {
+    /** 对于是头字符的处理 */
+    if (isStringStart(chr)) {
       parseString(chr);
     } 
-    /**对于是方括号的处理 */
-    else if (chr === 0x5B) 
-    {
+    /** 对于是方括号的处理 */
+    else if (chr === 0x5B) {
       parseBracket(chr);
     }
   }
@@ -4147,46 +4101,38 @@ function next ()
 /**
  * 判断是否到了字符串的结尾
  */
-function eof () 
-{
+function eof () {
   return index >= len
 }
 /**
  * 是否是字符串的开始，即判断传入的参数是否时单引号或者是双引号
  * @param {*} chr 
  */
-function isStringStart (chr) 
-{
+function isStringStart (chr) {
   return chr === 0x22 || chr === 0x27
 }
 /**
  * 方括号的处理，返回找到匹配的方括号结束位置
  * @param {*} chr 
  */
-function parseBracket (chr) 
-{
+function parseBracket (chr) {
   var inBracket = 1;
   expressionPos = index;
-  while (!eof()) 
-  {
+  while (!eof()) {
     chr = next();
-    if (isStringStart(chr)) 
-    {
+    if (isStringStart(chr)) {
       parseString(chr);
       continue
     }
-    /**对于是方括号的处理 */
-    if (chr === 0x5B) 
-    {
+    /** 对于是方括号的处理 */
+    if (chr === 0x5B) {
       inBracket++;
     }
-    /**对于是方括号结束的处理 */
-    if (chr === 0x5D) 
-    {
+    /** 对于是方括号结束的处理 */
+    if (chr === 0x5D) {
       inBracket--;
     }
-    if (inBracket === 0) 
-    {
+    if (inBracket === 0) {
       expressionEndPos = index;
       break
     }
@@ -4197,17 +4143,14 @@ function parseBracket (chr)
  * 在字符串中寻找是否还有此字符
  * @param {*} chr 
  */
-function parseString (chr) 
-{
+function parseString (chr) {
   var stringQuote = chr;
-  /**一直循环到字符串结束 */
-  while (!eof()) 
-  {
-    /**获取下一个字符的值 */
+  /** 一直循环到字符串结束 */
+  while (!eof()) {
+    /** 获取下一个字符的值 */
     chr = next();
-    /**如果在后续的字符串中找到此字符退出 */
-    if (chr === stringQuote) 
-    {
+    /** 如果在后续的字符串中找到此字符退出 */
+    if (chr === stringQuote) {
       break
     }
   }
@@ -4440,14 +4383,15 @@ var postTransforms;
 var platformIsPreTag;
 var platformMustUseProp;
 var platformGetTagNamespace;
-/**定义属性的格式 */
+/** 定义属性的格式 */
+
 
 /**
  * 产生抽象元素
  * 根据对标签的解析产生对应的抽象结构
- * @param {*} tag 
- * @param {*} attrs 
- * @param {*} parent 
+ * @param {*} tag 元素标签
+ * @param {*} attrs 元素属性
+ * @param {*} parent 元素的父节点
  */
 function createASTElement (
   tag,
@@ -4465,9 +4409,6 @@ function createASTElement (
   }
 }
 
-/**
- * Convert HTML string to AST.
- */
 /**
  * 将HTML文本转换为抽象结构
  * @param {*} template HTML字符串，即模板字符串
@@ -4784,10 +4725,8 @@ function parse (
  * 如果值不为NULL设置值的pre属性的值为真
  * @param {*} el 
  */
-function processPre (el) 
-{
-  if (getAndRemoveAttr$1(el, 'v-pre') != null) 
-  {
+function processPre (el) {
+  if (getAndRemoveAttr$1(el, 'v-pre') != null) {
     el.pre = true;
   }
 }
@@ -4795,27 +4734,22 @@ function processPre (el)
  * 原始属性的处理
  * @param {*} el 
  */
-function processRawAttrs (el) 
-{
-  /**获取对象的属性数组 */
+function processRawAttrs (el) {
+  /** 获取对象的属性数组 */
   var l = el.attrsList.length;
-  /**对于数组长度大于0的处理
+  /** 对于数组长度大于0的处理
    * 将属性名和属性值组成的数组存储在el的attrs数组中
    */
-  if (l) 
-  {
+  if (l) {
     var attrs = el.attrs = new Array(l);
-    for (var i = 0; i < l; i++) 
-    {
+    for (var i = 0; i < l; i++) {
       attrs[i] = {
         name: el.attrsList[i].name,
         value: JSON.stringify(el.attrsList[i].value)
       };
     }
-  } 
-  /**对于el的预处理属性为假的处理，设置元素的plain属性为真 */
-  else if (!el.pre) 
-  {
+  } else if (!el.pre) {
+    /** 对于el的预处理属性为假的处理，设置元素的plain属性为真 */
     // non root node in pre blocks with no attributes
     el.plain = true;
   }
@@ -4825,8 +4759,7 @@ function processRawAttrs (el)
  * @param {*} element 
  * @param {*} options 
  */
-function processElement (element, options) 
-{
+function processElement (element, options) {
   processKey(element);
 
   // determine whether this is a plain element after
@@ -4836,8 +4769,7 @@ function processElement (element, options)
   processRef(element);
   processSlot(element);
   processComponent(element);
-  for (var i = 0; i < transforms.length; i++) 
-  {
+  for (var i = 0; i < transforms.length; i++) {
     element = transforms[i](element, options) || element;
   }
   processAttrs(element);
@@ -4847,13 +4779,10 @@ function processElement (element, options)
  * 如果此属性存在设置此元素的key属性的值为返回的表达式
  * @param {*} el 
  */
-function processKey (el) 
-{
+function processKey (el) {
   var exp = getBindingAttr$1(el, 'key');
-  if (exp) 
-  {
-    if ("development" !== 'production' && el.tag === 'template') 
-    {
+  if (exp) {
+    if ("development" !== 'production' && el.tag === 'template') {
       warn$1("<template> cannot be keyed. Place the key on real elements instead.");
     }
     el.key = exp;
@@ -4863,16 +4792,14 @@ function processKey (el)
  * 处理ref属性
  * @param {*} el 
  */
-function processRef (el) 
-{
-  /**获取此对象ref属性的值 */
+function processRef (el) {
+  /** 获取此对象ref属性的值 */
   var ref = getBindingAttr$1(el, 'ref');
-  /**对于值不为假的处理
+  /** 对于值不为假的处理
    * 设置el的ref属性为ref属性的值
    * 设置refInFor，即是否有for属性
    */
-  if (ref) 
-  {
+  if (ref) {
     el.ref = ref;
     el.refInFor = checkInFor(el);
   }
@@ -4881,14 +4808,11 @@ function processRef (el)
  * for指令的处理
  * @param {*} el 
  */
-function processFor (el) 
-{
+function processFor (el) {
   var exp;
-  if ((exp = getAndRemoveAttr$1(el, 'v-for'))) 
-  {
+  if ((exp = getAndRemoveAttr$1(el, 'v-for'))) {
     var inMatch = exp.match(forAliasRE);
-    if (!inMatch) 
-    {
+    if (!inMatch) {
       "development" !== 'production' && warn$1(
         ("Invalid v-for expression: " + exp)
       );
@@ -4897,17 +4821,13 @@ function processFor (el)
     el.for = inMatch[2].trim();
     var alias = inMatch[1].trim();
     var iteratorMatch = alias.match(forIteratorRE);
-    if (iteratorMatch) 
-    {
+    if (iteratorMatch) {
       el.alias = iteratorMatch[1].trim();
       el.iterator1 = iteratorMatch[2].trim();
-      if (iteratorMatch[3]) 
-      {
+      if (iteratorMatch[3]) {
         el.iterator2 = iteratorMatch[3].trim();
       }
-    } 
-    else 
-    {
+    } else {
       el.alias = alias;
     }
   }
@@ -4916,26 +4836,20 @@ function processFor (el)
  * 处理v-if指令
  * @param {*} el 
  */
-function processIf (el) 
-{
+function processIf (el) {
   var exp = getAndRemoveAttr$1(el, 'v-if');
-  if (exp) 
-  {
+  if (exp) {
     el.if = exp;
     addIfCondition(el, {
       exp: exp,
       block: el
     });
-  } 
-  else 
-  {
-    if (getAndRemoveAttr$1(el, 'v-else') != null) 
-    {
+  } else {
+    if (getAndRemoveAttr$1(el, 'v-else') != null) {
       el.else = true;
     }
     var elseif = getAndRemoveAttr$1(el, 'v-else-if');
-    if (elseif) 
-    {
+    if (elseif) {
       el.elseif = elseif;
     }
   }
@@ -4945,18 +4859,15 @@ function processIf (el)
  * @param {*} el 
  * @param {*} parent 
  */
-function processIfConditions (el, parent) 
-{
+function processIfConditions (el, parent) {
   var prev = findPrevElement(parent.children);
-  if (prev && prev.if) 
-  {
+  if (prev && prev.if) {
     addIfCondition(prev, 
       {
       exp: el.elseif,
       block: el
     });
-  } 
-  else {
+  } else {
     warn$1(
       "v-" + (el.elseif ? ('else-if="' + el.elseif + '"') : 'else') + " " +
       "used on element <" + (el.tag) + "> without corresponding v-if."
@@ -4964,22 +4875,16 @@ function processIfConditions (el, parent)
   }
 }
 /**
- * 
+ * 查找前面的元素
  * @param {*} children 
  */
-function findPrevElement (children) 
-{
+function findPrevElement (children) {
   var i = children.length;
-  while (i--) 
-  {
-    if (children[i].type === 1) 
-    {
+  while (i--) {
+    if (children[i].type === 1) {
       return children[i]
-    } 
-    else 
-    {
-      if ("development" !== 'production' && children[i].text !== ' ') 
-      {
+    } else {
+      if ("development" !== 'production' && children[i].text !== ' ') {
         warn$1(
           "text \"" + (children[i].text.trim()) + "\" between v-if and v-else(-if) " +
           "will be ignored."
@@ -4994,31 +4899,27 @@ function findPrevElement (children)
  * @param {*} el 
  * @param {*} condition 
  */
-function addIfCondition (el, condition) 
-{
-  if (!el.ifConditions) 
-  {
+function addIfCondition (el, condition) {
+  if (!el.ifConditions) {
     el.ifConditions = [];
   }
   el.ifConditions.push(condition);
 }
 /**
- * 
+ * 处理一次
  * @param {*} el 
  */
-function processOnce (el) 
-{
+function processOnce (el) {
   /**
    * 获取v-once属性，并设置对象的once属性为此属性中是否存在v-once
    */
   var once$$1 = getAndRemoveAttr$1(el, 'v-once');
-  if (once$$1 != null) 
-  {
+  if (once$$1 != null) {
     el.once = true;
   }
 }
 /**
- * 
+ * 处理槽
  * @param {*} el 
  */
 function processSlot (el) {
@@ -5064,28 +4965,23 @@ function processSlot (el) {
  * 组件处理
  * @param {*} el 
  */
-function processComponent (el) 
-{
+function processComponent (el) {
   var binding;
-  if ((binding = getBindingAttr$1(el, 'is'))) 
-  {
+  if ((binding = getBindingAttr$1(el, 'is'))) {
     el.component = binding;
   }
-  if (getAndRemoveAttr$1(el, 'inline-template') != null) 
-  {
+  if (getAndRemoveAttr$1(el, 'inline-template') != null) {
     el.inlineTemplate = true;
   }
 }
 /**
- * 
+ * 处理属性
  * @param {*} el 
  */
-function processAttrs (el) 
-{
+function processAttrs (el) {
   var list = el.attrsList;
   var i, l, name, rawName, value, modifiers, isProp;
-  for (i = 0, l = list.length; i < l; i++) 
-  {
+  for (i = 0, l = list.length; i < l; i++) {
     name = rawName = list[i].name;
     value = list[i].value;
     if (dirRE.test(name)) {
@@ -5163,10 +5059,8 @@ function processAttrs (el)
  */
 function checkInFor (el) {
   var parent = el;
-  while (parent) 
-  {
-    if (parent.for !== undefined) 
-    {
+  while (parent) {
+    if (parent.for !== undefined) {
       return true
     }
     parent = parent.parent;
@@ -5177,11 +5071,9 @@ function checkInFor (el) {
  * 
  * @param {*} name 
  */
-function parseModifiers (name) 
-{
+function parseModifiers (name) {
   var match = name.match(modifierRE);
-  if (match) 
-  {
+  if (match) {
     var ret = {};
     match.forEach(function (m) { ret[m.slice(1)] = true; });
     return ret
@@ -5191,16 +5083,13 @@ function parseModifiers (name)
  * 将属性数组中的name属性值为键value属性值为值的映射表
  * @param {*} attrs 属性数组
  */
-function makeAttrsMap (attrs) 
-{
+function makeAttrsMap (attrs) {
   var map = {};
-  for (var i = 0, l = attrs.length; i < l; i++) 
-  {
+  for (var i = 0, l = attrs.length; i < l; i++) {
     if (
       "development" !== 'production' &&
       map[attrs[i].name] && !isIE$1 && !isEdge$1
-    ) 
-    {
+    ) {
       warn$1('duplicate attribute: ' + attrs[i].name);
     }
     map[attrs[i].name] = attrs[i].value;
@@ -5213,16 +5102,14 @@ function makeAttrsMap (attrs)
  * 判断是否是文本标签即是否是script和style标签
  * @param {*} el 
  */
-function isTextTag (el) 
-{
+function isTextTag (el) {
   return el.tag === 'script' || el.tag === 'style'
 }
 /**
  * 
  * @param {*} el DOM对象的抽象形式
  */
-function isForbiddenTag (el) 
-{
+function isForbiddenTag (el) {
   return (
     el.tag === 'style' ||
     (el.tag === 'script' && (
@@ -5239,14 +5126,11 @@ var ieNSPrefix = /^NS\d+:/;
  * 
  * @param {*} attrs 
  */
-function guardIESVGBug (attrs) 
-{
+function guardIESVGBug (attrs) {
   var res = [];
-  for (var i = 0; i < attrs.length; i++) 
-  {
+  for (var i = 0; i < attrs.length; i++) {
     var attr = attrs[i];
-    if (!ieNSBug.test(attr.name)) 
-    {
+    if (!ieNSBug.test(attr.name)) {
       attr.name = attr.name.replace(ieNSPrefix, '');
       res.push(attr);
     }
@@ -5258,13 +5142,10 @@ function guardIESVGBug (attrs)
  * @param {*} el 
  * @param {*} value 
  */
-function checkForAliasModel (el, value) 
-{
+function checkForAliasModel (el, value) {
   var _el = el;
-  while (_el) 
-  {
-    if (_el.for && _el.alias === value) 
-    {
+  while (_el) {
+    if (_el.for && _el.alias === value) {
       warn$1(
         "<" + (el.tag) + " v-model=\"" + value + "\">: " +
         "You are binding v-model directly to a v-for iteration alias. " +
@@ -5462,23 +5343,20 @@ function genComponentModel$1 (
   el,
   value,
   modifiers
-) 
-{
+) {
   var ref = modifiers || {};
   var number = ref.number;
   var trim = ref.trim;
-  /**设置基本的表达式 */
+  /** 设置基本的表达式 */
   var baseValueExpression = '$$v';
   var valueExpression = baseValueExpression;
-  if (trim) 
-  {
+  if (trim) {
     valueExpression =
       "(typeof " + baseValueExpression + " === 'string'" +
         "? " + baseValueExpression + ".trim()" +
         ": " + baseValueExpression + ")";
   }
-  if (number) 
-  {
+  if (number) {
     valueExpression = "_n(" + valueExpression + ")";
   }
   var assignment = genAssignmentCode$1(value, valueExpression);
@@ -5498,18 +5376,14 @@ function genComponentModel$1 (
 function genAssignmentCode$1 (
   value,
   assignment
-) 
-{
-  /**返回进行模块化处理结束后的值 */
+) {
+  /** 返回进行模块化处理结束后的值 */
   var res = parseModel$1(value);
-  /**对于值不为空的处理设置value的值为assignment的值 */
-  if (res.key === null) 
-  {
+  /** 对于值不为空的处理设置value的值为assignment的值 */
+  if (res.key === null) {
     return (value + "=" + assignment)
-  } 
-  /**对于值为空的处理 */
-  else 
-  {
+  } else {
+    /** 对于值为空的处理 */
     return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
   }
 }
@@ -5541,49 +5415,41 @@ var expressionEndPos$1;
  * 模块分析
  * @param {*} val 
  */
-function parseModel$1 (val) 
-{
-  /**获取字符串的长度 */
+function parseModel$1 (val) {
+  /** 获取字符串的长度 */
   len$1 = val.length;
-  /**对于字符串中不存在方括号的处理 */
-  if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len$1 - 1) 
-  {
-    /**获取最后一个点号的位置 */
+  /** 对于字符串中不存在方括号的处理 */
+  if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len$1 - 1) {
+    /** 获取最后一个点号的位置 */
     index$1 = val.lastIndexOf('.');
-    /**对于找到点号的处理
+    /** 对于找到点号的处理
      * 设置exp为属性key为值
      */
-    if (index$1 > -1) 
-    {
+    if (index$1 > -1) {
       return {
         exp: val.slice(0, index$1),
         key: '"' + val.slice(index$1 + 1) + '"'
       }
-    } 
-    /**对于没有找到点号的处理 */
-    else 
-    {
+    } else {
+      /** 对于没有找到点号的处理 */
       return {
         exp: val,
         key: null
       }
     }
   }
-  /**对于存在方括号的处理 */
+  /** 对于存在方括号的处理 */
   str$1 = val;
   index$1 = expressionPos$1 = expressionEndPos$1 = 0;
 
-  while (!eof$1()) 
-  {
+  while (!eof$1()) {
     chr$1 = next$1();
-    /**对于是头字符的处理 */
-    if (isStringStart$1(chr$1)) 
-    {
+    /** 对于是头字符的处理 */
+    if (isStringStart$1(chr$1)) {
       parseString$1(chr$1);
     } 
-    /**对于是方括号的处理 */
-    else if (chr$1 === 0x5B) 
-    {
+    /** 对于是方括号的处理 */
+    else if (chr$1 === 0x5B) {
       parseBracket$1(chr$1);
     }
   }
@@ -5602,46 +5468,38 @@ function next$1 ()
 /**
  * 判断是否到了字符串的结尾
  */
-function eof$1 () 
-{
+function eof$1 () {
   return index$1 >= len$1
 }
 /**
  * 是否是字符串的开始，即判断传入的参数是否时单引号或者是双引号
  * @param {*} chr 
  */
-function isStringStart$1 (chr) 
-{
+function isStringStart$1 (chr) {
   return chr === 0x22 || chr === 0x27
 }
 /**
  * 方括号的处理，返回找到匹配的方括号结束位置
  * @param {*} chr 
  */
-function parseBracket$1 (chr) 
-{
+function parseBracket$1 (chr) {
   var inBracket = 1;
   expressionPos$1 = index$1;
-  while (!eof$1()) 
-  {
+  while (!eof$1()) {
     chr = next$1();
-    if (isStringStart$1(chr)) 
-    {
+    if (isStringStart$1(chr)) {
       parseString$1(chr);
       continue
     }
-    /**对于是方括号的处理 */
-    if (chr === 0x5B) 
-    {
+    /** 对于是方括号的处理 */
+    if (chr === 0x5B) {
       inBracket++;
     }
-    /**对于是方括号结束的处理 */
-    if (chr === 0x5D) 
-    {
+    /** 对于是方括号结束的处理 */
+    if (chr === 0x5D) {
       inBracket--;
     }
-    if (inBracket === 0) 
-    {
+    if (inBracket === 0) {
       expressionEndPos$1 = index$1;
       break
     }
@@ -5652,17 +5510,14 @@ function parseBracket$1 (chr)
  * 在字符串中寻找是否还有此字符
  * @param {*} chr 
  */
-function parseString$1 (chr) 
-{
+function parseString$1 (chr) {
   var stringQuote = chr;
-  /**一直循环到字符串结束 */
-  while (!eof$1()) 
-  {
-    /**获取下一个字符的值 */
+  /** 一直循环到字符串结束 */
+  while (!eof$1()) {
+    /** 获取下一个字符的值 */
     chr = next$1();
-    /**如果在后续的字符串中找到此字符退出 */
-    if (chr === stringQuote) 
-    {
+    /** 如果在后续的字符串中找到此字符退出 */
+    if (chr === stringQuote) {
       break
     }
   }
@@ -5938,6 +5793,9 @@ var isNonPhrasingTag$1 = makeMap(
 
 /*  */
 
+/**
+ * 定义基本的指令
+ */
 var baseOptions = {
   expectHTML: true,
   modules: modules,
@@ -5973,14 +5831,15 @@ var postTransforms$1;
 var platformIsPreTag$1;
 var platformMustUseProp$1;
 var platformGetTagNamespace$1;
-/**定义属性的格式 */
+/** 定义属性的格式 */
+
 
 /**
  * 产生抽象元素
  * 根据对标签的解析产生对应的抽象结构
- * @param {*} tag 
- * @param {*} attrs 
- * @param {*} parent 
+ * @param {*} tag 元素标签
+ * @param {*} attrs 元素属性
+ * @param {*} parent 元素的父节点
  */
 function createASTElement$1 (
   tag,
@@ -5998,9 +5857,6 @@ function createASTElement$1 (
   }
 }
 
-/**
- * Convert HTML string to AST.
- */
 /**
  * 将HTML文本转换为抽象结构
  * @param {*} template HTML字符串，即模板字符串
@@ -6317,10 +6173,8 @@ function parse$1 (
  * 如果值不为NULL设置值的pre属性的值为真
  * @param {*} el 
  */
-function processPre$1 (el) 
-{
-  if (getAndRemoveAttr$1(el, 'v-pre') != null) 
-  {
+function processPre$1 (el) {
+  if (getAndRemoveAttr$1(el, 'v-pre') != null) {
     el.pre = true;
   }
 }
@@ -6328,27 +6182,22 @@ function processPre$1 (el)
  * 原始属性的处理
  * @param {*} el 
  */
-function processRawAttrs$1 (el) 
-{
-  /**获取对象的属性数组 */
+function processRawAttrs$1 (el) {
+  /** 获取对象的属性数组 */
   var l = el.attrsList.length;
-  /**对于数组长度大于0的处理
+  /** 对于数组长度大于0的处理
    * 将属性名和属性值组成的数组存储在el的attrs数组中
    */
-  if (l) 
-  {
+  if (l) {
     var attrs = el.attrs = new Array(l);
-    for (var i = 0; i < l; i++) 
-    {
+    for (var i = 0; i < l; i++) {
       attrs[i] = {
         name: el.attrsList[i].name,
         value: JSON.stringify(el.attrsList[i].value)
       };
     }
-  } 
-  /**对于el的预处理属性为假的处理，设置元素的plain属性为真 */
-  else if (!el.pre) 
-  {
+  } else if (!el.pre) {
+    /** 对于el的预处理属性为假的处理，设置元素的plain属性为真 */
     // non root node in pre blocks with no attributes
     el.plain = true;
   }
@@ -6358,8 +6207,7 @@ function processRawAttrs$1 (el)
  * @param {*} element 
  * @param {*} options 
  */
-function processElement$1 (element, options) 
-{
+function processElement$1 (element, options) {
   processKey$1(element);
 
   // determine whether this is a plain element after
@@ -6369,8 +6217,7 @@ function processElement$1 (element, options)
   processRef$1(element);
   processSlot$1(element);
   processComponent$1(element);
-  for (var i = 0; i < transforms$1.length; i++) 
-  {
+  for (var i = 0; i < transforms$1.length; i++) {
     element = transforms$1[i](element, options) || element;
   }
   processAttrs$1(element);
@@ -6380,13 +6227,10 @@ function processElement$1 (element, options)
  * 如果此属性存在设置此元素的key属性的值为返回的表达式
  * @param {*} el 
  */
-function processKey$1 (el) 
-{
+function processKey$1 (el) {
   var exp = getBindingAttr$1(el, 'key');
-  if (exp) 
-  {
-    if ("development" !== 'production' && el.tag === 'template') 
-    {
+  if (exp) {
+    if ("development" !== 'production' && el.tag === 'template') {
       warn$3("<template> cannot be keyed. Place the key on real elements instead.");
     }
     el.key = exp;
@@ -6396,16 +6240,14 @@ function processKey$1 (el)
  * 处理ref属性
  * @param {*} el 
  */
-function processRef$1 (el) 
-{
-  /**获取此对象ref属性的值 */
+function processRef$1 (el) {
+  /** 获取此对象ref属性的值 */
   var ref = getBindingAttr$1(el, 'ref');
-  /**对于值不为假的处理
+  /** 对于值不为假的处理
    * 设置el的ref属性为ref属性的值
    * 设置refInFor，即是否有for属性
    */
-  if (ref) 
-  {
+  if (ref) {
     el.ref = ref;
     el.refInFor = checkInFor$1(el);
   }
@@ -6414,14 +6256,11 @@ function processRef$1 (el)
  * for指令的处理
  * @param {*} el 
  */
-function processFor$1 (el) 
-{
+function processFor$1 (el) {
   var exp;
-  if ((exp = getAndRemoveAttr$1(el, 'v-for'))) 
-  {
+  if ((exp = getAndRemoveAttr$1(el, 'v-for'))) {
     var inMatch = exp.match(forAliasRE$1);
-    if (!inMatch) 
-    {
+    if (!inMatch) {
       "development" !== 'production' && warn$3(
         ("Invalid v-for expression: " + exp)
       );
@@ -6430,17 +6269,13 @@ function processFor$1 (el)
     el.for = inMatch[2].trim();
     var alias = inMatch[1].trim();
     var iteratorMatch = alias.match(forIteratorRE$1);
-    if (iteratorMatch) 
-    {
+    if (iteratorMatch) {
       el.alias = iteratorMatch[1].trim();
       el.iterator1 = iteratorMatch[2].trim();
-      if (iteratorMatch[3]) 
-      {
+      if (iteratorMatch[3]) {
         el.iterator2 = iteratorMatch[3].trim();
       }
-    } 
-    else 
-    {
+    } else {
       el.alias = alias;
     }
   }
@@ -6449,26 +6284,20 @@ function processFor$1 (el)
  * 处理v-if指令
  * @param {*} el 
  */
-function processIf$1 (el) 
-{
+function processIf$1 (el) {
   var exp = getAndRemoveAttr$1(el, 'v-if');
-  if (exp) 
-  {
+  if (exp) {
     el.if = exp;
     addIfCondition$1(el, {
       exp: exp,
       block: el
     });
-  } 
-  else 
-  {
-    if (getAndRemoveAttr$1(el, 'v-else') != null) 
-    {
+  } else {
+    if (getAndRemoveAttr$1(el, 'v-else') != null) {
       el.else = true;
     }
     var elseif = getAndRemoveAttr$1(el, 'v-else-if');
-    if (elseif) 
-    {
+    if (elseif) {
       el.elseif = elseif;
     }
   }
@@ -6478,18 +6307,15 @@ function processIf$1 (el)
  * @param {*} el 
  * @param {*} parent 
  */
-function processIfConditions$1 (el, parent) 
-{
+function processIfConditions$1 (el, parent) {
   var prev = findPrevElement$1(parent.children);
-  if (prev && prev.if) 
-  {
+  if (prev && prev.if) {
     addIfCondition$1(prev, 
       {
       exp: el.elseif,
       block: el
     });
-  } 
-  else {
+  } else {
     warn$3(
       "v-" + (el.elseif ? ('else-if="' + el.elseif + '"') : 'else') + " " +
       "used on element <" + (el.tag) + "> without corresponding v-if."
@@ -6497,22 +6323,16 @@ function processIfConditions$1 (el, parent)
   }
 }
 /**
- * 
+ * 查找前面的元素
  * @param {*} children 
  */
-function findPrevElement$1 (children) 
-{
+function findPrevElement$1 (children) {
   var i = children.length;
-  while (i--) 
-  {
-    if (children[i].type === 1) 
-    {
+  while (i--) {
+    if (children[i].type === 1) {
       return children[i]
-    } 
-    else 
-    {
-      if ("development" !== 'production' && children[i].text !== ' ') 
-      {
+    } else {
+      if ("development" !== 'production' && children[i].text !== ' ') {
         warn$3(
           "text \"" + (children[i].text.trim()) + "\" between v-if and v-else(-if) " +
           "will be ignored."
@@ -6527,31 +6347,27 @@ function findPrevElement$1 (children)
  * @param {*} el 
  * @param {*} condition 
  */
-function addIfCondition$1 (el, condition) 
-{
-  if (!el.ifConditions) 
-  {
+function addIfCondition$1 (el, condition) {
+  if (!el.ifConditions) {
     el.ifConditions = [];
   }
   el.ifConditions.push(condition);
 }
 /**
- * 
+ * 处理一次
  * @param {*} el 
  */
-function processOnce$1 (el) 
-{
+function processOnce$1 (el) {
   /**
    * 获取v-once属性，并设置对象的once属性为此属性中是否存在v-once
    */
   var once$$1 = getAndRemoveAttr$1(el, 'v-once');
-  if (once$$1 != null) 
-  {
+  if (once$$1 != null) {
     el.once = true;
   }
 }
 /**
- * 
+ * 处理槽
  * @param {*} el 
  */
 function processSlot$1 (el) {
@@ -6597,28 +6413,23 @@ function processSlot$1 (el) {
  * 组件处理
  * @param {*} el 
  */
-function processComponent$1 (el) 
-{
+function processComponent$1 (el) {
   var binding;
-  if ((binding = getBindingAttr$1(el, 'is'))) 
-  {
+  if ((binding = getBindingAttr$1(el, 'is'))) {
     el.component = binding;
   }
-  if (getAndRemoveAttr$1(el, 'inline-template') != null) 
-  {
+  if (getAndRemoveAttr$1(el, 'inline-template') != null) {
     el.inlineTemplate = true;
   }
 }
 /**
- * 
+ * 处理属性
  * @param {*} el 
  */
-function processAttrs$1 (el) 
-{
+function processAttrs$1 (el) {
   var list = el.attrsList;
   var i, l, name, rawName, value, modifiers, isProp;
-  for (i = 0, l = list.length; i < l; i++) 
-  {
+  for (i = 0, l = list.length; i < l; i++) {
     name = rawName = list[i].name;
     value = list[i].value;
     if (dirRE$1.test(name)) {
@@ -6696,10 +6507,8 @@ function processAttrs$1 (el)
  */
 function checkInFor$1 (el) {
   var parent = el;
-  while (parent) 
-  {
-    if (parent.for !== undefined) 
-    {
+  while (parent) {
+    if (parent.for !== undefined) {
       return true
     }
     parent = parent.parent;
@@ -6710,11 +6519,9 @@ function checkInFor$1 (el) {
  * 
  * @param {*} name 
  */
-function parseModifiers$1 (name) 
-{
+function parseModifiers$1 (name) {
   var match = name.match(modifierRE$1);
-  if (match) 
-  {
+  if (match) {
     var ret = {};
     match.forEach(function (m) { ret[m.slice(1)] = true; });
     return ret
@@ -6724,16 +6531,13 @@ function parseModifiers$1 (name)
  * 将属性数组中的name属性值为键value属性值为值的映射表
  * @param {*} attrs 属性数组
  */
-function makeAttrsMap$1 (attrs) 
-{
+function makeAttrsMap$1 (attrs) {
   var map = {};
-  for (var i = 0, l = attrs.length; i < l; i++) 
-  {
+  for (var i = 0, l = attrs.length; i < l; i++) {
     if (
       "development" !== 'production' &&
       map[attrs[i].name] && !isIE$1 && !isEdge$1
-    ) 
-    {
+    ) {
       warn$3('duplicate attribute: ' + attrs[i].name);
     }
     map[attrs[i].name] = attrs[i].value;
@@ -6746,16 +6550,14 @@ function makeAttrsMap$1 (attrs)
  * 判断是否是文本标签即是否是script和style标签
  * @param {*} el 
  */
-function isTextTag$1 (el) 
-{
+function isTextTag$1 (el) {
   return el.tag === 'script' || el.tag === 'style'
 }
 /**
  * 
  * @param {*} el DOM对象的抽象形式
  */
-function isForbiddenTag$1 (el) 
-{
+function isForbiddenTag$1 (el) {
   return (
     el.tag === 'style' ||
     (el.tag === 'script' && (
@@ -6772,14 +6574,11 @@ var ieNSPrefix$1 = /^NS\d+:/;
  * 
  * @param {*} attrs 
  */
-function guardIESVGBug$1 (attrs) 
-{
+function guardIESVGBug$1 (attrs) {
   var res = [];
-  for (var i = 0; i < attrs.length; i++) 
-  {
+  for (var i = 0; i < attrs.length; i++) {
     var attr = attrs[i];
-    if (!ieNSBug$1.test(attr.name)) 
-    {
+    if (!ieNSBug$1.test(attr.name)) {
       attr.name = attr.name.replace(ieNSPrefix$1, '');
       res.push(attr);
     }
@@ -6791,13 +6590,10 @@ function guardIESVGBug$1 (attrs)
  * @param {*} el 
  * @param {*} value 
  */
-function checkForAliasModel$1 (el, value) 
-{
+function checkForAliasModel$1 (el, value) {
   var _el = el;
-  while (_el) 
-  {
-    if (_el.for && _el.alias === value) 
-    {
+  while (_el) {
+    if (_el.for && _el.alias === value) {
       warn$3(
         "<" + (el.tag) + " v-model=\"" + value + "\">: " +
         "You are binding v-model directly to a v-for iteration alias. " +
@@ -7024,30 +6820,27 @@ function genHandlers (
   events,
   isNative,
   warn
-) 
-{
-  /**根据传入的isNative进行处理 设置res的值 */
+) {
+  /** 根据传入的isNative进行处理 设置res的值 */
   var res = isNative ? 'nativeOn:{' : 'on:{';
-  /**变量事件属性 */
-  for (var name in events) 
-  {
-    /**获取事件值 */
+  /** 变量事件属性 */
+  for (var name in events) {
+    /** 获取事件值 */
     var handler = events[name];
     // #5330: warn click.right, since right clicks do not actually fire click events.
     if ("development" !== 'production' &&
       name === 'click' &&
       handler && handler.modifiers && handler.modifiers.right
-    ) 
-    {
+    ) {
       warn(
         "Use \"contextmenu\" instead of \"click.right\" since right clicks " +
         "do not actually fire \"click\" events."
       );
     }
-    /**字符串转换 */
+    /** 字符串转换 */
     res += "\"" + name + "\":" + (genHandler(name, handler)) + ",";
   }
-  /**生成最终的字符串 */
+  /** 生成最终的字符串 */
   return res.slice(0, -1) + '}'
 }
 /**
@@ -7058,47 +6851,36 @@ function genHandlers (
 function genHandler (
   name,
   handler
-) 
-{
-  /**如果事件处理函数的值为假返回空函数 */
-  if (!handler) 
-  {
+) {
+  /** 如果事件处理函数的值为假返回空函数 */
+  if (!handler) {
     return 'function(){}'
   }
-  /**如果事件处理函数是数组的处理 */
-  if (Array.isArray(handler)) 
-  {
-    /**返回数组处理的形式 */
+  /** 如果事件处理函数是数组的处理 */
+  if (Array.isArray(handler)) {
+    /** 返回数组处理的形式 */
     return ("[" + (handler.map(function (handler) { return genHandler(name, handler); }).join(',')) + "]")
   }
 
   var isMethodPath = simplePathRE.test(handler.value);
   var isFunctionExpression = fnExpRE.test(handler.value);
 
-  if (!handler.modifiers) 
-  {
+  if (!handler.modifiers) {
     return isMethodPath || isFunctionExpression
       ? handler.value
       : ("function($event){" + (handler.value) + "}") // inline statement
-  } 
-  else 
-  {
+  } else {
     var code = '';
     var genModifierCode = '';
     var keys = [];
-    for (var key in handler.modifiers) 
-    {
-      if (modifierCode[key]) 
-      {
+    for (var key in handler.modifiers) {
+      if (modifierCode[key]) {
         genModifierCode += modifierCode[key];
         // left/right
-        if (keyCodes[key]) 
-        {
+        if (keyCodes[key]) {
           keys.push(key);
         }
-      } 
-      else if (key === 'exact') 
-      {
+      } else if (key === 'exact') {
         var modifiers = (handler.modifiers);
         genModifierCode += genGuard(
           ['ctrl', 'shift', 'alt', 'meta']
@@ -7106,19 +6888,15 @@ function genHandler (
             .map(function (keyModifier) { return ("$event." + keyModifier + "Key"); })
             .join('||')
         );
-      } 
-      else 
-      {
+      } else {
         keys.push(key);
       }
     }
-    if (keys.length) 
-    {
+    if (keys.length) {
       code += genKeyFilter(keys);
     }
     // Make sure modifiers like prevent and stop get executed after key filtering
-    if (genModifierCode) 
-    {
+    if (genModifierCode) {
       code += genModifierCode;
     }
     var handlerCode = isMethodPath
@@ -7133,26 +6911,23 @@ function genHandler (
  * 产生键值过滤器代码
  * @param {*} keys 
  */
-function genKeyFilter (keys) 
-{
+function genKeyFilter (keys) {
   return ("if(!('button' in $event)&&" + (keys.map(genFilterCode).join('&&')) + ")return null;")
 }
 /**
  * 产生过滤代码
  * @param {*} key 
  */
-function genFilterCode (key) 
-{
-  /**将key转换为10进制的整数 */
+function genFilterCode (key) {
+  /** 将key转换为10进制的整数 */
   var keyVal = parseInt(key, 10);
-  /**如果转换的值为真的处理
+  /** 如果转换的值为真的处理
    * 返回
    */
-  if (keyVal) 
-  {
+  if (keyVal) {
     return ("$event.keyCode!==" + keyVal)
   }
-  /**设置code的值在 */
+  /** 设置code的值在 */
   var code = keyCodes[key];
   return (
     "_k($event.keyCode," +
@@ -7167,14 +6942,13 @@ function genFilterCode (key)
 /**
  * 定义对于on事件的处理
  * @param {*} el DOM元素
- * @param {*} dir 
+ * @param {*} dir 指令
  */
-function on (el, dir) 
-{
-  if ("development" !== 'production' && dir.modifiers) 
-  {
+function on (el, dir) {
+  if ("development" !== 'production' && dir.modifiers) {
     warn("v-on without argument does not support modifiers.");
   }
+  // 元素对象封装监视器
   el.wrapListeners = function (code) { return ("_g(" + code + "," + (dir.value) + ")"); };
 }
 
@@ -8765,22 +8539,22 @@ function escapeChar (a) {
 
 /*  */
 
-/**预留属性 */
+/** 预留属性 */
 var isReservedAttr$1 = makeMap('style,class');
 
 // attributes that should be using props for binding
-/**接收值的属性 */
+/** 接收值的属性 */
 var acceptValue$1 = makeMap('input,textarea,option,select,progress');
 /**
- * 
- * @param {*} tag 
- * @param {*} type 
+ * 必须使用的属性
+ * @param {*} tag
+ * @param {*} type
  * @param {*} attr 属性名称
  */
 
-
+/** 枚举属性 */
 var isEnumeratedAttr$1 = makeMap('contenteditable,draggable,spellcheck');
-
+/** bool属性 */
 var isBooleanAttr$1 = makeMap(
   'allowfullscreen,async,autofocus,autoplay,checked,compact,controls,declare,' +
   'default,defaultchecked,defaultmuted,defaultselected,defer,disabled,' +
@@ -8793,17 +8567,17 @@ var isBooleanAttr$1 = makeMap(
 
 /**
  * 判断是否是xlink
- * @param {*} name 
+ * @param {*} name
  */
 
 /**
  * 获取xlink属性的值
- * @param {*} name 
+ * @param {*} name
  */
 
 /**
  * 
- * @param {*} val 
+ * @param {*} val
  */
 
 /*  */

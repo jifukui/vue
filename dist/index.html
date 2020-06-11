@@ -6,6 +6,78 @@
         <script type="text/javascript" src="./vue.js"></script>
     </head>
     <body>
-        
+        <div id="app">
+
+        </div>
+        <script>
+            Vue.component("data-info",{
+                template:"<p @click='change'>{{ name }} <slot></slot> <slot v-bind:value='name'></slot></p>",
+                data(){
+                    return {
+                        name:"jifukui",
+                        user:{
+                            name:"child-slot",
+                            age:48
+                        }
+                    }
+                },
+                methods:{
+                    change:function(){
+                        this.$emit("data","good game")
+                    }
+                },
+                watch:{
+                },
+                computer:{
+
+                }
+            });
+            var father=new Vue({
+                el:"#app",
+                template:"<div> \
+                    <span @click='change' >{{ name }}</span>\
+                    <data-info v-on:data='message' @click='change'> jifukuitest </data-info> \
+                    </div>  \
+                    ",
+                data:{
+                    name:"Hello this is father",
+                    info:""
+                },
+                methods:{
+                    change:function(){
+                        //this.name="jifukui love hualili"
+                        console.log("I Have click ")
+                    },
+                    message:function(value){
+                        console.log("the value is "+value);
+                    }
+                },
+                watch:{
+                },
+                computer:{
+
+                },
+                mounted:function(){
+                    console.log("Hello I have mounted")
+                }
+            });
+            /*father.$on("click",function(){
+                console.log("Father have click ")
+            });
+            father.$on("hover",function(){
+                console.log("Father have hover ")
+            });
+            father.$on("focus",function(){
+                console.log("Father have focus ")
+            });*/
+            var jiprintf=function(msg){
+                console.log("Hello this is Test "+msg);
+            }
+            father.$on("bady",function(msg){
+                console.log("Hello my baby"+msg)
+            });
+            father.$on("baddd",jiprintf);
+            //father.$off("baddd",jiprintf);
+        </script>
     </body>
 </html>
