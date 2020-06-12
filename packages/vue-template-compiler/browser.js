@@ -1302,9 +1302,6 @@ var hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys);
 
-/**
- * Defer a task to execute it asynchronously.
- */
 /** 定义nextTick函数，异步执行的实现
  * 
 */
@@ -1315,7 +1312,7 @@ var nextTick = (function () {
   var pending = false;
   /** */
   var timerFunc;
-  /** 定义下一个时刻处理函数 
+  /** 定义下一个时刻处理函数
    * 根据浏览器的情况进行下一时刻处理函数的处理
   */
   function nextTickHandler () {
@@ -1333,14 +1330,15 @@ var nextTick = (function () {
     timerFunc = function () {
       setImmediate(nextTickHandler);
     };
-  } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) ||MessageChannel.toString() === '[object MessageChannelConstructor]')) {
+  } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) || MessageChannel.toString() === '[object MessageChannelConstructor]')) {
     var channel = new MessageChannel();
     var port = channel.port2;
     channel.port1.onmessage = nextTickHandler;
     timerFunc = function () {
       port.postMessage(1);
     };
-  } /** 对于没有以上两个函数的处理 */ else {
+  } else {
+    /** 对于没有以上两个函数的处理 */
     /* istanbul ignore next */
     /** 对于有Promise的处理 */
     if (typeof Promise !== 'undefined' && isNative(Promise)) {
@@ -2452,9 +2450,6 @@ var hasSymbol$1 =
   typeof Symbol !== 'undefined' && isNative$1(Symbol) &&
   typeof Reflect !== 'undefined' && isNative$1(Reflect.ownKeys);
 
-/**
- * Defer a task to execute it asynchronously.
- */
 /** 定义nextTick函数，异步执行的实现
  * 
 */
@@ -2465,7 +2460,7 @@ var nextTick$1 = (function () {
   var pending = false;
   /** */
   var timerFunc;
-  /** 定义下一个时刻处理函数 
+  /** 定义下一个时刻处理函数
    * 根据浏览器的情况进行下一时刻处理函数的处理
   */
   function nextTickHandler () {
@@ -2483,14 +2478,15 @@ var nextTick$1 = (function () {
     timerFunc = function () {
       setImmediate(nextTickHandler);
     };
-  } else if (typeof MessageChannel !== 'undefined' && (isNative$1(MessageChannel) ||MessageChannel.toString() === '[object MessageChannelConstructor]')) {
+  } else if (typeof MessageChannel !== 'undefined' && (isNative$1(MessageChannel) || MessageChannel.toString() === '[object MessageChannelConstructor]')) {
     var channel = new MessageChannel();
     var port = channel.port2;
     channel.port1.onmessage = nextTickHandler;
     timerFunc = function () {
       port.postMessage(1);
     };
-  } /** 对于没有以上两个函数的处理 */ else {
+  } else {
+    /** 对于没有以上两个函数的处理 */
     /* istanbul ignore next */
     /** 对于有Promise的处理 */
     if (typeof Promise !== 'undefined' && isNative$1(Promise)) {

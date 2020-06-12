@@ -11,7 +11,7 @@
         </div>
         <script>
             Vue.component("data-info",{
-                template:"<p @click='change'>{{ name }} <slot></slot> <slot v-bind:value='name'></slot></p>",
+                template:"<p @click='change'>{{ name }} <slot></slot> <slot name='info'></slot> <slot name='jifukui' :user='user'></slot></p>",
                 data(){
                     return {
                         name:"jifukui",
@@ -34,11 +34,7 @@
             });
             var father=new Vue({
                 el:"#app",
-                template:"<div> \
-                    <span @click='change' >{{ name }}</span>\
-                    <data-info v-on:data='message' @click='change'> jifukuitest </data-info> \
-                    </div>  \
-                    ",
+                template:"<div><span @click='change' >{{ name }}</span><data-info v-on:data='message' @click='change'><template v-slot:default>uname slot{{ name }}</template><template slot='info'><p>Hello,v-slot</p></template><template slot='jifukui' slot-scope='ji'><p>jifukui,v-solt{{ji.user.age}}</p></template></data-info></div>",
                 data:{
                     name:"Hello this is father",
                     info:""
