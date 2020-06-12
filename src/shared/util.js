@@ -133,7 +133,7 @@ export function cached<F: Function> (fn: F): F {
   }: any)
 }
 
-/**下面这部分用于设置对象对应属性的属性值
+/** 下面这部分用于设置对象对应属性的属性值
  * 将-后面的字符转换为大写即驼峰式
  */
 const camelizeRE = /-(\w)/g;

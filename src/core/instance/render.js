@@ -28,21 +28,21 @@ import { isUpdatingChildComponent } from './lifecycle'
  * 设置组件的$slots的值为
  */
 export function initRender (vm: Component) {
-  // 虚拟节点
+  // 初始化此对象的虚拟节点
   vm._vnode = null
-  /** 参数 */
+  /** 获取此对象的参数 */
   const options = vm.$options
-  /** 父节点 */
-  const parentVnode = vm.$vnode = options._parentVnode 
+  /** 父节点虚拟节点 */
+  const parentVnode = vm.$vnode = options._parentVnode
   /** 父对象的内容 */
   const renderContext = parentVnode && parentVnode.context
-  /** 确定槽的参数 */
+  /** 确定槽的参数 这里应该是针对于具名插槽和匿名插槽的处理 此节点的渲染子节点和父节点的渲染内容*/
   vm.$slots = resolveSlots(options._renderChildren, renderContext)
-  /** 设置槽范围的参数为空的对象 */
+  /** 设置范围插槽为空的对象 */
   vm.$scopedSlots = emptyObject
-  /** 设置_c函数的方法为创建DOM元素*/
+  /** 设置_c函数的返回值为createElement函数*/
   vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
-  /** 设置对象$createElement的属相为创建DOM元素 强制使用规范格式*/
+  /** 设置对象$createElement的值为createElement函数 启用规范化模式*/
   vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
 
   /** 获取父数据 */

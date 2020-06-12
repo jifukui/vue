@@ -56,7 +56,7 @@ export function initInjections (vm: Component) {
     observerState.shouldConvert = true
   }
 }
-/**这个函数是获取需要注射的数据
+/** 这个函数是获取需要注射的数据
  * inject：注射的数据
  * vm：组件对象，被注射的对象
  * 如果inject的值不为否

@@ -345,8 +345,11 @@ function createComputedGetter (key) {
  * 获取所有method对象中的数据
  */
 function initMethods (vm: Component, methods: Object) {
+  // 获取组件的props属性
   const props = vm.$options.props
+  /** 遍历所有的方法属性，如果方法中的数据不为空调用bind函数将这个 */
   for (const key in methods) {
+    // 对于不是生产模式进行对方法属性和probs属性是否具有相同的属性名进行判断
     if (process.env.NODE_ENV !== 'production') {
       if (methods[key] == null) {
         warn(
@@ -393,9 +396,9 @@ function initWatch (vm: Component, watch: Object) {
 }
 /** 创建监视器
  * vm：组件对象
- * keyOrFn：
- * Handler：
- * option:
+ * keyOrFn：属性值或者是函数
+ * Handler：处理函数
+ * option:传入的参数
  * 返回组件的
  * 根据Handler是否为可扩展对象进行处理
  * 如果handler为可扩展对象设置option的值为Handler设置Handler的值为Handler的值的Handler属性
@@ -408,12 +411,12 @@ function createWatcher (
   handler: any,
   options?: Object
 ) {
-  /** 对于是对象的处理 */
+  /** 对于处理函数是空白对象的处理参数为处理函数，处理函数为处理函数中的handler*/
   if (isPlainObject(handler)) {
     options = handler
     handler = handler.handler
   }
-  /** 对于是字符串的处理 */
+  /** 对于处理函数是字符串的处理设置处理函数 */
   if (typeof handler === 'string') {
     handler = vm[handler]
   }

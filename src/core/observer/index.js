@@ -33,7 +33,7 @@ export const observerState = {
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
  */
-/** 定义Observer类
+/** 定义Observer类 观察类
  * value:对象
  * dep:依赖
  * vmCount:
@@ -102,8 +102,7 @@ function protoAugment (target, src: Object, keys: any) {
 /** 拷贝参数
  * 将src中的keys属性拷贝到target对象中
  */
-function copyAugment (target: Object, src: Object, keys: Array<string>) 
-{
+function copyAugment (target: Object, src: Object, keys: Array<string>) {
   for (let i = 0, l = keys.length; i < l; i++) {
     const key = keys[i]
     def(target, key, src[key])
@@ -159,11 +158,11 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * 定义对象的反应属性
- * @param {*} obj 反应的对象
- * @param {*} key 属性
- * @param {*} val 值
- * @param {*} customSetter 用户定义的设置处理函数
- * @param {*} shallow 是否隐藏
+ * @param {*} obj Vue对象
+ * @param {*} key 属性名
+ * @param {*} val 属性值
+ * @param {*} customSetter 用户定义的设置处理函数 null
+ * @param {*} shallow 是否隐藏 true
  */
 export function defineReactive (
   obj: Object,
@@ -172,6 +171,8 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 创建Dep对象
+  console.log('Obj is ' + obj._uid)
   const dep = new Dep()
   /** 获取对象的对应属性的属性描述符 */
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -195,11 +196,13 @@ export function defineReactive (
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
-      /** 获取属性值 */
+      /** 如果有getter函数调用getter函数反之直接返回此值 */
       const value = getter ? getter.call(obj) : val
       /** 对于Dep的target的属性不为否的处理
        * 更新依赖数组
        */
+      console.log('The Dep.target is' + Dep.target)
+      // 对于依赖的目标存在的处理
       if (Dep.target) {
         dep.depend()
         if (childOb) {
@@ -221,6 +224,7 @@ export function defineReactive (
       if (process.env.NODE_ENV !== 'production' && customSetter) {
         customSetter()
       }
+      /** 对于有设置器的调用设置器更新参数反之直接设置此参数值 */
       if (setter) {
         setter.call(obj, newVal)
       } else {

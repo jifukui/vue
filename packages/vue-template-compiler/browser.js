@@ -160,7 +160,7 @@ function cached (fn) {
   })
 }
 
-/**下面这部分用于设置对象对应属性的属性值
+/** 下面这部分用于设置对象对应属性的属性值
  * 将-后面的字符转换为大写即驼峰式
  */
 var camelizeRE = /-(\w)/g;
@@ -1037,36 +1037,34 @@ var config = ({
 
 var warn = noop;
 
+// 产生组件追踪
 var generateComponentTrace = (noop); // work around flow check
+// 格式化组件名称
 var formatComponentName = (noop);
-/**如果开发环境不是生产模式的处理 */
+/** 如果开发环境不是生产模式的处理 */
 {
-  /**判断是否有定义console */
+  /** 判断是否有定义console */
   var hasConsole = typeof console !== 'undefined';
   /** */
   var classifyRE = /(?:^|[-_])(\w)/g;
   var classify = function (str) { return str
     .replace(classifyRE, function (c) { return c.toUpperCase(); })
     .replace(/[-_]/g, ''); };
-  /**警告函数 */
+  /** 警告函数 */
   warn = function (msg, vm) {
     var trace = vm ? generateComponentTrace(vm) : '';
-    /**对于有警告处理函数的处理，使用警告处理函数 */
-    if (config.warnHandler) 
-    {
+    /** 对于有警告处理函数的处理，使用警告处理函数 */
+    if (config.warnHandler) {
       config.warnHandler.call(null, msg, vm, trace);
-    } 
-    /**对于没有警告处理函数的处理使用控制台输出 */
-    else if (hasConsole && (!config.silent)) 
-    {
+    } else if (hasConsole && (!config.silent)) {
+      /** 对于没有警告处理函数的处理使用控制台输出 */
       console.error(("[Vue warn]: " + msg + trace));
     }
   };
-  /**提示函数的实现 */
+  /** 提示函数的实现 */
   formatComponentName = function (vm, includeFile) {
-    /**对于是根组件的处理 */
-    if (vm.$root === vm) 
-    {
+    /** 对于是根组件的处理 */
+    if (vm.$root === vm) {
       return '<Root>'
     }
     var options = typeof vm === 'function' && vm.cid != null
@@ -1076,8 +1074,7 @@ var formatComponentName = (noop);
         : vm || {};
     var name = options.name || options._componentTag;
     var file = options.__file;
-    if (!name && file) 
-    {
+    if (!name && file) {
       var match = file.match(/([^/\\]+)\.vue$/);
       name = match && match[1];
     }
@@ -1087,7 +1084,7 @@ var formatComponentName = (noop);
       (file && includeFile !== false ? (" at " + file) : '')
     )
   };
-  /**重复函数的实现，将字符串重复多次 */
+  /** 重复函数的实现，将字符串重复多次 */
   var repeat = function (str, n) {
     var res = '';
     while (n) {
@@ -1097,32 +1094,26 @@ var formatComponentName = (noop);
     }
     return res
   };
-  /**产生组件追踪 */
+  /** 产生组件追踪 */
   generateComponentTrace = function (vm) {
-    /**对于组件是 */
-    if (vm._isVue && vm.$parent) 
-    {
+    /** 对于组件是Vue对象且组件存在父组件 */
+    if (vm._isVue && vm.$parent) {
       var tree = [];
       var currentRecursiveSequence = 0;
-      while (vm) 
-      {
-        /**对于树的长度大于0的处理 */
-        if (tree.length > 0) 
-        {
+      while (vm) {
+        /** 对于树的长度大于0的处理 */
+        if (tree.length > 0) {
           var last = tree[tree.length - 1];
-          if (last.constructor === vm.constructor) 
-          {
+          if (last.constructor === vm.constructor) {
             currentRecursiveSequence++;
             vm = vm.$parent;
             continue
-          } 
-          else if (currentRecursiveSequence > 0) 
-          {
+          } else if (currentRecursiveSequence > 0) {
             tree[tree.length - 1] = [last, currentRecursiveSequence];
             currentRecursiveSequence = 0;
           }
         }
-        /**向树中添加对象并设置vm为当前vm的父对象 */
+        /** 向树中添加对象并设置vm为当前vm的父对象 */
         tree.push(vm);
         vm = vm.$parent;
       }
@@ -1131,9 +1122,7 @@ var formatComponentName = (noop);
             ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
             : formatComponentName(vm))); })
         .join('\n')
-    } 
-    else 
-    {
+    } else {
       return ("\n\n(found in " + (formatComponentName(vm)) + ")")
     }
   };
@@ -1439,57 +1428,50 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 /*  */
 
 
-/**设置uid的值为0 */
+/** 设置uid的值为0 */
 var uid = 0;
 
 /**
  * A dep is an observable that can have multiple
  * directives subscribing to it.
  */
-/**创建Dep类 */
-var Dep = function Dep () 
-{
+/** 创建Dep类 */
+var Dep = function Dep () {
   this.id = uid++;
   this.subs = [];
 };
-/**将sub压入对象数组中 */
-Dep.prototype.addSub = function addSub (sub) 
-{
+/** 将sub压入对象数组中 */
+Dep.prototype.addSub = function addSub (sub) {
   this.subs.push(sub);
 };
-/**移除对象中的数据 */
-Dep.prototype.removeSub = function removeSub (sub) 
-{
+/** 移除对象中的数据 */
+Dep.prototype.removeSub = function removeSub (sub) {
   remove(this.subs, sub);
 };
-/**定义depend函数
+/** 定义depend函数
  * 设置Dep对象的压入数组中
  */
-Dep.prototype.depend = function depend () 
-{
-  if (Dep.target) 
-  {
+Dep.prototype.depend = function depend () {
+  if (Dep.target) {
     Dep.target.addDep(this);
   }
 };
-/**Dep的通知函数
+/** Dep的通知函数
  * 设置此对象的所有子进行更新
  */
-Dep.prototype.notify = function notify () 
-{
+Dep.prototype.notify = function notify () {
   // stabilize the subscriber list first
   var subs = this.subs.slice();
-  for (var i = 0, l = subs.length; i < l; i++) 
-  {
+  for (var i = 0, l = subs.length; i < l; i++) {
     subs[i].update();
   }
 };
 
-/**定义Dep的目标为空 */
+/** 定义Dep的目标为空 */
 Dep.target = null;
-/**向目标栈中压入数据 */
+/** 向目标栈中压入数据 */
 
-/**提取目标栈中的数据 */
+/** 提取目标栈中的数据 */
 
 /*  */
 /**引入vNode类 
@@ -1589,9 +1571,9 @@ Object.defineProperties( VNode.prototype, prototypeAccessors );
  * dynamically accessing methods on Array prototype
  */
 
-/**设置arrayProto的值为数组构造函数的原型 */
+/** 设置arrayProto的值为数组构造函数的原型 */
 var arrayProto = Array.prototype;
-/**数组的实现 */
+/** 数组的实现 */
 var arrayMethods = Object.create(arrayProto);[
   'push',
   'pop',
@@ -1601,20 +1583,17 @@ var arrayMethods = Object.create(arrayProto);[
   'sort',
   'reverse'
 ]
-.forEach(function (method) 
-{
+.forEach(function (method) {
   // cache original method
   var original = arrayProto[method];
-  def(arrayMethods, method, function mutator () 
-  {
+  def(arrayMethods, method, function mutator () {
     var args = [], len = arguments.length;
     while ( len-- ) args[ len ] = arguments[ len ];
 
     var result = original.apply(this, args);
     var ob = this.__ob__;
     var inserted;
-    switch (method) 
-    {
+    switch (method) {
       case 'push':
       case 'unshift':
         inserted = args;
@@ -1623,8 +1602,7 @@ var arrayMethods = Object.create(arrayProto);[
         inserted = args.slice(2);
         break
     }
-    if (inserted) 
-    {
+    if (inserted) {
       ob.observeArray(inserted);
     }
     // notify change
@@ -1655,7 +1633,7 @@ var observerState = {
  * object's property keys into getter/setters that
  * collect dependencies and dispatches updates.
  */
-/** 定义Observer类
+/** 定义Observer类 观察类
  * value:对象
  * dep:依赖
  * vmCount:
@@ -1716,8 +1694,7 @@ function protoAugment (target, src, keys) {
 /** 拷贝参数
  * 将src中的keys属性拷贝到target对象中
  */
-function copyAugment (target, src, keys) 
-{
+function copyAugment (target, src, keys) {
   for (var i = 0, l = keys.length; i < l; i++) {
     var key = keys[i];
     def(target, key, src[key]);
@@ -1773,11 +1750,11 @@ function observe (value, asRootData) {
 
 /**
  * 定义对象的反应属性
- * @param {*} obj 反应的对象
- * @param {*} key 属性
- * @param {*} val 值
- * @param {*} customSetter 用户定义的设置处理函数
- * @param {*} shallow 是否隐藏
+ * @param {*} obj Vue对象
+ * @param {*} key 属性名
+ * @param {*} val 属性值
+ * @param {*} customSetter 用户定义的设置处理函数 null
+ * @param {*} shallow 是否隐藏 true
  */
 function defineReactive (
   obj,
@@ -1786,6 +1763,8 @@ function defineReactive (
   customSetter,
   shallow
 ) {
+  // 创建Dep对象
+  console.log('Obj is ' + obj._uid);
   var dep = new Dep();
   /** 获取对象的对应属性的属性描述符 */
   var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1809,11 +1788,13 @@ function defineReactive (
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () {
-      /** 获取属性值 */
+      /** 如果有getter函数调用getter函数反之直接返回此值 */
       var value = getter ? getter.call(obj) : val;
       /** 对于Dep的target的属性不为否的处理
        * 更新依赖数组
        */
+      console.log('The Dep.target is' + Dep.target);
+      // 对于依赖的目标存在的处理
       if (Dep.target) {
         dep.depend();
         if (childOb) {
@@ -1835,6 +1816,7 @@ function defineReactive (
       if ("development" !== 'production' && customSetter) {
         customSetter();
       }
+      /** 对于有设置器的调用设置器更新参数反之直接设置此参数值 */
       if (setter) {
         setter.call(obj, newVal);
       } else {
@@ -7618,45 +7600,42 @@ function checkExpression (exp, text, errors) {
 
 var warn$4 = noop;
 var tip$1 = noop;
+// 产生组件追踪
 var generateComponentTrace$1 = (noop); // work around flow check
+// 格式化组件名称
 var formatComponentName$1 = (noop);
-/**如果开发环境不是生产模式的处理 */
+/** 如果开发环境不是生产模式的处理 */
 {
-  /**判断是否有定义console */
+  /** 判断是否有定义console */
   var hasConsole$1 = typeof console !== 'undefined';
   /** */
   var classifyRE$1 = /(?:^|[-_])(\w)/g;
   var classify$1 = function (str) { return str
     .replace(classifyRE$1, function (c) { return c.toUpperCase(); })
     .replace(/[-_]/g, ''); };
-  /**警告函数 */
+  /** 警告函数 */
   warn$4 = function (msg, vm) {
     var trace = vm ? generateComponentTrace$1(vm) : '';
-    /**对于有警告处理函数的处理，使用警告处理函数 */
-    if (config.warnHandler) 
-    {
+    /** 对于有警告处理函数的处理，使用警告处理函数 */
+    if (config.warnHandler) {
       config.warnHandler.call(null, msg, vm, trace);
-    } 
-    /**对于没有警告处理函数的处理使用控制台输出 */
-    else if (hasConsole$1 && (!config.silent)) 
-    {
+    } else if (hasConsole$1 && (!config.silent)) {
+      /** 对于没有警告处理函数的处理使用控制台输出 */
       console.error(("[Vue warn]: " + msg + trace));
     }
   };
-  /**提示函数的实现 */
+  /** 提示函数的实现 */
   tip$1 = function (msg, vm) {
-    if (hasConsole$1 && (!config.silent)) 
-    {
+    if (hasConsole$1 && (!config.silent)) {
       console.warn("[Vue tip]: " + msg + (
         vm ? generateComponentTrace$1(vm) : ''
       ));
     }
   };
-  /**格式化组件名称函数 */
+  /** 格式化组件名称函数 */
   formatComponentName$1 = function (vm, includeFile) {
-    /**对于是根组件的处理 */
-    if (vm.$root === vm) 
-    {
+    /** 对于是根组件的处理 */
+    if (vm.$root === vm) {
       return '<Root>'
     }
     var options = typeof vm === 'function' && vm.cid != null
@@ -7666,8 +7645,7 @@ var formatComponentName$1 = (noop);
         : vm || {};
     var name = options.name || options._componentTag;
     var file = options.__file;
-    if (!name && file) 
-    {
+    if (!name && file) {
       var match = file.match(/([^/\\]+)\.vue$/);
       name = match && match[1];
     }
@@ -7677,7 +7655,7 @@ var formatComponentName$1 = (noop);
       (file && includeFile !== false ? (" at " + file) : '')
     )
   };
-  /**重复函数的实现，将字符串重复多次 */
+  /** 重复函数的实现，将字符串重复多次 */
   var repeat$1 = function (str, n) {
     var res = '';
     while (n) {
@@ -7687,32 +7665,26 @@ var formatComponentName$1 = (noop);
     }
     return res
   };
-  /**产生组件追踪 */
+  /** 产生组件追踪 */
   generateComponentTrace$1 = function (vm) {
-    /**对于组件是 */
-    if (vm._isVue && vm.$parent) 
-    {
+    /** 对于组件是Vue对象且组件存在父组件 */
+    if (vm._isVue && vm.$parent) {
       var tree = [];
       var currentRecursiveSequence = 0;
-      while (vm) 
-      {
-        /**对于树的长度大于0的处理 */
-        if (tree.length > 0) 
-        {
+      while (vm) {
+        /** 对于树的长度大于0的处理 */
+        if (tree.length > 0) {
           var last = tree[tree.length - 1];
-          if (last.constructor === vm.constructor) 
-          {
+          if (last.constructor === vm.constructor) {
             currentRecursiveSequence++;
             vm = vm.$parent;
             continue
-          } 
-          else if (currentRecursiveSequence > 0) 
-          {
+          } else if (currentRecursiveSequence > 0) {
             tree[tree.length - 1] = [last, currentRecursiveSequence];
             currentRecursiveSequence = 0;
           }
         }
-        /**向树中添加对象并设置vm为当前vm的父对象 */
+        /** 向树中添加对象并设置vm为当前vm的父对象 */
         tree.push(vm);
         vm = vm.$parent;
       }
@@ -7721,9 +7693,7 @@ var formatComponentName$1 = (noop);
             ? ((formatComponentName$1(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
             : formatComponentName$1(vm))); })
         .join('\n')
-    } 
-    else 
-    {
+    } else {
       return ("\n\n(found in " + (formatComponentName$1(vm)) + ")")
     }
   };

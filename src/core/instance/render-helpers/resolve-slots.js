@@ -2,7 +2,7 @@
 
 /**
  * 
- * @param {*} children 要渲染的子对象
+ * @param {*} children 渲染子节点对象
  * @param {*} context  要渲染的内容
  * 如果children的值为都直接返回空的对象
  * 
@@ -27,7 +27,12 @@ export function resolveSlots (
     if (data && data.attrs && data.attrs.slot) {
       delete data.attrs.slot
     }
-    /** 对于 */
+    /** 子渲染对象的渲染内容和传入的渲染内容一致
+     * 或者子的内容函数和传入的渲染内容一致
+     * 且数据不为空
+     * 数据的slot属性不为空。进行操作
+     * 这里应该是对于具名插槽的处理
+     */
     if ((child.context === context || child.functionalContext === context) && data && data.slot != null) {
       const name = child.data.slot
       const slot = (slots[name] || (slots[name] = []))
@@ -37,6 +42,9 @@ export function resolveSlots (
         slot.push(child)
       }
     } else {
+      /**
+       * 这里应该是对于匿名插槽的处理
+       */
       defaultSlot.push(child)
     }
   }

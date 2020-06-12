@@ -30,6 +30,10 @@
                 },
                 computer:{
 
+                },
+                inject:["foo"],
+                created:function(){
+                    console.log(this.foo.info);
                 }
             });
             var father=new Vue({
@@ -53,19 +57,16 @@
                 computer:{
 
                 },
+                provide:{
+                    foo:{
+                        name:"jifukui",
+                        info: "football player"
+                    }
+                },
                 mounted:function(){
                     console.log("Hello I have mounted")
                 }
             });
-            /*father.$on("click",function(){
-                console.log("Father have click ")
-            });
-            father.$on("hover",function(){
-                console.log("Father have hover ")
-            });
-            father.$on("focus",function(){
-                console.log("Father have focus ")
-            });*/
             var jiprintf=function(msg){
                 console.log("Hello this is Test "+msg);
             }
