@@ -46,7 +46,6 @@ export function createFnInvoker (fns: Function | Array<Function>): Function {
         cloned[i].apply(null, arguments)
       }
     } else {
-      // return handler return value for single handlers
       return fns.apply(null, arguments)
     }
   }
@@ -71,6 +70,7 @@ export function updateListeners (
   vm: Component
 ) {
   let name, cur, old, event
+  // 遍历父监听器中的监听的事件
   for (name in on) {
     cur = on[name]
     old = oldOn[name]

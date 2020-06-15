@@ -68,7 +68,9 @@ export class Observer {
    * getter/setters. This method should only be called when
    * value type is Object.
    */
-  /** */
+  /** 获取对象的所有键值
+   * 定义
+   */
   walk (obj: Object) {
     const keys = Object.keys(obj)
     for (let i = 0; i < keys.length; i++) {
@@ -171,21 +173,18 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
-  // 创建Dep对象
-  console.log('Obj is ' + obj._uid)
+  // 创建新的依赖对象
   const dep = new Dep()
   /** 获取对象的对应属性的属性描述符 */
   const property = Object.getOwnPropertyDescriptor(obj, key)
-  /** 如果属性的可配置属性为否则退出 */
+  /** 对于此参数的属性不可进行配置，退出 */
   if (property && property.configurable === false) {
     return
   }
-
-  // cater for pre-defined getter/setters
-  /** 获取获取和设置函数 */
+  /** 获取 获取和设置函数 */
   const getter = property && property.get
   const setter = property && property.set
-
+  //
   let childOb = !shallow && observe(val)
   /** 定义属性
    * obj:对象
@@ -201,10 +200,11 @@ export function defineReactive (
       /** 对于Dep的target的属性不为否的处理
        * 更新依赖数组
        */
-      console.log('The Dep.target is' + Dep.target)
       // 对于依赖的目标存在的处理
       if (Dep.target) {
+        // 将此对象添加到依赖数组
         dep.depend()
+        // 如果不进行隐藏
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {
@@ -220,7 +220,6 @@ export function defineReactive (
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
-      /* eslint-enable no-self-compare */
       if (process.env.NODE_ENV !== 'production' && customSetter) {
         customSetter()
       }
@@ -231,6 +230,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
+      // 通知依赖参数改变
       dep.notify()
     }
   })

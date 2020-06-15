@@ -3,20 +3,17 @@
 import { warn } from '../util/index'
 import { hasSymbol } from 'core/util/env'
 import { defineReactive, observerState } from '../observer/index'
-/**privide和inject为一对功能是用于祖组件向后代子孙组件提供数据 */
-/**初始化提供
- * vm：为组件对象
- * 根据对象的$options.provide属性是否为空进行处理
- * 不为空且属性的类型为函数调用此函数，反之返回此对象
- * 为空不做任何处理
-*/
 /**
- * 
+ * 设置组件的提供属性
  * @param {*} vm Vue对象
  */
 export function initProvide (vm: Component) {
+  // 获取组件的提供属性
   const provide = vm.$options.provide
-  /** 对于provide的属性存在且是函数的处理 */
+  /** 对于provide的属性存在的处理
+   * 如果提供属性是函数调用此函数
+   * 如果提供属性不是函数直接设置对象的_provided属性为provide的值
+   */
   if (provide) {
     vm._provided = typeof provide === 'function'
       ? provide.call(vm)
@@ -28,7 +25,7 @@ export function initProvide (vm: Component) {
  * @param {*} vm 
  */
 export function initInjections (vm: Component) {
-  /** 获取需要注射的数据 */
+  /** 获取此组件的注入属性 */
   const result = resolveInject(vm.$options.inject, vm)
   /** 如果有需要注射的内容
    * 设置服务器的状态值为否
@@ -37,8 +34,9 @@ export function initInjections (vm: Component) {
    */
   if (result) {
     observerState.shouldConvert = false
+    // 遍历结果中的书友的值
     Object.keys(result).forEach(key => {
-      /* istanbul ignore else */
+      // 对于开发环境不是生产环境的处理
       if (process.env.NODE_ENV !== 'production') {
         defineReactive(vm, key, result[key], () => {
           warn(
@@ -65,8 +63,9 @@ export function initInjections (vm: Component) {
  * 遍历此对象的所有可枚举属性
  */
 export function resolveInject (inject: any, vm: Component): ?Object {
+  // 对于有inject属性的处理
   if (inject) {
-    // inject is :any because flow is not smart enough to figure out cached
+    // 创建一个空的对象
     const result = Object.create(null)
     /** 获取注射对象的所有可枚举属性名 */
     const keys = hasSymbol
@@ -79,32 +78,40 @@ export function resolveInject (inject: any, vm: Component): ?Object {
     for (let i = 0; i < keys.length; i++) {
       /** 存储值 */
       const key = keys[i]
-      /** 存储此值的注射属性的from属性 */
+      /** 存储此值的注射属性的from属性,即属性的来源 */
       const provideKey = inject[key].from
+      // 设置数据源为传入的组件
       let source = vm
-      /** 遍历此组件的所有存在的父组件，如果vm不为否继续执行为否返回空的对象 */
+      // 在组件链中寻找提供此数据的来源
       while (source) {
-        /** 对于此组件有_provided属性且_provided属性中存在provideKey在向结果中添加此属性的值为 */
+        /** 如果组件的中存在此_provided且这个组件的源存在于组件的_provided属性中
+         * 设置结果的对应的键的值为组件_provided属性的对应的值
+         * 退出此次循环
+         */
         if (source._provided && provideKey in source._provided) {
           result[key] = source._provided[provideKey]
           break
         }
+        // 反之在父组件中继续寻找
         source = source.$parent
       }
-      /** 遍历完成之后如果注射组件中有default属性
-       * 
-       */
+     // 对于没有在组件链中寻找到的处理方式
       if (!source) {
+        // 如果default为此组件中的内容
         if ('default' in inject[key]) {
+          // 获取注入属性的默认值
           const provideDefault = inject[key].default
+          // 设置值为如果是函数调用函数，如果不是函数直接使用提供的值
           result[key] = typeof provideDefault === 'function'
             ? provideDefault.call(vm)
             : provideDefault
         } else if (process.env.NODE_ENV !== 'production') {
+          // 对于不是生产模式的处理进行警告
           warn(`Injection "${key}" not found`, vm)
         }
       }
     }
+    // 返回结果
     return result
   }
 }

@@ -4,6 +4,11 @@
         <title>测试使用Vue</title>
         <meta charset="utf-8">
         <script type="text/javascript" src="./vue.js"></script>
+        <style>
+            .blue{
+                color: blue;
+            }
+        </style>
     </head>
     <body>
         <div id="app">
@@ -31,17 +36,24 @@
                 computer:{
 
                 },
-                inject:["foo"],
+                inject:["foo","jifukui"],
                 created:function(){
                     console.log(this.foo.info);
+                    console.log(this.jifukui.like);
+                    console.log(this.$attrs.info);
                 }
             });
             var father=new Vue({
                 el:"#app",
-                template:"<div><span @click='change' >{{ name }}</span><data-info v-on:data='message' @click='change'><template v-slot:default>uname slot{{ name }}</template><template slot='info'><p>Hello,v-slot</p></template><template slot='jifukui' slot-scope='ji'><p>jifukui,v-solt{{ji.user.age}}</p></template></data-info></div>",
+                template:"<div v-bind:class=[blud]><span @click='change' >{{ name }}</span><data-info v-on:data='message' @click='change' info='father give you'><template v-slot:default>uname slot{{ name }}</template><template slot='info'><p>Hello,v-slot</p></template><template slot='jifukui' slot-scope='ji'><p>jifukui,v-solt{{ji.user.age}}</p></template></data-info></div>",
                 data:{
                     name:"Hello this is father",
-                    info:""
+                    info:"",
+                    blud:"blue"
+                },
+                props:{
+                    info1:"apple",
+                    info2:"banana"
                 },
                 methods:{
                     change:function(){
@@ -61,6 +73,10 @@
                     foo:{
                         name:"jifukui",
                         info: "football player"
+                    },
+                    jifukui:{
+                        like:"football",
+                        value:"CR7"
                     }
                 },
                 mounted:function(){

@@ -94,13 +94,13 @@ export function initState (vm: Component) {
     initWatch(vm, opts.watch)
   }
 }
-/** 初始化props
- * vm：组件对象
- * propsOptions：
- * 获取组件中的propsData的数据，设置props变量
+/**
+ * 初始化组件的Props属性
+ * @param {*} vm 组件
+ * @param {*} propsOptions props参数 
  */
 function initProps (vm: Component, propsOptions: Object) {
-  /** propsData变量存储当前组件中$options.propsData属性的值如果不存在为空对象 */
+  // 获取此组件的的Props属性
   const propsData = vm.$options.propsData || {}
   /** props变量用于存储props属性 */
   const props = vm._props = {}

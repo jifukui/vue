@@ -1,5 +1,5 @@
 /* @flow */
-/**引入vNode类 
+/** 引入vNode类 虚拟节点类
  * 下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型
  * tag：标签
  * data：数据
@@ -63,14 +63,14 @@ export default class VNode {
   functionalScopeId: ?string; // functioanl scope id support
 /** 构造函数，下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型 */
   constructor (
-    tag?: string,
-    data?: VNodeData,
-    children?: ?Array<VNode>,
-    text?: string,
-    elm?: Node,
-    context?: Component,
-    componentOptions?: VNodeComponentOptions,
-    asyncFactory?: Function
+    tag?: string,//标签
+    data?: VNodeData,//数据
+    children?: ?Array<VNode>,//子节点
+    text?: string,//数据
+    elm?: Node,//
+    context?: Component,//组件
+    componentOptions?: VNodeComponentOptions,//组件参数
+    asyncFactory?: Function//
   ) {
     this.tag = tag
     this.data = data
@@ -114,17 +114,13 @@ export const createEmptyVNode = (text: string = '') => {
   node.isComment = true
   return node
 }
-/** 创建一个文本节点 */
+/** 创建一个文本虚拟节点 */
 export function createTextVNode (val: string | number) {
   return new VNode(undefined, undefined, undefined, String(val))
 }
 
-// optimized shallow clone
-// used for static nodes and slot nodes because they may be reused across
-// multiple renders, cloning them avoids errors when DOM manipulations rely
-// on their elm reference.
 /** 节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
- * vnode:
+ * vnode:虚拟节点
  * deep:是否深度拷贝
  */
 export function cloneVNode (vnode: VNode, deep?: boolean): VNode {
@@ -143,6 +139,7 @@ export function cloneVNode (vnode: VNode, deep?: boolean): VNode {
   cloned.key = vnode.key
   cloned.isComment = vnode.isComment
   cloned.isCloned = true
+  // 如果是深度拷贝且虚拟节点存在子节点的处理
   if (deep && vnode.children) {
     cloned.children = cloneVNodes(vnode.children)
   }
