@@ -69,6 +69,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
  * @param {*} vm Vue对象
  */
 export function initState (vm: Component) {
+  // 定义监听器
   vm._watchers = []
   const opts = vm.$options
   // 初始化props
@@ -104,13 +105,10 @@ function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   /** props变量用于存储props属性 */
   const props = vm._props = {}
-  // cache prop keys so that future props updates can iterate using Array
-  // instead of dynamic object key enumeration.
-  /** keys变量存储传入对象的属性值 */
+  /** keys和vm.$options._propKeys初始化为空数组，存储的是props属性的属性名 */
   const keys = vm.$options._propKeys = []
   /** isRoot变量存储是否是根组件 */
   const isRoot = !vm.$parent
-  // root instance props should be converted
   /** 设置发布器的状态 */
   observerState.shouldConvert = isRoot
   /** 将传入对象中的属性值添加至keys数组中
@@ -120,9 +118,10 @@ function initProps (vm: Component, propsOptions: Object) {
    * 设置发布器的状态值为真
    */
   for (const key in propsOptions) {
+    // 在属性名数组中添加此属性名
     keys.push(key)
+    // 判断是否是合法的属性名
     const value = validateProp(key, propsOptions, propsData, vm)
-    /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
       const hyphenatedKey = hyphenate(key)
       if (isReservedAttribute(hyphenatedKey) || config.isReservedAttr(hyphenatedKey)) {
@@ -145,9 +144,7 @@ function initProps (vm: Component, propsOptions: Object) {
     } else {
       defineReactive(props, key, value)
     }
-    // static props are already proxied on the component's prototype
-    // during Vue.extend(). We only need to proxy props defined at
-    // instantiation here.
+    // 对于键名不存在于组件中的处理，设置组件对此属性进行代理处理
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
@@ -173,7 +170,6 @@ function initData (vm: Component) {
       vm
     )
   }
-  // proxy data on instance
   /**
    * 设置keys的值为对象的键值
    * 设置props的值
@@ -186,6 +182,7 @@ function initData (vm: Component) {
   /** 循环获取data数据中的值需要保证data中的数据和props中的数据不冲突 */
   while (i--) {
     const key = keys[i]
+    // 对于methods中也存在这个属性名的处理
     if (process.env.NODE_ENV !== 'production') {
       if (methods && hasOwn(methods, key)) {
         warn(
@@ -228,19 +225,20 @@ function getData (data: Function, vm: Component): any {
 }
 /** 设置组件的监测器操作 */
 const computedWatcherOptions = { lazy: true }
-/** 初始化计算器
- * vm:为组件
- * computer：计算对象
- *
+/**
+ * 初始化计算属性
+ * @param {*} vm 组件对象
+ * @param {*} computed 计算对象
  */
 function initComputed (vm: Component, computed: Object) {
+  // 创建空的对象
   const watchers = vm._computedWatchers = Object.create(null)
-  // computed properties are just getters during SSR
   /** 此值获取是否是服务器端渲染 */
   const isSSR = isServerRendering()
-
-  for (const key in computed){
+  // 遍历计算属性中的属性
+  for (const key in computed) {
     const userDef = computed[key]
+    // 根据属性值设置getter函数
     const getter = typeof userDef === 'function' ? userDef : userDef.get
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(
@@ -248,9 +246,9 @@ function initComputed (vm: Component, computed: Object) {
         vm
       )
     }
-
+    // 对于不是服务器端渲染的处理
     if (!isSSR) {
-      // create internal watcher for the computed property.
+      // 设置监听器中这个属性的值为新创建的监听对象
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -258,25 +256,27 @@ function initComputed (vm: Component, computed: Object) {
         computedWatcherOptions
       )
     }
-
-    // component-defined computed properties are already defined on the
-    // component prototype. We only need to define computed properties defined
-    // at instantiation here.
+    // 对于属性不存在于组件中
     if (!(key in vm)) {
+      //
       defineComputed(vm, key, userDef)
     } else if (process.env.NODE_ENV !== 'production') {
+      // 对于不是发布模式的处理
+      // 这个键值存在于data属性中
       if (key in vm.$data) {
         warn(`The computed property "${key}" is already defined in data.`, vm)
       } else if (vm.$options.props && key in vm.$options.props) {
+        // 这个属性存在于props属性中
         warn(`The computed property "${key}" is already defined as a prop.`, vm)
       }
     }
   }
 }
-/** 定义计算
- * target：目标
- * key:属性
- * userDef:用户定义
+/**
+ * 
+ * @param {*} target 目标对象
+ * @param {*} key 属性值
+ * @param {*} userDef 处理函数
  */
 export function defineComputed (
   target: any,
@@ -315,6 +315,7 @@ export function defineComputed (
       )
     }
   }
+  // 定义目标的此属性的描述符
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 /** 创建计算的获取器的获取方法
@@ -351,6 +352,7 @@ function initMethods (vm: Component, methods: Object) {
   for (const key in methods) {
     // 对于不是生产模式进行对方法属性和probs属性是否具有相同的属性名进行判断
     if (process.env.NODE_ENV !== 'production') {
+      // 对于方法的此属性的值为空的处理进行警告
       if (methods[key] == null) {
         warn(
           `Method "${key}" has an undefined value in the component definition. ` +
@@ -371,6 +373,7 @@ function initMethods (vm: Component, methods: Object) {
         )
       }
     }
+    // 将此方法绑定在
     vm[key] = methods[key] == null ? noop : bind(methods[key], vm)
   }
 }
@@ -381,8 +384,15 @@ function initMethods (vm: Component, methods: Object) {
  * 如果属性是数组对数组中的每一个值都创建监视器
  * 其他对象为对象创建监视器
  */
+/**
+ * 初始化监听属性
+ * @param {*} vm 组件对象
+ * @param {*} watch 监听对象
+ */
 function initWatch (vm: Component, watch: Object) {
+  // 遍历监听属性的属性
   for (const key in watch) {
+    // 获取监听器的处理函数
     const handler = watch[key]
     // 对于是数组的处理
     if (Array.isArray(handler)) {
@@ -405,13 +415,20 @@ function initWatch (vm: Component, watch: Object) {
  * 如果Handler的类型为字符串类型的处理设置Handler的值为组件对象的Handler属性
  * 返回组件对象调用watch的结果
  */
+/**
+ * 创建监听器
+ * @param {*} vm 组件对象 
+ * @param {*} keyOrFn 属性名
+ * @param {*} handler 处理函数
+ * @param {*} options 参数值
+ */
 function createWatcher (
   vm: Component,
   keyOrFn: string | Function,
   handler: any,
   options?: Object
 ) {
-  /** 对于处理函数是空白对象的处理参数为处理函数，处理函数为处理函数中的handler*/
+  /** 如果传入的handler是对象的处理*/
   if (isPlainObject(handler)) {
     options = handler
     handler = handler.handler

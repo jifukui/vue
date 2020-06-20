@@ -881,26 +881,25 @@ function parseComponent (
 }
 
 /*  */
-/**\vue-master\src\core\util\lan.js */
-/**创建一个不允许改变的空的对象 */
+/** 路径分析相关 */
+/** 创建一个不允许改变的空的对象 */
 var emptyObject = Object.freeze({});
 
 /**
  * Check if a string starts with $ or _
  * 判断字符串是否是以$字符或者是_字符开始
+ * 以这些字符开始的被认为是预留的
  */
 
 
 /**
- * Define a property.
- * 定义对象的属性
- * 值为传入的值，可写可枚举
- * obj:对象
- * key:属性
- * enumerable:可枚举属性
+ * 定义属性函数
+ * @param {*} obj 对象
+ * @param {*} key 属性名
+ * @param {*} val 属性值
+ * @param {*} enumerable 是否可枚举
  */
-function def (obj, key, val, enumerable) 
-{
+function def (obj, key, val, enumerable) {
   Object.defineProperty(obj, key, {
     value: val,
     enumerable: !!enumerable,
@@ -909,8 +908,12 @@ function def (obj, key, val, enumerable)
   });
 }
 
+/**
+ * 分析路径
+ * @param {*} path 路径字符串
+ */
 
-/**end \vue-master\src\core\util\lang.js */
+/** end \vue-master\src\core\util\lang.js */
 
 /** 有价值的类型 */
 var ASSET_TYPES = [
@@ -934,104 +937,67 @@ var LIFECYCLE_HOOKS = [
 ];
 
 /*  */
-/**\vue-master\src\core\config.js */
-/**导入no,noop,indentity
+/** \vue-master\src\core\config.js */
+/** 导入no,noop,indentity
  * no:无论传入什么参数总是返回否
  * noop:不做任何有效的处理
  * indentity:返回相同的参数
  */
-/**导入生命周期的钩子函数 */
+/** 导入生命周期的钩子函数 */
 /**
  * 配置信息
  */
 
-/**默认导出 */
+/** 默认导出 */
 var config = ({
-  /**
-   * Option merge strategies (used in core/util/options)
-   */
+  // 合并策略
   optionMergeStrategies: Object.create(null),
-
-  /**
-   * Whether to suppress warnings.
-   */
+  // 是否抑制警告
   silent: false,
 
-  /**
-   * Show production mode tip message on boot?
-   */
+  // 是否在发布模式下的根节点对于警告进行提示
   productionTip: "development" !== 'production',
 
-  /**
-   * Whether to enable devtools
-   */
+  // 是否使能开发者工具
   devtools: "development" !== 'production',
 
-  /**
-   * Whether to record perf
-   */
+  // 是否记录性能
   performance: false,
 
-  /**
-   * Error handler for watcher errors
-   */
+  // 是否有错误处理函数对错误进行监听
   errorHandler: null,
 
-  /**
-   * Warn handler for watcher warns
-   */
+  // 是否有错误处理函数对警告进行监听
   warnHandler: null,
 
-  /**
-   * Ignore certain custom elements
-   */
+  // 忽略某些自定义元素
   ignoredElements: [],
 
-  /**
-   * Custom user key aliases for v-on
-   */
+  // 用户使用的键值的名称
   keyCodes: Object.create(null),
 
-  /**
-   * Check if a tag is reserved so that it cannot be registered as a
-   * component. This is platform-dependent and may be overwritten.
-   */
+  // 检测是否是预留的组件，如果是预留的标签使其不能作为组件
   isReservedTag: no,
 
-  /**
-   * Check if an attribute is reserved so that it cannot be used as a component
-   * prop. This is platform-dependent and may be overwritten.
-   */
+  // 检测属性是不是预留的属性如果是预留的组件使其不能作为组件的prop属性
   isReservedAttr: no,
 
-  /**
-   * Check if a tag is an unknown element.
-   * Platform-dependent.
-   */
+  // 检测标签是否是未知的元素
   isUnknownElement: no,
 
-  /**
-   * Get the namespace of an element
-   */
+  // 获取元素的名称空间
   getTagNamespace: noop,
 
-  /**
-   * Parse the real tag name for the specific platform.
-   */
+  // 解析特殊平台的真实的标签名称
   parsePlatformTagName: identity,
 
-  /**
-   * Check if an attribute must be bound using property, e.g. value
-   * Platform-dependent.
-   */
+  // 检测属性是否被绑定到必须使用的属性
   mustUseProp: no,
 
-  /**
-   * Exposed for legacy reasons
-   */
+  // 生命周期钩子函数
   _lifecycleHooks: LIFECYCLE_HOOKS
 });
-/**end \vue-master\src\core\config.js */
+/** end \vue-master\src\core\config.js  */
 
 /*  */
 
@@ -1129,80 +1095,81 @@ var formatComponentName = (noop);
 }
 
 /*  */
-/**vue-master\src\core\util\util.js 错误处理相关函数*/
-/**错误处理函数 */
-function handleError (err, vm, info) 
-{
-  if (vm) 
-  {
+/** vue-master\src\core\util\util.js 错误处理相关函数*/
+/**
+ * 错误处理函数
+ * @param {*} err 错误
+ * @param {*} vm 组件
+ * @param {*} info 信息
+ */
+function handleError (err, vm, info) {
+  // 组件的值为真
+  if (vm) {
     var cur = vm;
-    while ((cur = cur.$parent)) 
-    {
-      /**设置hooks为错误捕捉函数 */
+    // 获取父组件
+    while ((cur = cur.$parent)) {
+      /** 获取组件上的错误捕获函数 */
       var hooks = cur.$options.errorCaptured;
-      if (hooks) 
-      {
-        for (var i = 0; i < hooks.length; i++) 
-        {
-          try 
-          {
-            /**错误捕捉 */
+      // 对于存在错误捕获函数的处理
+      if (hooks) {
+        // 遍历错误捕获函数
+        for (var i = 0; i < hooks.length; i++) {
+          try {
+            /** 错误捕捉 */
             var capture = hooks[i].call(cur, err, vm, info) === false;
-            if (capture) 
-            {
+            if (capture) {
               return
             }
-          } 
-          catch (e) 
-          {
-            /**出现错误调用错误处理函数 */
+          } catch (e) {
+            /** 使用全局错误处理函数进行错误的处理 */
             globalHandleError(e, cur, 'errorCaptured hook');
           }
         }
       }
     }
   }
+  /** 使用全局错误处理函数进行错误的处理 */
   globalHandleError(err, vm, info);
 }
-
-function globalHandleError (err, vm, info) 
-{
-  /**判断是否配置了错误处理 */
-  if (config.errorHandler) 
-  {
-    try 
-    {
-      /**调用错误处理 */
+/**
+ * 全局错误处理函数
+ * @param {*} err 错误对象
+ * @param {*} vm 组件对象
+ * @param {*} info 错误信息
+ */
+function globalHandleError (err, vm, info) {
+  /** 判断是否配置了错误处理 */
+  if (config.errorHandler) {
+    try {
+      /** 调用错误处理 */
       return config.errorHandler.call(null, err, vm, info)
-    } 
-    catch (e) 
-    {
-      /**输出错误信息 */
+    } catch (e) {
+      /** 输出错误信息 */
       logError(e, null, 'config.errorHandler');
     }
   }
-  /**输出错误信息 */
+  /** 输出错误信息 */
   logError(err, vm, info);
 }
-/**输出错误信息 */
-function logError (err, vm, info) 
-{
-  /**对于开发环境不是生产模式输出错误原因和错误 */
+/**
+ * 错误信息输出函数
+ * @param {*} err 错误对象
+ * @param {*} vm 组件对象
+ * @param {*} info 错误信息
+ */
+function logError (err, vm, info) {
+  /** 对于开发环境不是生产模式输出错误原因和错误 */
   {
     warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
   }
-  /* istanbul ignore else */
-  /**控制台输出错误信息 */
-  if (inBrowser && typeof console !== 'undefined') 
-  {
+  /** 对于是浏览器且console的类型为函数使用console.error输出错误信息 */
+  if (inBrowser && typeof console !== 'undefined') {
     console.error(err);
-  } 
-  else 
-  {
+  } else {
     throw err
   }
 }
-/**end vue-master\src\core\util\util.js */
+/** end vue-master\src\core\util\util.js */
 
 /*  */
 /* globals MessageChannel */
@@ -1291,35 +1258,40 @@ var hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys);
 
-/** 定义nextTick函数，异步执行的实现
- * 
+/** 
+ * 定义nextTick函数
 */
 var nextTick = (function () {
   /** 回调函数数组 */
   var callbacks = [];
   /** 挂起状态 */
   var pending = false;
-  /** */
+  /** 计时器函数 */
   var timerFunc;
   /** 定义下一个时刻处理函数
    * 根据浏览器的情况进行下一时刻处理函数的处理
   */
   function nextTickHandler () {
     pending = false;
+    // 获取回调处理函数的第一个值
     var copies = callbacks.slice(0);
+    // 设置回调处理函数的长度为0
     callbacks.length = 0;
+    // 调用回调函数
     for (var i = 0; i < copies.length; i++) {
       copies[i]();
     }
   }
   /** 对于setImmediate不是未定义的且是原生的处理
-   * 设置事件处理函数
+   * 设置事件处理函数，setImmediate好像只有IE支持
    */
   if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
     timerFunc = function () {
       setImmediate(nextTickHandler);
     };
   } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) || MessageChannel.toString() === '[object MessageChannelConstructor]')) {
+    // MessageChannel的值不是未定义且MessageChannel是原生的或者MessageChannel转换为字符串的值为object MessageChannelConstructor
+    // 一般会使用这个进行执行
     var channel = new MessageChannel();
     var port = channel.port2;
     channel.port1.onmessage = nextTickHandler;
@@ -1327,17 +1299,14 @@ var nextTick = (function () {
       port.postMessage(1);
     };
   } else {
-    /** 对于没有以上两个函数的处理 */
-    /* istanbul ignore next */
-    /** 对于有Promise的处理 */
+    /** 对于支持Promise的处理 */
     if (typeof Promise !== 'undefined' && isNative(Promise)) {
-      // use microtask in non-DOM environments, e.g. Weex
       var p = Promise.resolve();
       timerFunc = function () {
         p.then(nextTickHandler);
       };
     } else {
-      // fallback to setTimeout
+      // 对于上述的方法都不支持使用settimeout函数实现调用
       timerFunc = function () {
         setTimeout(nextTickHandler, 0);
       };
@@ -1365,7 +1334,6 @@ var nextTick = (function () {
       pending = true;
       timerFunc();
     }
-    // $flow-disable-line
     if (!cb && typeof Promise !== 'undefined') {
       return new Promise(function (resolve, reject) {
         _resolve = resolve;
@@ -1430,26 +1398,23 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 
 /** 设置uid的值为0 */
 var uid = 0;
-
 /**
- * A dep is an observable that can have multiple
- * directives subscribing to it.
+ * 定义Dep类
  */
-/** 创建Dep类 */
 var Dep = function Dep () {
   this.id = uid++;
   this.subs = [];
 };
-/** 将sub压入对象数组中 */
+/** 将监听器添加到此监听器的子数组中 */
 Dep.prototype.addSub = function addSub (sub) {
   this.subs.push(sub);
 };
-/** 移除对象中的数据 */
+/** 从此监听器子数组中删除此监听器*/
 Dep.prototype.removeSub = function removeSub (sub) {
   remove(this.subs, sub);
 };
-/** 定义depend函数
- * 设置Dep对象的压入数组中
+/**
+ * 将此对象添加在父对象中的依赖监听器中
  */
 Dep.prototype.depend = function depend () {
   if (Dep.target) {
@@ -1461,20 +1426,22 @@ Dep.prototype.depend = function depend () {
  */
 Dep.prototype.notify = function notify () {
   // stabilize the subscriber list first
+  // 转换为数组
   var subs = this.subs.slice();
   for (var i = 0, l = subs.length; i < l; i++) {
+    // 更新数据
     subs[i].update();
   }
 };
 
-/** 定义Dep的目标为空 */
+//
 Dep.target = null;
 /** 向目标栈中压入数据 */
 
-/** 提取目标栈中的数据 */
+/** 提取目标栈中栈顶的数据 */
 
 /*  */
-/**引入vNode类 
+/** 引入vNode类 虚拟节点类
  * 下面的语法是typesctipt语法中设置传入参数的类型有问号表示可以是未定义的类型使用|表示也支持这种类型
  * tag：标签
  * data：数据
@@ -1502,14 +1469,14 @@ Dep.target = null;
  * functionalScopeId：
 */
 var VNode = function VNode (
-  tag,
-  data,
-  children,
-  text,
-  elm,
-  context,
-  componentOptions,
-  asyncFactory
+  tag,//标签
+  data,//数据
+  children,//子节点
+  text,//数据
+  elm,//
+  context,//组件
+  componentOptions,//组件参数
+  asyncFactory//
 ) {
   this.tag = tag;
   this.data = data;
@@ -1552,15 +1519,11 @@ Object.defineProperties( VNode.prototype, prototypeAccessors );
  * 设置节点的isComment为真
  */
 
-/** 创建一个文本节点 */
+/** 创建一个文本虚拟节点 */
 
 
-// optimized shallow clone
-// used for static nodes and slot nodes because they may be reused across
-// multiple renders, cloning them avoids errors when DOM manipulations rely
-// on their elm reference.
 /** 节点复制，创建一个新的节点对象将传入节点的ns,istatic,key,iscomment的值进行复制设置iscloned的值设置为真
- * vnode:
+ * vnode:虚拟节点
  * deep:是否深度拷贝
  */
 
@@ -1584,8 +1547,9 @@ var arrayMethods = Object.create(arrayProto);[
   'reverse'
 ]
 .forEach(function (method) {
-  // cache original method
+  // 获取这些方法
   var original = arrayProto[method];
+  // 数组方法中这些方法的属性
   def(arrayMethods, method, function mutator () {
     var args = [], len = arguments.length;
     while ( len-- ) args[ len ] = arguments[ len ];
@@ -1605,7 +1569,7 @@ var arrayMethods = Object.create(arrayProto);[
     if (inserted) {
       ob.observeArray(inserted);
     }
-    // notify change
+    // 通知参数改变
     ob.dep.notify();
     return result
   });
@@ -1661,7 +1625,9 @@ var Observer = function Observer (value) {
  * getter/setters. This method should only be called when
  * value type is Object.
  */
-/** */
+/** 获取对象的所有键值
+ * 定义
+ */
 Observer.prototype.walk = function walk (obj) {
   var keys = Object.keys(obj);
   for (var i = 0; i < keys.length; i++) {
@@ -1702,14 +1668,9 @@ function copyAugment (target, src, keys) {
 }
 
 /**
- * Attempt to create an observer instance for a value,
- * returns the new observer if successfully observed,
- * or the existing observer if the value already has one.
- */
-/**
- * value：
- * asRootData：
- * 返回发布对象
+ * 发布函数，创建发布对象并返回这个对象
+ * @param {*} value 属性
+ * @param {*} asRootData 是否作为根函数
  */
 function observe (value, asRootData) {
   /** 对于value的不是对象或者value是VNode的实例的处理
@@ -1734,8 +1695,8 @@ function observe (value, asRootData) {
   ) {
     /** 对于observerState的shouldConvert属性为真
    * 且不是服务器端渲染
-   * 且value不是数组或者不是
-   * 且
+   * 且value是数组或者是对象
+   * 且此对象是可扩展的
    * 且value的isVue属性不为真的处理
    * 根据value创建一个新的Observer对象
    */
@@ -1763,21 +1724,18 @@ function defineReactive (
   customSetter,
   shallow
 ) {
-  // 创建Dep对象
-  console.log('Obj is ' + obj._uid);
+  // 创建新的依赖对象
   var dep = new Dep();
   /** 获取对象的对应属性的属性描述符 */
   var property = Object.getOwnPropertyDescriptor(obj, key);
-  /** 如果属性的可配置属性为否则退出 */
+  /** 对于此参数的属性不可进行配置，退出 */
   if (property && property.configurable === false) {
     return
   }
-
-  // cater for pre-defined getter/setters
-  /** 获取获取和设置函数 */
+  /** 获取 获取和设置函数 */
   var getter = property && property.get;
   var setter = property && property.set;
-
+  //
   var childOb = !shallow && observe(val);
   /** 定义属性
    * obj:对象
@@ -1793,10 +1751,11 @@ function defineReactive (
       /** 对于Dep的target的属性不为否的处理
        * 更新依赖数组
        */
-      console.log('The Dep.target is' + Dep.target);
       // 对于依赖的目标存在的处理
       if (Dep.target) {
+        // 将此对象添加到依赖数组
         dep.depend();
+        // 如果不进行隐藏
         if (childOb) {
           childOb.dep.depend();
           if (Array.isArray(value)) {
@@ -1812,7 +1771,6 @@ function defineReactive (
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
-      /* eslint-enable no-self-compare */
       if ("development" !== 'production' && customSetter) {
         customSetter();
       }
@@ -1823,6 +1781,7 @@ function defineReactive (
         val = newVal;
       }
       childOb = !shallow && observe(newVal);
+      // 通知依赖参数改变
       dep.notify();
     }
   });
@@ -1900,63 +1859,61 @@ function dependArray (value) {
 
 /*  */
 
-/**创建strats对象为一个空的对象
+/** 创建strats对象为一个空的对象
  * strats为配置的config.optionMergeStrategies属性
  * 即为创建空对象的函数
  */
 var strats = config.optionMergeStrategies;
 
-/**
- * Options with restrictions
- */
-/**对于环境不是生产模式的处理 */
+/** 对于环境不是生产模式的处理 */
 {
-  /** */
-  strats.el = strats.propsData = function (parent, child, vm, key) 
-  {
-    /**如果vm对象的值为否进行警告
+  /**
+   * 设置策略的元素和propData的值
+   */
+  strats.el = strats.propsData = function (parent, child, vm, key) {
+    /** 如果vm对象的值为否进行警告
      * 返回默认的strat
      */
-    if (!vm) 
-    {
+    if (!vm) {
       warn(
         "option \"" + key + "\" can only be used during instance " +
         'creation with the `new` keyword.'
       );
     }
-    /**子不存在返回父 */
+    /** 子不存在返回父 */
     return defaultStrat(parent, child)
   };
 }
 
 /**
- * 进行数据的合并，将from中的属性添加至to对象
+ * 进行数据的合并，
+ * 获取数据源的所有属性
+ * 如果数据目的没有此参数调用set函数设置数据数据目的此参数的值
+ * 如果数据目的有此参数且数据目的和数据源的此属性都是对象，继续调用数据合并
  * @param {*} to 数据目标
  * @param {*} from 数据源
  */
-function mergeData (to, from) 
-{
-  /**对于数据源的值为空的处理，直接返回目的数据 */
-  if (!from) 
-  {
+function mergeData (to, from) {
+  /** 对于数据源的值为空的处理，直接返回目的数据 */
+  if (!from) {
     return to
   }
   var key, toVal, fromVal;
+  // 获取数据源的所有的属性名
   var keys = Object.keys(from);
-  /**将源数据中的数据合并到目的数据 */
-  for (var i = 0; i < keys.length; i++) 
-  {
+  // 变量属性名
+  for (var i = 0; i < keys.length; i++) {
+    // 属性名
     key = keys[i];
+    // 目的属性值
     toVal = to[key];
+    // 源属性值
     fromVal = from[key];
-    /**如果目的对象没有这个属性的处理添加此属性 */
-    if (!hasOwn(to, key)) 
-    {
+    /** 如果目的对象没有这个属性名的处理添加此属性 */
+    if (!hasOwn(to, key)) {
       set(to, key, fromVal);
-    } 
-    /**对于目的对象没有此属性且目的对象的值为对象且源对象的值为对象的处理，递归调用此函数进行深度的复制 */
-    else if (isPlainObject(toVal) && isPlainObject(fromVal)) 
-    {
+    } else if (isPlainObject(toVal) && isPlainObject(fromVal)) {
+      // 如果元和目的的属性值都是对象，进行深度的数据合并
       mergeData(toVal, fromVal);
     }
   }
@@ -1964,61 +1921,56 @@ function mergeData (to, from)
 }
 
 /**
- * 聚合数据
- * @param {*} parentVal 
- * @param {*} childVal 
+ * 合并数据的方法
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
  * @param {*} vm Vue对象
  */
 function mergeDataOrFn (
   parentVal,
   childVal,
   vm
-) 
-{
-  /**对于Vue对象不存在的处理方式 */
-  if (!vm) 
-  {
-    // in a Vue.extend merge, both should be functions
-    if (!childVal) 
-    {
+) {
+  /** 组件对象为空的处理 */
+  if (!vm) {
+    // 子参数为假值 返回父参数
+    if (!childVal) {
       return parentVal
     }
-    if (!parentVal) 
-    {
+    // 父参数为假值返回子参数
+    if (!parentVal) {
       return childVal
     }
-    return function mergedDataFn () 
-    {
+    // 父子参数都不为空，返回mergedDataFn函数，调用的是mergedData的函数的返回值
+    return function mergedDataFn () {
       return mergeData(
         typeof childVal === 'function' ? childVal.call(this) : childVal,
         typeof parentVal === 'function' ? parentVal.call(this) : parentVal
       )
     }
-  } 
-  /**对于两个对象有一个存在的处理 */
-  else if (parentVal || childVal) 
-  {
-    return function mergedInstanceDataFn () 
-    {
-      // instance merge
+  } else if (parentVal || childVal) {
+    // 这是对于组件的值为假值的处理，返回聚合实例数据的方法
+    // 这里面是对于父子参数至少有一个为真值的处理
+    return function mergedInstanceDataFn () {
+      // 根据子参数是不是方法进行处理，是函数调用此函数，不是返回其值数据赋值给instanceData
       var instanceData = typeof childVal === 'function'
         ? childVal.call(vm)
         : childVal;
+      // 根据父参数是不是方法进行处理，是函数调用此函数，不是返回其值数据赋值给defaultData
       var defaultData = typeof parentVal === 'function'
         ? parentVal.call(vm)
         : parentVal;
-      if (instanceData) 
-      {
+      // 对于子参数的值为真的处理，对子参数的值和父参数的值进行合并
+      if (instanceData) {
         return mergeData(instanceData, defaultData)
-      } 
-      else 
-      {
+      } else {
+        // 子参数的值为假值直接返回父的参数
         return defaultData
       }
     }
   }
 }
-/**strats对象的data属性
+/** strats对象的data属性
  * parentVal：父值
  * childVal：子值
  * vm：组件对象
@@ -2027,16 +1979,21 @@ function mergeDataOrFn (
  * 反之返回当前strats的值与父的值聚合到子的值
  * 反之返回聚合父的值和子的值到vm的值
  */
+/**
+ * 设置策略的数据
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
+ * @param {*} vm 组件对象
+ */
 strats.data = function (
   parentVal,
   childVal,
   vm
-) 
-{
-  if (!vm) 
-  {
-    if (childVal && typeof childVal !== 'function') 
-    {
+) {
+  // 组件对象为假值的处理
+  if (!vm) {
+    // 对于子参数为真且类型不是函数的处理，进行警告返回父参数
+    if (childVal && typeof childVal !== 'function') {
       "development" !== 'production' && warn(
         'The "data" option should be a function ' +
         'that returns a per-instance value in component ' +
@@ -2046,16 +2003,14 @@ strats.data = function (
 
       return parentVal
     }
+    // 对于上述条件不成立，对此属性调用数据聚合函数
     return mergeDataOrFn.call(this, parentVal, childVal)
   }
-
+  // 调用数据聚合函数
   return mergeDataOrFn(parentVal, childVal, vm)
 };
 
-/**
- * Hooks and props are merged as arrays.
- */
-/**聚合钩子
+/** 聚合钩子
  * parentVal:
  * childVal:
  * 如果子的值为否返回父的值
@@ -2064,11 +2019,15 @@ strats.data = function (
  * 如果父的值为假判断子是否是数组
  * 如果子的属性为数组返回子，返回子的数组化形式
  */
+/**
+ * 聚合钩子
+ * @param {*} parentVal 
+ * @param {*} childVal 
+ */
 function mergeHook (
   parentVal,
   childVal
-) 
-{
+) {
   return childVal
     ? parentVal
       ? parentVal.concat(childVal)
@@ -2077,13 +2036,11 @@ function mergeHook (
         : [childVal]
     : parentVal
 }
-/**设置strats的钩子的方法 */
+/** 设置strats的钩子的方法 */
 LIFECYCLE_HOOKS.forEach(function (hook) {
   strats[hook] = mergeHook;
 });
-
-
-/**聚合资源
+/** 聚合资源
  * parentVal：父值
  * childVal：子值
  * vm：组件
@@ -2092,32 +2049,35 @@ LIFECYCLE_HOOKS.forEach(function (hook) {
  * 如果子的值为假，不对资源对象进行处理
  * 返回资源对象
  */
+/**
+ * 聚合
+ * 如果子参数不为假值，如果不是发布模式调用assertObjectType函数然后调用extend函数
+ * 如果子参数为假值直接返回父参数
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
+ * @param {*} vm 组件对象
+ * @param {*} key 属性名
+ */
 function mergeAssets (
   parentVal,
   childVal,
   vm,
   key
-) 
-{
-  /**创建资源对象 */
+) {
+  /** 创建资源对象 */
   var res = Object.create(parentVal || null);
-  if (childVal) 
-  {
+  if (childVal) {
     "development" !== 'production' && assertObjectType(key, childVal, vm);
     return extend(res, childVal)
-  } 
-  else 
-  {
+  } else {
     return res
   }
 }
-/**strats对象中添加对应的资源的方法 */
+/** strats对象中添加对应的资源的方法 */
 ASSET_TYPES.forEach(function (type) {
   strats[type + 's'] = mergeAssets;
 });
-
-
-/**strats对象的watch属性
+/** strats对象的watch属性
  * parentVal：
  * childVal：
  * vm：
@@ -2135,42 +2095,42 @@ ASSET_TYPES.forEach(function (type) {
  * 当存在于父属性中此属性在子对象中为数组设置为此子属性反之设置为子对象此属性的数组形式
  * 返回此对象的父对象的浅拷贝的合并版本
  */
+/**
+ * 策略监听函数
+ * @param {*} parentVal 
+ * @param {*} childVal 
+ * @param {*} vm 
+ * @param {*} key 
+ */
 strats.watch = function (
   parentVal,
   childVal,
   vm,
   key
-) 
-{
-  /**如果父的值和子的值都是对象的watch属性设置其值为undefined */
-  if (parentVal === nativeWatch) 
-  {
+) {
+  /** 如果父的值和子的值都是对象的watch属性设置其值为undefined */
+  if (parentVal === nativeWatch) {
     parentVal = undefined;
   }
-  if (childVal === nativeWatch) 
-  {
+  if (childVal === nativeWatch) {
     childVal = undefined;
   }
   /* istanbul ignore if */
-  if (!childVal) 
-  {
+  if (!childVal) {
     return Object.create(parentVal || null)
   }
   {
     assertObjectType(key, childVal, vm);
   }
-  if (!parentVal) 
-  {
+  if (!parentVal) {
     return childVal
   }
   var ret = {};
   extend(ret, parentVal);
-  for (var key$1 in childVal) 
-  {
+  for (var key$1 in childVal) {
     var parent = ret[key$1];
     var child = childVal[key$1];
-    if (parent && !Array.isArray(parent)) 
-    {
+    if (parent && !Array.isArray(parent)) {
       parent = [parent];
     }
     ret[key$1] = parent
@@ -2179,7 +2139,7 @@ strats.watch = function (
   }
   return ret
 };
-/**设置strats对象的props属性，methods属性，inject属性和computed属性
+/** 设置strats对象的props属性，methods属性，inject属性和computed属性
  * parentVal：
  * childVal：
  * vm：
@@ -2189,6 +2149,13 @@ strats.watch = function (
  * 创建一个空格对象，浅拷贝父对象
  * 如果子对象存在，再将此对象浅拷贝子对象，返回合并之后的对象
  */
+/**
+ * 设置策略的props，methods，inject，computed属性
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
+ * @param {*} vm 组件对象
+ * @param {*} key 属性名
+ */
 strats.props =
 strats.methods =
 strats.inject =
@@ -2197,20 +2164,16 @@ strats.computed = function (
   childVal,
   vm,
   key
-) 
-{
-  if (childVal && "development" !== 'production') 
-  {
+) {
+  if (childVal && "development" !== 'production') {
     assertObjectType(key, childVal, vm);
   }
-  if (!parentVal) 
-  {
+  if (!parentVal) {
     return childVal
   }
   var ret = Object.create(null);
   extend(ret, parentVal);
-  if (childVal) 
-  {
+  if (childVal) {
     extend(ret, childVal);
   }
   return ret
@@ -2219,9 +2182,11 @@ strats.computed = function (
 strats.provide = mergeDataOrFn;
 
 /**
- * Default strategy.
+ * 默认策略
+ * 如果子参数的值为真返回子参数的值为假返回父参数的值
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
  */
-/** childVal的值为未定义返回parent的值反之返回child的值 */
 var defaultStrat = function (parentVal, childVal) {
   return childVal === undefined
     ? parentVal
@@ -2229,15 +2194,14 @@ var defaultStrat = function (parentVal, childVal) {
 };
 
 /**
- * 
- * @param {*} name 
- * @param {*} value 
- * @param {*} vm 
+ * 判断传入的参数是否是对象
+ * @param {*} name 键名
+ * @param {*} value 键值
+ * @param {*} vm 组件名称
  */
-function assertObjectType (name, value, vm) 
-{
-  if (!isPlainObject(value)) 
-  {
+function assertObjectType (name, value, vm) {
+  // 对于参数不是对象的处理，进行警告
+  if (!isPlainObject(value)) {
     warn(
       "Invalid value for option \"" + name + "\": expected an Object, " +
       "but got " + (toRawType(value)) + ".",
@@ -2250,7 +2214,7 @@ function assertObjectType (name, value, vm)
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
  */
-/**聚合两个对象的参数
+/** 聚合两个对象的参数
  * parent：父对象
  * child：子对象
  * vm：
@@ -2432,35 +2396,40 @@ var hasSymbol$1 =
   typeof Symbol !== 'undefined' && isNative$1(Symbol) &&
   typeof Reflect !== 'undefined' && isNative$1(Reflect.ownKeys);
 
-/** 定义nextTick函数，异步执行的实现
- * 
+/** 
+ * 定义nextTick函数
 */
 var nextTick$1 = (function () {
   /** 回调函数数组 */
   var callbacks = [];
   /** 挂起状态 */
   var pending = false;
-  /** */
+  /** 计时器函数 */
   var timerFunc;
   /** 定义下一个时刻处理函数
    * 根据浏览器的情况进行下一时刻处理函数的处理
   */
   function nextTickHandler () {
     pending = false;
+    // 获取回调处理函数的第一个值
     var copies = callbacks.slice(0);
+    // 设置回调处理函数的长度为0
     callbacks.length = 0;
+    // 调用回调函数
     for (var i = 0; i < copies.length; i++) {
       copies[i]();
     }
   }
   /** 对于setImmediate不是未定义的且是原生的处理
-   * 设置事件处理函数
+   * 设置事件处理函数，setImmediate好像只有IE支持
    */
   if (typeof setImmediate !== 'undefined' && isNative$1(setImmediate)) {
     timerFunc = function () {
       setImmediate(nextTickHandler);
     };
   } else if (typeof MessageChannel !== 'undefined' && (isNative$1(MessageChannel) || MessageChannel.toString() === '[object MessageChannelConstructor]')) {
+    // MessageChannel的值不是未定义且MessageChannel是原生的或者MessageChannel转换为字符串的值为object MessageChannelConstructor
+    // 一般会使用这个进行执行
     var channel = new MessageChannel();
     var port = channel.port2;
     channel.port1.onmessage = nextTickHandler;
@@ -2468,17 +2437,14 @@ var nextTick$1 = (function () {
       port.postMessage(1);
     };
   } else {
-    /** 对于没有以上两个函数的处理 */
-    /* istanbul ignore next */
-    /** 对于有Promise的处理 */
+    /** 对于支持Promise的处理 */
     if (typeof Promise !== 'undefined' && isNative$1(Promise)) {
-      // use microtask in non-DOM environments, e.g. Weex
       var p = Promise.resolve();
       timerFunc = function () {
         p.then(nextTickHandler);
       };
     } else {
-      // fallback to setTimeout
+      // 对于上述的方法都不支持使用settimeout函数实现调用
       timerFunc = function () {
         setTimeout(nextTickHandler, 0);
       };
@@ -2506,7 +2472,6 @@ var nextTick$1 = (function () {
       pending = true;
       timerFunc();
     }
-    // $flow-disable-line
     if (!cb && typeof Promise !== 'undefined') {
       return new Promise(function (resolve, reject) {
         _resolve = resolve;
@@ -5210,104 +5175,67 @@ var modules = [
 ];
 
 /*  */
-/**\vue-master\src\core\config.js */
-/**导入no,noop,indentity
+/** \vue-master\src\core\config.js */
+/** 导入no,noop,indentity
  * no:无论传入什么参数总是返回否
  * noop:不做任何有效的处理
  * indentity:返回相同的参数
  */
-/**导入生命周期的钩子函数 */
+/** 导入生命周期的钩子函数 */
 /**
  * 配置信息
  */
 
-/**默认导出 */
+/** 默认导出 */
 var config$1 = ({
-  /**
-   * Option merge strategies (used in core/util/options)
-   */
+  // 合并策略
   optionMergeStrategies: Object.create(null),
-
-  /**
-   * Whether to suppress warnings.
-   */
+  // 是否抑制警告
   silent: false,
 
-  /**
-   * Show production mode tip message on boot?
-   */
+  // 是否在发布模式下的根节点对于警告进行提示
   productionTip: "development" !== 'production',
 
-  /**
-   * Whether to enable devtools
-   */
+  // 是否使能开发者工具
   devtools: "development" !== 'production',
 
-  /**
-   * Whether to record perf
-   */
+  // 是否记录性能
   performance: false,
 
-  /**
-   * Error handler for watcher errors
-   */
+  // 是否有错误处理函数对错误进行监听
   errorHandler: null,
 
-  /**
-   * Warn handler for watcher warns
-   */
+  // 是否有错误处理函数对警告进行监听
   warnHandler: null,
 
-  /**
-   * Ignore certain custom elements
-   */
+  // 忽略某些自定义元素
   ignoredElements: [],
 
-  /**
-   * Custom user key aliases for v-on
-   */
+  // 用户使用的键值的名称
   keyCodes: Object.create(null),
 
-  /**
-   * Check if a tag is reserved so that it cannot be registered as a
-   * component. This is platform-dependent and may be overwritten.
-   */
+  // 检测是否是预留的组件，如果是预留的标签使其不能作为组件
   isReservedTag: no,
 
-  /**
-   * Check if an attribute is reserved so that it cannot be used as a component
-   * prop. This is platform-dependent and may be overwritten.
-   */
+  // 检测属性是不是预留的属性如果是预留的组件使其不能作为组件的prop属性
   isReservedAttr: no,
 
-  /**
-   * Check if a tag is an unknown element.
-   * Platform-dependent.
-   */
+  // 检测标签是否是未知的元素
   isUnknownElement: no,
 
-  /**
-   * Get the namespace of an element
-   */
+  // 获取元素的名称空间
   getTagNamespace: noop,
 
-  /**
-   * Parse the real tag name for the specific platform.
-   */
+  // 解析特殊平台的真实的标签名称
   parsePlatformTagName: identity,
 
-  /**
-   * Check if an attribute must be bound using property, e.g. value
-   * Platform-dependent.
-   */
+  // 检测属性是否被绑定到必须使用的属性
   mustUseProp: no,
 
-  /**
-   * Exposed for legacy reasons
-   */
+  // 生命周期钩子函数
   _lifecycleHooks: LIFECYCLE_HOOKS
 });
-/**end \vue-master\src\core\config.js */
+/** end \vue-master\src\core\config.js  */
 
 /*  */
 

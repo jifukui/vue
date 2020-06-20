@@ -3,26 +3,24 @@
 import { extend } from 'shared/util'
 import { detectErrors } from './error-detector'
 import { createCompileToFunctionFn } from './to-function'
-
-export function createCompilerCreator (baseCompile: Function): Function 
-{
-  return function createCompiler (baseOptions: CompilerOptions)
-  {
+/**
+ * 创建编译器构造器
+ * @param {*} baseCompile 基本编译
+ */
+export function createCompilerCreator (baseCompile: Function): Function {
+  return function createCompiler (baseOptions: CompilerOptions) {
     function compile (
       template: string,
       options?: CompilerOptions
-    ): CompiledResult 
-    {
+    ): CompiledResult {
       const finalOptions = Object.create(baseOptions)
       const errors = []
       const tips = []
-      finalOptions.warn = (msg, tip) => 
-      {
+      finalOptions.warn = (msg, tip) => {
         (tip ? tips : errors).push(msg)
       }
-      /**对于options的值不为空的处理 */
-      if (options) 
-      {
+      /** 对于options的值不为空的处理 */
+      if (options) {
         // merge custom modules
         if (options.modules) 
         {
@@ -48,8 +46,7 @@ export function createCompilerCreator (baseCompile: Function): Function
       }
 
       const compiled = baseCompile(template, finalOptions)
-      if (process.env.NODE_ENV !== 'production') 
-      {
+      if (process.env.NODE_ENV !== 'production') {
         errors.push.apply(errors, detectErrors(compiled.ast))
       }
       compiled.errors = errors

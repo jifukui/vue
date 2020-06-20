@@ -77,8 +77,7 @@ export function createASTElement (
 export function parse (
   template: string,
   options: CompilerOptions
-): ASTElement | void 
-{
+): ASTElement | void {
   warn = options.warn || baseWarn
 
   platformIsPreTag = options.isPreTag || no

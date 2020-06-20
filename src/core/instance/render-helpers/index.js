@@ -10,21 +10,21 @@ import { bindObjectProps } from './bind-object-props'
 import { renderStatic, markOnce } from './render-static'
 import { bindObjectListeners } from './bind-object-listeners'
 import { resolveScopedSlots } from './resolve-slots'
-/**导出安装渲染帮助函数 */
+/** 导出安装渲染帮助函数 */
 export function installRenderHelpers (target: any) {
-  target._o = markOnce
-  target._n = toNumber
-  target._s = toString
-  target._l = renderList
-  target._t = renderSlot
-  target._q = looseEqual
-  target._i = looseIndexOf
-  target._m = renderStatic
-  target._f = resolveFilter
-  target._k = checkKeyCodes
-  target._b = bindObjectProps
-  target._v = createTextVNode
-  target._e = createEmptyVNode
-  target._u = resolveScopedSlots
-  target._g = bindObjectListeners
+  target._o = markOnce // 标记一次
+  target._n = toNumber // 转换为数字
+  target._s = toString  // 转换为字符串
+  target._l = renderList // 渲染链表
+  target._t = renderSlot  // 渲染的槽
+  target._q = looseEqual   // 不相等
+  target._i = looseIndexOf //
+  target._m = renderStatic //
+  target._f = resolveFilter  //
+  target._k = checkKeyCodes  //
+  target._b = bindObjectProps  //
+  target._v = createTextVNode  // 创建文本节点
+  target._e = createEmptyVNode // 创建空节点
+  target._u = resolveScopedSlots  // 范围槽
+  target._g = bindObjectListeners // 绑定事件监听器
 }

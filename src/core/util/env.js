@@ -87,35 +87,40 @@ export const hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys)
 
-/** 定义nextTick函数，异步执行的实现
- * 
+/** 
+ * 定义nextTick函数
 */
 export const nextTick = (function () {
   /** 回调函数数组 */
   const callbacks = []
   /** 挂起状态 */
   let pending = false
-  /** */
+  /** 计时器函数 */
   let timerFunc
   /** 定义下一个时刻处理函数
    * 根据浏览器的情况进行下一时刻处理函数的处理
   */
   function nextTickHandler () {
     pending = false
+    // 获取回调处理函数的第一个值
     const copies = callbacks.slice(0)
+    // 设置回调处理函数的长度为0
     callbacks.length = 0
+    // 调用回调函数
     for (let i = 0; i < copies.length; i++) {
       copies[i]()
     }
   }
   /** 对于setImmediate不是未定义的且是原生的处理
-   * 设置事件处理函数
+   * 设置事件处理函数，setImmediate好像只有IE支持
    */
   if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
     timerFunc = () => {
       setImmediate(nextTickHandler)
     }
   } else if (typeof MessageChannel !== 'undefined' && (isNative(MessageChannel) || MessageChannel.toString() === '[object MessageChannelConstructor]')) {
+    // MessageChannel的值不是未定义且MessageChannel是原生的或者MessageChannel转换为字符串的值为object MessageChannelConstructor
+    // 一般会使用这个进行执行
     const channel = new MessageChannel()
     const port = channel.port2
     channel.port1.onmessage = nextTickHandler
@@ -123,17 +128,14 @@ export const nextTick = (function () {
       port.postMessage(1)
     }
   } else {
-    /** 对于没有以上两个函数的处理 */
-    /* istanbul ignore next */
-    /** 对于有Promise的处理 */
+    /** 对于支持Promise的处理 */
     if (typeof Promise !== 'undefined' && isNative(Promise)) {
-      // use microtask in non-DOM environments, e.g. Weex
       const p = Promise.resolve()
       timerFunc = () => {
         p.then(nextTickHandler)
       }
     } else {
-      // fallback to setTimeout
+      // 对于上述的方法都不支持使用settimeout函数实现调用
       timerFunc = () => {
         setTimeout(nextTickHandler, 0)
       }
@@ -161,7 +163,6 @@ export const nextTick = (function () {
       pending = true
       timerFunc()
     }
-    // $flow-disable-line
     if (!cb && typeof Promise !== 'undefined') {
       return new Promise((resolve, reject) => {
         _resolve = resolve

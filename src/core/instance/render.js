@@ -60,12 +60,13 @@ export function initRender (vm: Component) {
     defineReactive(vm, '$listeners', options._parentListeners || emptyObject, null, true)
   }
 }
-/** 渲染的混入
- * Vue：组件对象
+/**
+ * 渲染的混合
+ * @param {*} Vue 组件对象 
  */
 export function renderMixin (Vue: Class<Component>) {
   // install runtime convenience helpers
-  /** 安装转换助手 */
+  /** 安装渲染助手，即初始化组件的一些属性 */
   installRenderHelpers(Vue.prototype)
   /** 定义组件的nextTick的方法实现 */
   Vue.prototype.$nextTick = function (fn: Function) {

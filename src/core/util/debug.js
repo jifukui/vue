@@ -10,7 +10,7 @@ export let generateComponentTrace = (noop: any) // work around flow check
 // 格式化组件名称
 export let formatComponentName = (noop: any)
 /** 如果开发环境不是生产模式的处理 */
-if(process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   /** 判断是否有定义console */
   const hasConsole = typeof console !== 'undefined'
   /** */

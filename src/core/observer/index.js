@@ -112,14 +112,9 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
 }
 
 /**
- * Attempt to create an observer instance for a value,
- * returns the new observer if successfully observed,
- * or the existing observer if the value already has one.
- */
-/**
- * value：
- * asRootData：
- * 返回发布对象
+ * 发布函数，创建发布对象并返回这个对象
+ * @param {*} value 属性
+ * @param {*} asRootData 是否作为根数据
  */
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   /** 对于value的不是对象或者value是VNode的实例的处理
@@ -144,8 +139,8 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
   ) {
     /** 对于observerState的shouldConvert属性为真
    * 且不是服务器端渲染
-   * 且value不是数组或者不是
-   * 且
+   * 且value是数组或者是对象
+   * 且此对象是可扩展的
    * 且value的isVue属性不为真的处理
    * 根据value创建一个新的Observer对象
    */

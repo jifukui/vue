@@ -36,11 +36,12 @@
                 computer:{
 
                 },
-                inject:["foo","jifukui"],
+                inject:["foo","jifukui","name1"],
                 created:function(){
                     console.log(this.foo.info);
                     console.log(this.jifukui.like);
                     console.log(this.$attrs.info);
+                    console.log("The name is " + this.name1);
                 }
             });
             var father=new Vue({
@@ -65,6 +66,9 @@
                     }
                 },
                 watch:{
+                    name1:function(value){
+                        console.log("The data have changed " + value);
+                    }
                 },
                 computer:{
 
@@ -77,7 +81,8 @@
                     jifukui:{
                         like:"football",
                         value:"CR7"
-                    }
+                    },
+                    name1:"inject_jifukui1"
                 },
                 mounted:function(){
                     console.log("Hello I have mounted")

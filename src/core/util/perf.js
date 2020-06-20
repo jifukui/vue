@@ -8,7 +8,7 @@ export let measure
 if (process.env.NODE_ENV !== 'production') {
   /** 设置perf的值为window的performance */
   const perf = inBrowser && window.performance;
-  /* istanbul ignore if */
+  // 如果这些条件都成立的处理
   if (
     perf &&
     perf.mark &&

@@ -1,6 +1,6 @@
 /* @flow */
-/**\vue-master\src\core\config.js */
-/**导入no,noop,indentity
+/** \vue-master\src\core\config.js */
+/** 导入no,noop,indentity
  * no:无论传入什么参数总是返回否
  * noop:不做任何有效的处理
  * indentity:返回相同的参数
@@ -10,119 +10,94 @@ import {
   noop,
   identity
 } from 'shared/util'
-/**导入生命周期的钩子函数 */
+/** 导入生命周期的钩子函数 */
 import { LIFECYCLE_HOOKS } from 'shared/constants'
 /**
  * 配置信息
  */
-export type Config = 
-{
-  // user
-  optionMergeStrategies: { [key: string]: Function };/**自定义合并策略函数 */
-  silent: boolean;  /**是否关闭所有日志和警告 */
-  productionTip: boolean; /**设置为 false 以阻止 vue 在启动时生成生产提示 */
-  performance: boolean;/**设置为 true 以在浏览器开发工具的性能/时间线面板中启用对组件初始化、编译、渲染和打补丁的性能追踪 */
-  devtools: boolean;    /**是否启用代码检查 */
-  errorHandler: ?(err: Error, vm: Component, info: string) => void;/**捕获错误 */
-  warnHandler: ?(msg: string, vm: Component, trace: string) => void;/**警告处理函数 */
-  ignoredElements: Array<string>;/**定义忽略DOM元素 */
-  keyCodes: { [key: string]: number | Array<number> };/**给v-on定义键位别名 */
+export type Config = {
+  // 合并策略
+  optionMergeStrategies: { [key: string]: Function };
+  // 是否关闭所有日志和警告
+  silent: boolean ;
+  // 设置为 false 以阻止 vue 在启动时生成生产提示
+  productionTip: boolean;
+  // 设置为 true 以在浏览器开发工具的性能/时间线面板中启用对组件初始化、编译、渲染和打补丁的性能追踪
+  performance: boolean;
+  // 是否启用代码检查
+  devtools: boolean ;
+  // 错误处理函数
+  errorHandler: ?(err: Error, vm: Component, info: string) => void;
+  // 警告处理函数
+  warnHandler: ?(msg: string, vm: Component, trace: string) => void;
+  // 被忽略的元素
+  ignoredElements: Array<string>;
+  // 自定义键码名
+  keyCodes: { [key: string]: number | Array<number> };
 
-  // platform
+  // 是否是预留标签
   isReservedTag: (x?: string) => boolean;
+  // 是否是预留属性
   isReservedAttr: (x?: string) => boolean;
+  // 分析平台的标签名
   parsePlatformTagName: (x: string) => string;
+  // 是未知的元素
   isUnknownElement: (x?: string) => boolean;
+  // 获取标签的名称空间
   getTagNamespace: (x?: string) => string | void;
+  // 必须使用Prop属性
   mustUseProp: (tag: string, type: ?string, name: string) => boolean;
 
-  // legacy
+  // 生命周期钩子
   _lifecycleHooks: Array<string>;
 };
-/**默认导出 */
+/** 默认导出 */
 export default ({
-  /**
-   * Option merge strategies (used in core/util/options)
-   */
+  // 合并策略
   optionMergeStrategies: Object.create(null),
-
-  /**
-   * Whether to suppress warnings.
-   */
+  // 是否抑制警告
   silent: false,
 
-  /**
-   * Show production mode tip message on boot?
-   */
+  // 是否在发布模式下的根节点对于警告进行提示
   productionTip: process.env.NODE_ENV !== 'production',
 
-  /**
-   * Whether to enable devtools
-   */
+  // 是否使能开发者工具
   devtools: process.env.NODE_ENV !== 'production',
 
-  /**
-   * Whether to record perf
-   */
+  // 是否记录性能
   performance: false,
 
-  /**
-   * Error handler for watcher errors
-   */
+  // 是否有错误处理函数对错误进行监听
   errorHandler: null,
 
-  /**
-   * Warn handler for watcher warns
-   */
+  // 是否有错误处理函数对警告进行监听
   warnHandler: null,
 
-  /**
-   * Ignore certain custom elements
-   */
+  // 忽略某些自定义元素
   ignoredElements: [],
 
-  /**
-   * Custom user key aliases for v-on
-   */
+  // 用户使用的键值的名称
   keyCodes: Object.create(null),
 
-  /**
-   * Check if a tag is reserved so that it cannot be registered as a
-   * component. This is platform-dependent and may be overwritten.
-   */
+  // 检测是否是预留的组件，如果是预留的标签使其不能作为组件
   isReservedTag: no,
 
-  /**
-   * Check if an attribute is reserved so that it cannot be used as a component
-   * prop. This is platform-dependent and may be overwritten.
-   */
+  // 检测属性是不是预留的属性如果是预留的组件使其不能作为组件的prop属性
   isReservedAttr: no,
 
-  /**
-   * Check if a tag is an unknown element.
-   * Platform-dependent.
-   */
+  // 检测标签是否是未知的元素
   isUnknownElement: no,
 
-  /**
-   * Get the namespace of an element
-   */
+  // 获取元素的名称空间
   getTagNamespace: noop,
 
-  /**
-   * Parse the real tag name for the specific platform.
-   */
+  // 解析特殊平台的真实的标签名称
   parsePlatformTagName: identity,
 
-  /**
-   * Check if an attribute must be bound using property, e.g. value
-   * Platform-dependent.
-   */
+  // 检测属性是否被绑定到必须使用的属性
   mustUseProp: no,
 
-  /**
-   * Exposed for legacy reasons
-   */
+  // 生命周期钩子函数
   _lifecycleHooks: LIFECYCLE_HOOKS
 }: Config)
-/**end \vue-master\src\core\config.js */
+/** end \vue-master\src\core\config.js  */

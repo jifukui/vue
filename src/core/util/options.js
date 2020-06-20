@@ -20,64 +20,61 @@ import {
   isPlainObject
 } from 'shared/util'
 
-/**创建strats对象为一个空的对象
+/** 创建strats对象为一个空的对象
  * strats为配置的config.optionMergeStrategies属性
  * 即为创建空对象的函数
  */
 const strats = config.optionMergeStrategies
 
-/**
- * Options with restrictions
- */
-/**对于环境不是生产模式的处理 */
-if (process.env.NODE_ENV !== 'production') 
-{
-  /** */
-  strats.el = strats.propsData = function (parent, child, vm, key) 
-  {
-    /**如果vm对象的值为否进行警告
+/** 对于环境不是生产模式的处理 */
+if (process.env.NODE_ENV !== 'production') {
+  /**
+   * 设置策略的元素和propData的值
+   */
+  strats.el = strats.propsData = function (parent, child, vm, key) {
+    /** 如果vm对象的值为否进行警告
      * 返回默认的strat
      */
-    if (!vm) 
-    {
+    if (!vm) {
       warn(
         `option "${key}" can only be used during instance ` +
         'creation with the `new` keyword.'
       )
     }
-    /**子不存在返回父 */
+    /** 子不存在返回父 */
     return defaultStrat(parent, child)
   }
 }
 
 /**
- * 进行数据的合并，将from中的属性添加至to对象
+ * 进行数据的合并，
+ * 获取数据源的所有属性
+ * 如果数据目的没有此参数调用set函数设置数据数据目的此参数的值
+ * 如果数据目的有此参数且数据目的和数据源的此属性都是对象，继续调用数据合并
  * @param {*} to 数据目标
  * @param {*} from 数据源
  */
-function mergeData (to: Object, from: ?Object): Object 
-{
-  /**对于数据源的值为空的处理，直接返回目的数据 */
-  if (!from) 
-  {
+function mergeData (to: Object, from: ?Object): Object {
+  /** 对于数据源的值为空的处理，直接返回目的数据 */
+  if (!from) {
     return to
   }
   let key, toVal, fromVal
+  // 获取数据源的所有的属性名
   const keys = Object.keys(from)
-  /**将源数据中的数据合并到目的数据 */
-  for (let i = 0; i < keys.length; i++) 
-  {
+  // 变量属性名
+  for (let i = 0; i < keys.length; i++) {
+    // 属性名
     key = keys[i]
+    // 目的属性值
     toVal = to[key]
+    // 源属性值
     fromVal = from[key]
-    /**如果目的对象没有这个属性的处理添加此属性 */
-    if (!hasOwn(to, key)) 
-    {
+    /** 如果目的对象没有这个属性名的处理添加此属性 */
+    if (!hasOwn(to, key)) {
       set(to, key, fromVal)
-    } 
-    /**对于目的对象没有此属性且目的对象的值为对象且源对象的值为对象的处理，递归调用此函数进行深度的复制 */
-    else if (isPlainObject(toVal) && isPlainObject(fromVal)) 
-    {
+    } else if (isPlainObject(toVal) && isPlainObject(fromVal)) {
+      // 如果元和目的的属性值都是对象，进行深度的数据合并
       mergeData(toVal, fromVal)
     }
   }
@@ -85,61 +82,56 @@ function mergeData (to: Object, from: ?Object): Object
 }
 
 /**
- * 聚合数据
- * @param {*} parentVal 
- * @param {*} childVal 
+ * 合并数据的方法
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
  * @param {*} vm Vue对象
  */
 export function mergeDataOrFn (
   parentVal: any,
   childVal: any,
   vm?: Component
-): ?Function 
-{
-  /**对于Vue对象不存在的处理方式 */
-  if (!vm) 
-  {
-    // in a Vue.extend merge, both should be functions
-    if (!childVal) 
-    {
+): ?Function {
+  /** 组件对象为空的处理 */
+  if (!vm) {
+    // 子参数为假值 返回父参数
+    if (!childVal) {
       return parentVal
     }
-    if (!parentVal) 
-    {
+    // 父参数为假值返回子参数
+    if (!parentVal) {
       return childVal
     }
-    return function mergedDataFn () 
-    {
+    // 父子参数都不为空，返回mergedDataFn函数，调用的是mergedData的函数的返回值
+    return function mergedDataFn () {
       return mergeData(
         typeof childVal === 'function' ? childVal.call(this) : childVal,
         typeof parentVal === 'function' ? parentVal.call(this) : parentVal
       )
     }
-  } 
-  /**对于两个对象有一个存在的处理 */
-  else if (parentVal || childVal) 
-  {
-    return function mergedInstanceDataFn () 
-    {
-      // instance merge
+  } else if (parentVal || childVal) {
+    // 这是对于组件的值为假值的处理，返回聚合实例数据的方法
+    // 这里面是对于父子参数至少有一个为真值的处理
+    return function mergedInstanceDataFn () {
+      // 根据子参数是不是方法进行处理，是函数调用此函数，不是返回其值数据赋值给instanceData
       const instanceData = typeof childVal === 'function'
         ? childVal.call(vm)
         : childVal
+      // 根据父参数是不是方法进行处理，是函数调用此函数，不是返回其值数据赋值给defaultData
       const defaultData = typeof parentVal === 'function'
         ? parentVal.call(vm)
         : parentVal
-      if (instanceData) 
-      {
+      // 对于子参数的值为真的处理，对子参数的值和父参数的值进行合并
+      if (instanceData) {
         return mergeData(instanceData, defaultData)
-      } 
-      else 
-      {
+      } else {
+        // 子参数的值为假值直接返回父的参数
         return defaultData
       }
     }
   }
 }
-/**strats对象的data属性
+/** strats对象的data属性
  * parentVal：父值
  * childVal：子值
  * vm：组件对象
@@ -148,16 +140,21 @@ export function mergeDataOrFn (
  * 反之返回当前strats的值与父的值聚合到子的值
  * 反之返回聚合父的值和子的值到vm的值
  */
+/**
+ * 设置策略的数据
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
+ * @param {*} vm 组件对象
+ */
 strats.data = function (
   parentVal: any,
   childVal: any,
   vm?: Component
-): ?Function 
-{
-  if (!vm) 
-  {
-    if (childVal && typeof childVal !== 'function') 
-    {
+): ?Function {
+  // 组件对象为假值的处理
+  if (!vm) {
+    // 对于子参数为真且类型不是函数的处理，进行警告返回父参数
+    if (childVal && typeof childVal !== 'function') {
       process.env.NODE_ENV !== 'production' && warn(
         'The "data" option should be a function ' +
         'that returns a per-instance value in component ' +
@@ -167,16 +164,14 @@ strats.data = function (
 
       return parentVal
     }
+    // 对于上述条件不成立，对此属性调用数据聚合函数
     return mergeDataOrFn.call(this, parentVal, childVal)
   }
-
+  // 调用数据聚合函数
   return mergeDataOrFn(parentVal, childVal, vm)
 }
 
-/**
- * Hooks and props are merged as arrays.
- */
-/**聚合钩子
+/** 聚合钩子
  * parentVal:
  * childVal:
  * 如果子的值为否返回父的值
@@ -185,11 +180,15 @@ strats.data = function (
  * 如果父的值为假判断子是否是数组
  * 如果子的属性为数组返回子，返回子的数组化形式
  */
+/**
+ * 聚合钩子
+ * @param {*} parentVal 
+ * @param {*} childVal 
+ */
 function mergeHook (
   parentVal: ?Array<Function>,
   childVal: ?Function | ?Array<Function>
-): ?Array<Function> 
-{
+): ?Array<Function> {
   return childVal
     ? parentVal
       ? parentVal.concat(childVal)
@@ -198,47 +197,39 @@ function mergeHook (
         : [childVal]
     : parentVal
 }
-/**设置strats的钩子的方法 */
+/** 设置strats的钩子的方法 */
 LIFECYCLE_HOOKS.forEach(hook => {
   strats[hook] = mergeHook
 })
-
-
-/**聚合资源
- * parentVal：父值
- * childVal：子值
- * vm：组件
- * key：键值
- * 如果子的值为真，将子的值浅拷贝到资源对象中
- * 如果子的值为假，不对资源对象进行处理
- * 返回资源对象
+/**
+ * 聚合
+ * 如果子参数不为假值，如果不是发布模式调用assertObjectType函数然后调用extend函数
+ * 如果子参数为假值直接返回父参数
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
+ * @param {*} vm 组件对象
+ * @param {*} key 属性名
  */
 function mergeAssets (
   parentVal: ?Object,
   childVal: ?Object,
   vm?: Component,
   key: string
-): Object 
-{
-  /**创建资源对象 */
+): Object {
+  /** 创建资源对象 */
   const res = Object.create(parentVal || null)
-  if (childVal) 
-  {
+  if (childVal) {
     process.env.NODE_ENV !== 'production' && assertObjectType(key, childVal, vm)
     return extend(res, childVal)
-  } 
-  else 
-  {
+  } else {
     return res
   }
 }
-/**strats对象中添加对应的资源的方法 */
+/** strats对象中添加对应的资源的方法 */
 ASSET_TYPES.forEach(function (type) {
   strats[type + 's'] = mergeAssets
 })
-
-
-/**strats对象的watch属性
+/** strats对象的watch属性
  * parentVal：
  * childVal：
  * vm：
@@ -256,52 +247,60 @@ ASSET_TYPES.forEach(function (type) {
  * 当存在于父属性中此属性在子对象中为数组设置为此子属性反之设置为子对象此属性的数组形式
  * 返回此对象的父对象的浅拷贝的合并版本
  */
+/**
+ * 策略监听函数
+ * @param {*} parentVal 
+ * @param {*} childVal 
+ * @param {*} vm 
+ * @param {*} key 
+ */
 strats.watch = function (
   parentVal: ?Object,
   childVal: ?Object,
   vm?: Component,
   key: string
-): ?Object 
-{
-  /**如果父的值和子的值都是对象的watch属性设置其值为undefined */
-  if (parentVal === nativeWatch) 
-  {
+): ?Object {
+  // 如果父参数是原生的监听函数，设置父参数为未定义
+  if (parentVal === nativeWatch) {
     parentVal = undefined
   }
-  if (childVal === nativeWatch) 
-  {
+  // 如果子参数是原生的监听函数，设置子参数为未定义
+  if (childVal === nativeWatch) {
     childVal = undefined
   }
-  /* istanbul ignore if */
-  if (!childVal) 
-  {
+  // 如果子参数的值为返回继承父参数的对象
+  if (!childVal) {
     return Object.create(parentVal || null)
   }
-  if (process.env.NODE_ENV !== 'production') 
-  {
+  // 如果不是发布模式，检测对象的类型
+  if (process.env.NODE_ENV !== 'production') {
     assertObjectType(key, childVal, vm)
   }
-  if (!parentVal) 
-  {
+  // 如果父对象的值为假，返回子参数
+  if (!parentVal) {
     return childVal
   }
+  // 对于父子参数都为真的处理
   const ret = {}
+  //
   extend(ret, parentVal)
-  for (const key in childVal) 
-  {
+  // 遍历子参数中的所有属性
+  for (const key in childVal) {
     let parent = ret[key]
     const child = childVal[key]
-    if (parent && !Array.isArray(parent)) 
-    {
+    //  如果父参数的值为真且不是数组的处理
+    if (parent && !Array.isArray(parent)) {
+      // 转换为数组的形式
       parent = [parent]
     }
+    //
     ret[key] = parent
       ? parent.concat(child)
       : Array.isArray(child) ? child : [child]
   }
   return ret
 }
-/**设置strats对象的props属性，methods属性，inject属性和computed属性
+/** 设置strats对象的props属性，methods属性，inject属性和computed属性
  * parentVal：
  * childVal：
  * vm：
@@ -311,6 +310,13 @@ strats.watch = function (
  * 创建一个空格对象，浅拷贝父对象
  * 如果子对象存在，再将此对象浅拷贝子对象，返回合并之后的对象
  */
+/**
+ * 设置策略的props，methods，inject，computed属性
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
+ * @param {*} vm 组件对象
+ * @param {*} key 属性名
+ */
 strats.props =
 strats.methods =
 strats.inject =
@@ -319,20 +325,16 @@ strats.computed = function (
   childVal: ?Object,
   vm?: Component,
   key: string
-): ?Object 
-{
-  if (childVal && process.env.NODE_ENV !== 'production') 
-  {
+): ?Object {
+  if (childVal && process.env.NODE_ENV !== 'production') {
     assertObjectType(key, childVal, vm)
   }
-  if (!parentVal) 
-  {
+  if (!parentVal) {
     return childVal
   }
   const ret = Object.create(null)
   extend(ret, parentVal)
-  if (childVal) 
-  {
+  if (childVal) {
     extend(ret, childVal)
   }
   return ret
@@ -341,9 +343,11 @@ strats.computed = function (
 strats.provide = mergeDataOrFn
 
 /**
- * Default strategy.
+ * 默认策略
+ * 如果子参数的值为真返回子参数的值为假返回父参数的值
+ * @param {*} parentVal 父参数
+ * @param {*} childVal 子参数
  */
-/** childVal的值为未定义返回parent的值反之返回child的值 */
 const defaultStrat = function (parentVal: any, childVal: any): any {
   return childVal === undefined
     ? parentVal
@@ -352,6 +356,10 @@ const defaultStrat = function (parentVal: any, childVal: any): any {
 
 /** 检测组件中属性的名称是否是合法的属性名称
  * 对于组件中使用构建的标签或者是预留的标签进行警告
+ */
+/**
+ * 
+ * @param {*} options 
  */
 function checkComponents (options: Object) {
   for (const key in options.components) {
@@ -433,29 +441,21 @@ function normalizeProps (options: Object, vm: ?Component) {
  * @param {*} options Vue对象的options属性
  * @param {*} vm Vue对象
  */
-function normalizeInject (options: Object, vm: ?Component) 
-{
+function normalizeInject (options: Object, vm: ?Component) {
   const inject = options.inject
   const normalized = options.inject = {}
-  if (Array.isArray(inject)) 
-  {
-    for (let i = 0; i < inject.length; i++) 
-    {
+  if (Array.isArray(inject)) {
+    for (let i = 0; i < inject.length; i++) {
       normalized[inject[i]] = { from: inject[i] }
     }
-  } 
-  else if (isPlainObject(inject)) 
-  {
-    for (const key in inject) 
-    {
+  } else if (isPlainObject(inject)) {
+    for (const key in inject) {
       const val = inject[key]
       normalized[key] = isPlainObject(val)
         ? extend({ from: key }, val)
         : { from: val }
     }
-  } 
-  else if (process.env.NODE_ENV !== 'production' && inject) 
-  {
+  } else if (process.env.NODE_ENV !== 'production' && inject) {
     warn(
       `Invalid value for option "inject": expected an Array or an Object, ` +
       `but got ${toRawType(inject)}.`,
@@ -464,34 +464,29 @@ function normalizeInject (options: Object, vm: ?Component)
   }
 }
 /**
- * 
+ * 指令的规则化
  * @param {*} options 
  */
-function normalizeDirectives (options: Object) 
-{
+function normalizeDirectives (options: Object) {
   const dirs = options.directives
-  if (dirs) 
-  {
-    for (const key in dirs) 
-    {
+  if (dirs) {
+    for (const key in dirs) {
       const def = dirs[key]
-      if (typeof def === 'function') 
-      {
+      if (typeof def === 'function') {
         dirs[key] = { bind: def, update: def }
       }
     }
   }
 }
 /**
- * 
- * @param {*} name 
- * @param {*} value 
- * @param {*} vm 
+ * 判断传入的参数是否是对象
+ * @param {*} name 键名
+ * @param {*} value 键值
+ * @param {*} vm 组件名称
  */
-function assertObjectType (name: string, value: any, vm: ?Component) 
-{
-  if (!isPlainObject(value)) 
-  {
+function assertObjectType (name: string, value: any, vm: ?Component) {
+  // 对于参数不是对象的处理，进行警告
+  if (!isPlainObject(value)) {
     warn(
       `Invalid value for option "${name}": expected an Object, ` +
       `but got ${toRawType(value)}.`,
@@ -504,7 +499,7 @@ function assertObjectType (name: string, value: any, vm: ?Component)
  * Merge two option objects into a new one.
  * Core utility used in both instantiation and inheritance.
  */
-/**聚合两个对象的参数
+/** 聚合两个对象的参数
  * parent：父对象
  * child：子对象
  * vm：
@@ -595,7 +590,7 @@ export function resolveAsset (
   // fallback to prototype chain
   const res = assets[id] || assets[camelizedId] || assets[PascalCaseId]
   if (process.env.NODE_ENV !== 'production' && warnMissing && !res) {
-    warn(
+    warn( 
       'Failed to resolve ' + type.slice(0, -1) + ': ' + id,
       options
     )

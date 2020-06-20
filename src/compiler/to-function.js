@@ -13,26 +13,20 @@ type CompiledFunctionResult =
  * @param {*} code 函数的代码
  * @param {*} errors 错误信息
  */
-function createFunction (code, errors) 
-{
-  try 
-  {
+function createFunction (code, errors) {
+  try {
     return new Function(code)
-  } 
-  catch (err) 
-  {
+  } catch (err) {
     errors.push({ err, code })
     return noop
   }
 }
 /**
- * 
+ * 创建
  * @param {*} compile 
  */
-export function createCompileToFunctionFn (compile: Function): Function 
-{
-  const cache: 
-  {
+export function createCompileToFunctionFn (compile: Function): Function {
+  const cache: {
     [key: string]: CompiledFunctionResult;
   } = Object.create(null)
   /**
@@ -44,24 +38,17 @@ export function createCompileToFunctionFn (compile: Function): Function
     template: string,
     options?: CompilerOptions,
     vm?: Component
-  ): CompiledFunctionResult 
-  {
+  ): CompiledFunctionResult {
     options = extend({}, options)
     const warn = options.warn || baseWarn
     delete options.warn
 
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production') 
-    {
-      // detect possible CSP restriction
-      try 
-      {
+    /** 对于不是发布模式的处理 */
+    if (process.env.NODE_ENV !== 'production') {
+      try {
         new Function('return 1')
-      } 
-      catch (e) 
-      {
-        if (e.toString().match(/unsafe-eval|CSP/)) 
-        {
+      } catch (e) {
+        if (e.toString().match(/unsafe-eval|CSP/)) {
           warn(
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
@@ -77,8 +64,7 @@ export function createCompileToFunctionFn (compile: Function): Function
     const key = options.delimiters
       ? String(options.delimiters) + template
       : template
-    if (cache[key]) 
-    {
+    if (cache[key]) {
       return cache[key]
     }
 
