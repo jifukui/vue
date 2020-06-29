@@ -4,7 +4,8 @@ import { extend } from 'shared/util'
 import { detectErrors } from './error-detector'
 import { createCompileToFunctionFn } from './to-function'
 /**
- * 创建编译器构造器
+ * 创建编译器构造器，返回一个函数
+ * 
  * @param {*} baseCompile 基本编译
  */
 export function createCompilerCreator (baseCompile: Function): Function {
@@ -22,24 +23,20 @@ export function createCompilerCreator (baseCompile: Function): Function {
       /** 对于options的值不为空的处理 */
       if (options) {
         // merge custom modules
-        if (options.modules) 
-        {
+        if (options.modules) {
           finalOptions.modules =
             (baseOptions.modules || []).concat(options.modules)
         }
         // merge custom directives
-        if (options.directives) 
-        {
+        if (options.directives) {
           finalOptions.directives = extend(
             Object.create(baseOptions.directives),
             options.directives
           )
         }
         // copy other options
-        for (const key in options) 
-        {
-          if (key !== 'modules' && key !== 'directives') 
-          {
+        for (const key in options) {
+          if (key !== 'modules' && key !== 'directives') {
             finalOptions[key] = options[key]
           }
         }

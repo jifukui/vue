@@ -74,20 +74,21 @@ Vue.prototype.$mount = function (
       /** 对于DOM元素存在的处理获取此元素的HTML文本 */
       template = getOuterHTML(el)
     }
-    /** 对于传入的对象有template属性的处理 */
+    /** 对于传入的对象有template属性的处理，即存在插入节点的处理 */
     if (template) {
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
       }
       /**
-       * 获取渲染和静态渲染函数，传入模板，是否检测新行，
+       * 获取渲染和静态渲染函数，传入模板，是否检测新行，分隔符，，还有this
        */
       const { render, staticRenderFns } = compileToFunctions(template, {
         shouldDecodeNewlines,
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // 设置渲染器和静态渲染函数
       options.render = render
       options.staticRenderFns = staticRenderFns
       /** 对于不是发布模式且有对于性能进行检测的处理 */

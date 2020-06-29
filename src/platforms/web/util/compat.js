@@ -3,7 +3,7 @@
 import { inBrowser } from 'core/util/index'
 
 /**
- * 判断编码字符是否存在于内容中，查看文档中是否有linux换行符
+ * 判断编码字符是否存在于内容中，查看文档中是否有Unicode换行符
  * @param {*} content 被查找文本
  * @param {*} encoded 查找内容
  */

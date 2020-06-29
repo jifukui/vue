@@ -2,8 +2,9 @@
 
 import config from '../config'
 import { noop } from 'shared/util'
-
+// 声明警告函数 空的程序执行体
 export let warn = noop
+// 声明提示函数 空的程序执行体
 export let tip = noop
 // 产生组件追踪
 export let generateComponentTrace = (noop: any) // work around flow check

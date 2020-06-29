@@ -53,8 +53,7 @@ export function createASTElement (
   tag: string,
   attrs: Array<Attr>,
   parent: ASTElement | void
-): ASTElement 
-{
+): ASTElement {
   return {
     type: 1,
     tag,
@@ -103,8 +102,7 @@ export function parse (
    * @param {*} msg 
    */
   function warnOnce (msg) {
-    if (!warned) 
-    {
+    if (!warned) {
       warned = true
       warn(msg)
     }
@@ -113,15 +111,12 @@ export function parse (
    * 
    * @param {*} element 
    */
-  function endPre (element) 
-  {
+  function endPre (element) {
     // check pre state
-    if (element.pre) 
-    {
+    if (element.pre) {
       inVPre = false
     }
-    if (platformIsPreTag(element.tag)) 
-    {
+    if (platformIsPreTag(element.tag)) {
       inPre = false
     }
   }

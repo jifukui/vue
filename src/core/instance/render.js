@@ -14,12 +14,6 @@ import { resolveSlots } from './render-helpers/resolve-slots'
 import VNode, { cloneVNodes, createEmptyVNode } from '../vdom/vnode'
 
 import { isUpdatingChildComponent } from './lifecycle'
-/** 初始化渲染
- * 定义组件的槽和扩展槽的处理
- * 定义组件创建DOM元素的实现
- * 定义组件的属性和监听器改变的处理
- * vm：组件对象或Vue组件
- */
 /**
  * 渲染的混入
  * 渲染的初始化
@@ -65,7 +59,6 @@ export function initRender (vm: Component) {
  * @param {*} Vue 组件对象 
  */
 export function renderMixin (Vue: Class<Component>) {
-  // install runtime convenience helpers
   /** 安装渲染助手，即初始化组件的一些属性 */
   installRenderHelpers(Vue.prototype)
   /** 定义组件的nextTick的方法实现 */
@@ -93,8 +86,7 @@ export function renderMixin (Vue: Class<Component>) {
     /** 设置组件的作用域插槽的值为父节点的数据属性中的作用域插槽或者是个空的对象 */
     vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject
 
-    // set parent vnode. this allows render functions to have access
-    // to the data on the placeholder node.
+    // 设置此节点的父节点
     vm.$vnode = _parentVnode
     // render self
     let vnode

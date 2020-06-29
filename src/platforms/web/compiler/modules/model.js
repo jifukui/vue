@@ -21,7 +21,11 @@ import {
   addIfCondition,
   createASTElement
 } from 'compiler/parser/index'
-
+/**
+ * 预转换节点
+ * @param {*} el 抽象元素
+ * @param {*} options 编译指令
+ */
 function preTransformNode (el: ASTElement, options: CompilerOptions) {
   if (el.tag === 'input') {
     const map = el.attrsMap
@@ -63,16 +67,24 @@ function preTransformNode (el: ASTElement, options: CompilerOptions) {
     }
   }
 }
-
+/**
+ * 拷贝AST元素
+ * @param {*} el 
+ */
 function cloneASTElement (el) {
   return createASTElement(el.tag, el.attrsList.slice(), el.parent)
 }
-
+/**
+ * 添加原始属性
+ * @param {*} el 
+ * @param {*} name 
+ * @param {*} value 
+ */
 function addRawAttr (el, name, value) {
   el.attrsMap[name] = value
   el.attrsList.push({ name, value })
 }
-
+/**默认导出 */
 export default {
   preTransformNode
 }

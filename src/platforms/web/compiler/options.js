@@ -15,14 +15,14 @@ import { isUnaryTag, canBeLeftOpenTag } from './util'
  * 定义基本的指令
  */
 export const baseOptions: CompilerOptions = {
-  expectHTML: true,
-  modules,
-  directives,
-  isPreTag,
-  isUnaryTag,
-  mustUseProp,
-  canBeLeftOpenTag,
-  isReservedTag,
-  getTagNamespace,
-  staticKeys: genStaticKeys(modules)
+  expectHTML: true,   // 期待HTML属性值为真
+  modules,            // 预转换节点函数
+  directives,         //
+  isPreTag,           //
+  isUnaryTag,         //
+  mustUseProp,        //
+  canBeLeftOpenTag,   //
+  isReservedTag,      // 是否是
+  getTagNamespace,    //
+  staticKeys: genStaticKeys(modules)  //
 }

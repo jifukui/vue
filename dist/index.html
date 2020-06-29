@@ -46,11 +46,12 @@
             });
             var father=new Vue({
                 el:"#app",
-                template:"<div v-bind:class=[blud]><span @click='change' >{{ name }}</span><data-info v-on:data='message' @click='change' info='father give you'><template v-slot:default>uname slot{{ name }}</template><template slot='info'><p>Hello,v-slot</p></template><template slot='jifukui' slot-scope='ji'><p>jifukui,v-solt{{ji.user.age}}</p></template></data-info></div>",
+                template:"<div v-bind:class=[blud]><span @click='change' >{{ name }}</span><data-info v-on:data='message' @click='change' info='father give you'><template v-slot:default>uname slot{{ name }}</template><template slot='info'><p>Hello,v-slot</p></template><template slot='jifukui' slot-scope='ji'><p>jifukui,v-solt{{ji.user.age}}</p></template></data-info><input type='radio' value='jifukui' v-model='radio' /></div>",
                 data:{
                     name:"Hello this is father",
                     info:"",
-                    blud:"blue"
+                    blud:"blue",
+                    radio: "jifukui"
                 },
                 props:{
                     info1:"apple",

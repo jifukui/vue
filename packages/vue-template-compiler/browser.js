@@ -893,7 +893,7 @@ var emptyObject = Object.freeze({});
 
 
 /**
- * 定义属性函数
+ * 定义对象的描述属性函数
  * @param {*} obj 对象
  * @param {*} key 属性名
  * @param {*} val 属性值
@@ -1001,7 +1001,9 @@ var config = ({
 
 /*  */
 
+// 声明警告函数 空的程序执行体
 var warn = noop;
+// 声明提示函数 空的程序执行体
 
 // 产生组件追踪
 var generateComponentTrace = (noop); // work around flow check
@@ -1376,14 +1378,14 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 
 /*  */
 
-/**类型别名 PropOptions
+/** 类型别名 PropOptions
  * type
  * default
  * required
  * validator
 */
 
-/**有效的数据Prop
+/** 有效的数据Prop
  * key:键值
  * propOptions:对象
  * propData:
@@ -1670,7 +1672,7 @@ function copyAugment (target, src, keys) {
 /**
  * 发布函数，创建发布对象并返回这个对象
  * @param {*} value 属性
- * @param {*} asRootData 是否作为根函数
+ * @param {*} asRootData 是否作为根数据
  */
 function observe (value, asRootData) {
   /** 对于value的不是对象或者value是VNode的实例的处理
@@ -2040,15 +2042,6 @@ function mergeHook (
 LIFECYCLE_HOOKS.forEach(function (hook) {
   strats[hook] = mergeHook;
 });
-/** 聚合资源
- * parentVal：父值
- * childVal：子值
- * vm：组件
- * key：键值
- * 如果子的值为真，将子的值浅拷贝到资源对象中
- * 如果子的值为假，不对资源对象进行处理
- * 返回资源对象
- */
 /**
  * 聚合
  * 如果子参数不为假值，如果不是发布模式调用assertObjectType函数然后调用extend函数
@@ -2108,31 +2101,40 @@ strats.watch = function (
   vm,
   key
 ) {
-  /** 如果父的值和子的值都是对象的watch属性设置其值为undefined */
+  // 如果父参数是原生的监听函数，设置父参数为未定义
   if (parentVal === nativeWatch) {
     parentVal = undefined;
   }
+  // 如果子参数是原生的监听函数，设置子参数为未定义
   if (childVal === nativeWatch) {
     childVal = undefined;
   }
-  /* istanbul ignore if */
+  // 如果子参数的值为返回继承父参数的对象
   if (!childVal) {
     return Object.create(parentVal || null)
   }
+  // 如果不是发布模式，检测对象的类型
   {
     assertObjectType(key, childVal, vm);
   }
+  // 如果父对象的值为假，返回子参数
   if (!parentVal) {
     return childVal
   }
+  // 对于父子参数都为真的处理
   var ret = {};
+  //
   extend(ret, parentVal);
+  // 遍历子参数中的所有属性
   for (var key$1 in childVal) {
     var parent = ret[key$1];
     var child = childVal[key$1];
+    //  如果父参数的值为真且不是数组的处理
     if (parent && !Array.isArray(parent)) {
+      // 转换为数组的形式
       parent = [parent];
     }
+    //
     ret[key$1] = parent
       ? parent.concat(child)
       : Array.isArray(child) ? child : [child];
@@ -2575,7 +2577,7 @@ var isTextInputType = makeMap('text,number,password,search,email,tel,url');
 /*  */
 
 /**
- * 返回此对象的dom元素
+ * 返回此对象的dom元素对象
  * @param {*} el 字符串或者是元素DOM对象
  */
 
@@ -2810,12 +2812,13 @@ function baseWarn (msg) {
 
 /**
  * 向props数组中添加参数
+ * 如果抽象元素中存在props属性直接使用不存在此属性创建一个空的数组
+ * 在数组中添加对象属性名和属性值
  * @param {*} el 抽象元素
  * @param {*} name 属性名称
  * @param {*} value 属性值
  */
-function addProp (el, name, value) 
-{
+function addProp (el, name, value) {
   (el.props || (el.props = [])).push({ name: name, value: value });
 }
 /**
@@ -2837,13 +2840,13 @@ function addProp (el, name, value)
 
 
 /**
- * 添加处理函数
+ * 添加处理函数，
  * @param {*} el 对象
- * @param {*} name 
- * @param {*} value 
- * @param {*} modifiers 
- * @param {*} important 
- * @param {*} warn 
+ * @param {*} name 事件名称
+ * @param {*} value 处理代码
+ * @param {*} modifiers 修饰符
+ * @param {*} important 重要性
+ * @param {*} warn 警告
  */
 function addHandler (
   el,
@@ -2852,10 +2855,8 @@ function addHandler (
   modifiers,
   important,
   warn
-) 
-{
-  // warn prevent and passive modifier
-  /* istanbul ignore if */
+) {
+  // 对于不是发布模式且定义警告或者是修饰符且修饰符中有。进行警告
   if (
     "development" !== 'production' && warn &&
     modifiers && modifiers.prevent && modifiers.passive
@@ -2865,46 +2866,41 @@ function addHandler (
       'Passive handler can\'t prevent default event.'
     );
   }
-  // check capture modifier
-  if (modifiers && modifiers.capture) 
-  {
+  // 对于是捕捉事件的处理，删除修饰器的捕捉属性，在属性名前添加!号
+  if (modifiers && modifiers.capture) {
     delete modifiers.capture;
     name = '!' + name; // mark the event as captured
   }
-  if (modifiers && modifiers.once) 
-  {
+  // 对于是只执行一次的处理，删除只执行一次属性，在属性名前加~号
+  if (modifiers && modifiers.once) {
     delete modifiers.once;
     name = '~' + name; // mark the event as once
   }
-  /* istanbul ignore if */
-  if (modifiers && modifiers.passive) 
-  {
+  // 对于
+  if (modifiers && modifiers.passive) {
     delete modifiers.passive;
     name = '&' + name; // mark the event as passive
   }
   var events;
-  if (modifiers && modifiers.native) 
-  {
+  // 对于
+  if (modifiers && modifiers.native) {
     delete modifiers.native;
     events = el.nativeEvents || (el.nativeEvents = {});
-  } 
-  else 
-  {
+  } else {
     events = el.events || (el.events = {});
   }
+  // 设置新的处理函数
   var newHandler = { value: value, modifiers: modifiers };
+  // 获取老的处理函数
   var handlers = events[name];
-  /* istanbul ignore if */
-  if (Array.isArray(handlers)) 
-  {
+  // 对于处理函数为数组的处理
+  if (Array.isArray(handlers)) {
     important ? handlers.unshift(newHandler) : handlers.push(newHandler);
-  } 
-  else if (handlers) 
-  {
+  } else if (handlers) {
+    // 对于处理函数存在的处理
     events[name] = important ? [newHandler, handlers] : [handlers, newHandler];
-  } 
-  else 
-  {
+  } else {
+    // 对于处理函数不存在的处理，设置这个元素的处理函数为新的处理函数
     events[name] = newHandler;
   }
 }
@@ -2918,24 +2914,18 @@ function getBindingAttr (
   el,
   name,
   getStatic
-) 
-{
-  /**获取绑定属性 */
+) {
+  /** 获取绑定属性 */
   var dynamicValue =
     getAndRemoveAttr(el, ':' + name) ||
     getAndRemoveAttr(el, 'v-bind:' + name);
-  /**对于绑定属性不为空的处理 */
-  if (dynamicValue != null) 
-  {
-    /**返回处理之后的表达式 */
+  /** 对于绑定属性不为空的处理 */
+  if (dynamicValue != null) {
+    /** 返回处理之后的表达式 */
     return parseFilters(dynamicValue)
-  } 
-  /**对于 */
-  else if (getStatic !== false) 
-  {
+  } else if (getStatic !== false) {
     var staticValue = getAndRemoveAttr(el, name);
-    if (staticValue != null) 
-    {
+    if (staticValue != null) {
       return JSON.stringify(staticValue)
     }
   }
@@ -2951,28 +2941,26 @@ function getAndRemoveAttr (
   el,
   name,
   removeFromMap
-) 
-{
+) {
   var val;
-  /**对于对象存在此属性的处理 */
-  if ((val = el.attrsMap[name]) != null) 
-  {
-    /**获取属性列表 */
+  /** 对于对象存在此属性的处理 */
+  if ((val = el.attrsMap[name]) != null) {
+    /** 获取属性列表 */
     var list = el.attrsList;
-    for (var i = 0, l = list.length; i < l; i++) 
-    {
-      if (list[i].name === name) 
-      {
+    // 遍历属性列表中的属性，获取对应属性名在属性列表中的位置
+    // 如果寻找到删除此属性列表中的此项
+    for (var i = 0, l = list.length; i < l; i++) {
+      if (list[i].name === name) {
         list.splice(i, 1);
         break
       }
     }
   }
-  /**删除的处理 */
-  if (removeFromMap) 
-  {
+  /** 对于定义删除的状态为真的处理，在元素的属性映射中删除此属性名 */
+  if (removeFromMap) {
     delete el.attrsMap[name];
   }
+  // 返回此属性名在属性映射中的值
   return val
 }
 
@@ -3938,47 +3926,41 @@ function parseText$1 (
 
 /**
  * 产生组件模式
- * @param {*} el 
- * @param {*} value 
- * @param {*} modifiers 
+ * 即生成此抽象元素的model的值参数和回调函数
+ * @param {*} el 抽象元素
+ * @param {*} value 指令值
+ * @param {*} modifiers 修饰符
  */
 
 
 /**
  * 根据传入的数值，设置其数值或是设置方法
- * @param {*} value 
- * @param {*} assignment 
+ * @param {*} value 传入的参数值
+ * @param {*} assignment 传入的处理代码
  */
 function genAssignmentCode (
   value,
   assignment
 ) {
-  /** 返回进行模块化处理结束后的值 */
+  /** 返回进行模块化处理结束后的值，即区分属性值和属性名 */
   var res = parseModel(value);
-  /** 对于值不为空的处理设置value的值为assignment的值 */
+  // 对于结果中的属性名为null的处理，设置value=assignment
   if (res.key === null) {
     return (value + "=" + assignment)
   } else {
-    /** 对于值为空的处理 */
+    /** 结果的key属性不为Null的处理 设置返回的字符串为 */
     return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
   }
 }
-
 /**
- * Parse a v-model expression into a base path and a final key segment.
- * Handles both dot-path and possible square brackets.
- *
- * Possible cases:
- *
- * - test
- * - test[key]
- * - test[test1[key]]
- * - test["a"][key]
- * - xxx.test[a[a].test1[key]]
- * - test.xxx.a["asa"][test1[key]]
- *
+ * 定义变量
+ * len：传入字符串的长度
+ * str: 传入的字符串
+ * chr：当前获取的字符
+ * index：当前处理字符的位置
+ * expressionPos：表达式开始的位置号
+ * expressionEndPos：表达式解决的位置
  */
-
 var len;
 var str;
 var chr;
@@ -3989,25 +3971,28 @@ var expressionEndPos;
 
 /**
  * 模块分析
- * @param {*} val 
+ * @param {*} val 参数值
  */
 function parseModel (val) {
   /** 获取字符串的长度 */
   len = val.length;
-  /** 对于字符串中不存在方括号的处理 */
+  // 对于不存在'['但是存在']'的处理
   if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
     /** 获取最后一个点号的位置 */
     index = val.lastIndexOf('.');
-    /** 对于找到点号的处理
-     * 设置exp为属性key为值
-     */
+    // 对于存在'.'的处理
+    // 返回exp的值为字符串到.号的位置
+    // 返回key的值为从点号后面到字符串结束的值
     if (index > -1) {
       return {
         exp: val.slice(0, index),
         key: '"' + val.slice(index + 1) + '"'
       }
     } else {
-      /** 对于没有找到点号的处理 */
+      /** 对于没有找到点号的处理
+       * exp的值为传入的值
+       * key的值为null
+       */
       return {
         exp: val,
         key: null
@@ -4017,18 +4002,24 @@ function parseModel (val) {
   /** 对于存在方括号的处理 */
   str = val;
   index = expressionPos = expressionEndPos = 0;
-
+  // 遍历字符串到结尾
   while (!eof()) {
     chr = next();
-    /** 对于是头字符的处理 */
+    /** 对于是头字符的处理，调用parseString函数处理字符串
+     *  直到此字符再次出现
+     */
     if (isStringStart(chr)) {
       parseString(chr);
-    } 
-    /** 对于是方括号的处理 */
-    else if (chr === 0x5B) {
+    } else if (chr === 0x5B) {
+      /** 对于是方括号的处理，调用parseBracket函数处理
+       * 直到所有的方括号字符都被匹配上，返回被匹配的位置
+       */
       parseBracket(chr);
     }
   }
+  /** 返回参数值exp为从0到'['开始的位置
+   * key为重表达式开始到']'结束的位置
+   */
   return {
     exp: val.slice(0, expressionPos),
     key: val.slice(expressionPos + 1, expressionEndPos)
@@ -4037,8 +4028,7 @@ function parseModel (val) {
 /**
  * 获取字符串的下一个字符的编码值
  */
-function next () 
-{
+function next () {
   return str.charCodeAt(++index)
 }
 /**
@@ -4048,15 +4038,16 @@ function eof () {
   return index >= len
 }
 /**
- * 是否是字符串的开始，即判断传入的参数是否时单引号或者是双引号
- * @param {*} chr 
+ * 是否是字符串的开始，
+ * 即判断传入的参数是否时单引号或者是双引号
+ * @param {*} chr 传入的字符
  */
 function isStringStart (chr) {
   return chr === 0x22 || chr === 0x27
 }
 /**
  * 方括号的处理，返回找到匹配的方括号结束位置
- * @param {*} chr 
+ * @param {*} chr 传入的字符
  */
 function parseBracket (chr) {
   var inBracket = 1;
@@ -4067,14 +4058,15 @@ function parseBracket (chr) {
       parseString(chr);
       continue
     }
-    /** 对于是方括号的处理 */
+    /** 对于是方括号开始字符的处理 */
     if (chr === 0x5B) {
       inBracket++;
     }
-    /** 对于是方括号结束的处理 */
+    /** 对于是方括号结束字符的处理 */
     if (chr === 0x5D) {
       inBracket--;
     }
+    // 对于开始方括号都被匹配的处理
     if (inBracket === 0) {
       expressionEndPos = index;
       break
@@ -4084,9 +4076,10 @@ function parseBracket (chr) {
 /**
  * 字符串分析
  * 在字符串中寻找是否还有此字符
- * @param {*} chr 
+ * @param {*} chr 传入的字符
  */
 function parseString (chr) {
+  // 获取传入的字符
   var stringQuote = chr;
   /** 一直循环到字符串结束 */
   while (!eof()) {
@@ -4117,20 +4110,20 @@ function baseWarn$1 (msg) {
 function pluckModuleFunction$1 (
   modules,
   key
-) 
-{
+) {
   return modules
     ? modules.map(function (m) { return m[key]; }).filter(function (_) { return _; })
     : []
 }
 /**
  * 向props数组中添加参数
+ * 如果抽象元素中存在props属性直接使用不存在此属性创建一个空的数组
+ * 在数组中添加对象属性名和属性值
  * @param {*} el 抽象元素
  * @param {*} name 属性名称
  * @param {*} value 属性值
  */
-function addProp$1 (el, name, value) 
-{
+function addProp$1 (el, name, value) {
   (el.props || (el.props = [])).push({ name: name, value: value });
 }
 /**
@@ -4139,8 +4132,7 @@ function addProp$1 (el, name, value)
  * @param {*} name 
  * @param {*} value 
  */
-function addAttr$1 (el, name, value) 
-{
+function addAttr$1 (el, name, value) {
   (el.attrs || (el.attrs = [])).push({ name: name, value: value });
 }
 /**
@@ -4159,19 +4151,18 @@ function addDirective$1 (
   value,
   arg,
   modifiers
-) 
-{
+) {
   (el.directives || (el.directives = [])).push({ name: name, rawName: rawName, value: value, arg: arg, modifiers: modifiers });
 }
 
 /**
- * 添加处理函数
+ * 添加处理函数，
  * @param {*} el 对象
- * @param {*} name 
- * @param {*} value 
- * @param {*} modifiers 
- * @param {*} important 
- * @param {*} warn 
+ * @param {*} name 事件名称
+ * @param {*} value 处理代码
+ * @param {*} modifiers 修饰符
+ * @param {*} important 重要性
+ * @param {*} warn 警告
  */
 function addHandler$1 (
   el,
@@ -4180,10 +4171,8 @@ function addHandler$1 (
   modifiers,
   important,
   warn
-) 
-{
-  // warn prevent and passive modifier
-  /* istanbul ignore if */
+) {
+  // 对于不是发布模式且定义警告或者是修饰符且修饰符中有。进行警告
   if (
     "development" !== 'production' && warn &&
     modifiers && modifiers.prevent && modifiers.passive
@@ -4193,46 +4182,41 @@ function addHandler$1 (
       'Passive handler can\'t prevent default event.'
     );
   }
-  // check capture modifier
-  if (modifiers && modifiers.capture) 
-  {
+  // 对于是捕捉事件的处理，删除修饰器的捕捉属性，在属性名前添加!号
+  if (modifiers && modifiers.capture) {
     delete modifiers.capture;
     name = '!' + name; // mark the event as captured
   }
-  if (modifiers && modifiers.once) 
-  {
+  // 对于是只执行一次的处理，删除只执行一次属性，在属性名前加~号
+  if (modifiers && modifiers.once) {
     delete modifiers.once;
     name = '~' + name; // mark the event as once
   }
-  /* istanbul ignore if */
-  if (modifiers && modifiers.passive) 
-  {
+  // 对于
+  if (modifiers && modifiers.passive) {
     delete modifiers.passive;
     name = '&' + name; // mark the event as passive
   }
   var events;
-  if (modifiers && modifiers.native) 
-  {
+  // 对于
+  if (modifiers && modifiers.native) {
     delete modifiers.native;
     events = el.nativeEvents || (el.nativeEvents = {});
-  } 
-  else 
-  {
+  } else {
     events = el.events || (el.events = {});
   }
+  // 设置新的处理函数
   var newHandler = { value: value, modifiers: modifiers };
+  // 获取老的处理函数
   var handlers = events[name];
-  /* istanbul ignore if */
-  if (Array.isArray(handlers)) 
-  {
+  // 对于处理函数为数组的处理
+  if (Array.isArray(handlers)) {
     important ? handlers.unshift(newHandler) : handlers.push(newHandler);
-  } 
-  else if (handlers) 
-  {
+  } else if (handlers) {
+    // 对于处理函数存在的处理
     events[name] = important ? [newHandler, handlers] : [handlers, newHandler];
-  } 
-  else 
-  {
+  } else {
+    // 对于处理函数不存在的处理，设置这个元素的处理函数为新的处理函数
     events[name] = newHandler;
   }
 }
@@ -4246,24 +4230,18 @@ function getBindingAttr$1 (
   el,
   name,
   getStatic
-) 
-{
-  /**获取绑定属性 */
+) {
+  /** 获取绑定属性 */
   var dynamicValue =
     getAndRemoveAttr$1(el, ':' + name) ||
     getAndRemoveAttr$1(el, 'v-bind:' + name);
-  /**对于绑定属性不为空的处理 */
-  if (dynamicValue != null) 
-  {
-    /**返回处理之后的表达式 */
+  /** 对于绑定属性不为空的处理 */
+  if (dynamicValue != null) {
+    /** 返回处理之后的表达式 */
     return parseFilters(dynamicValue)
-  } 
-  /**对于 */
-  else if (getStatic !== false) 
-  {
+  } else if (getStatic !== false) {
     var staticValue = getAndRemoveAttr$1(el, name);
-    if (staticValue != null) 
-    {
+    if (staticValue != null) {
       return JSON.stringify(staticValue)
     }
   }
@@ -4279,28 +4257,26 @@ function getAndRemoveAttr$1 (
   el,
   name,
   removeFromMap
-) 
-{
+) {
   var val;
-  /**对于对象存在此属性的处理 */
-  if ((val = el.attrsMap[name]) != null) 
-  {
-    /**获取属性列表 */
+  /** 对于对象存在此属性的处理 */
+  if ((val = el.attrsMap[name]) != null) {
+    /** 获取属性列表 */
     var list = el.attrsList;
-    for (var i = 0, l = list.length; i < l; i++) 
-    {
-      if (list[i].name === name) 
-      {
+    // 遍历属性列表中的属性，获取对应属性名在属性列表中的位置
+    // 如果寻找到删除此属性列表中的此项
+    for (var i = 0, l = list.length; i < l; i++) {
+      if (list[i].name === name) {
         list.splice(i, 1);
         break
       }
     }
   }
-  /**删除的处理 */
-  if (removeFromMap) 
-  {
+  /** 对于定义删除的状态为真的处理，在元素的属性映射中删除此属性名 */
+  if (removeFromMap) {
     delete el.attrsMap[name];
   }
+  // 返回此属性名在属性映射中的值
   return val
 }
 
@@ -4340,8 +4316,7 @@ function createASTElement (
   tag,
   attrs,
   parent
-) 
-{
+) {
   return {
     type: 1,
     tag: tag,
@@ -4364,8 +4339,7 @@ function createASTElement (
 function parse (
   template,
   options
-) 
-{
+) {
   warn$1 = options.warn || baseWarn$1;
 
   platformIsPreTag = options.isPreTag || no;
@@ -4391,8 +4365,7 @@ function parse (
    * @param {*} msg 
    */
   function warnOnce (msg) {
-    if (!warned) 
-    {
+    if (!warned) {
       warned = true;
       warn$1(msg);
     }
@@ -4401,15 +4374,12 @@ function parse (
    * 
    * @param {*} element 
    */
-  function endPre (element) 
-  {
+  function endPre (element) {
     // check pre state
-    if (element.pre) 
-    {
+    if (element.pre) {
       inVPre = false;
     }
-    if (platformIsPreTag(element.tag)) 
-    {
+    if (platformIsPreTag(element.tag)) {
       inPre = false;
     }
   }
@@ -5113,6 +5083,11 @@ function checkForAliasModel (el, value) {
  *   <input v-else :type="type" v-model="data[type]">
  */
 
+/**
+ * 预转换节点
+ * @param {*} el 抽象元素
+ * @param {*} options 编译指令
+ */
 function preTransformNode (el, options) {
   if (el.tag === 'input') {
     var map = el.attrsMap;
@@ -5154,16 +5129,24 @@ function preTransformNode (el, options) {
     }
   }
 }
-
+/**
+ * 拷贝AST元素
+ * @param {*} el 
+ */
 function cloneASTElement (el) {
   return createASTElement(el.tag, el.attrsList.slice(), el.parent)
 }
-
+/**
+ * 添加原始属性
+ * @param {*} el 
+ * @param {*} name 
+ * @param {*} value 
+ */
 function addRawAttr (el, name, value) {
   el.attrsMap[name] = value;
   el.attrsList.push({ name: name, value: value });
 }
-
+/**默认导出 */
 var model = {
   preTransformNode: preTransformNode
 };
@@ -5241,32 +5224,42 @@ var config$1 = ({
 
 /**
  * 产生组件模式
- * @param {*} el 
- * @param {*} value 
- * @param {*} modifiers 
+ * 即生成此抽象元素的model的值参数和回调函数
+ * @param {*} el 抽象元素
+ * @param {*} value 指令值
+ * @param {*} modifiers 修饰符
  */
 function genComponentModel$1 (
   el,
   value,
   modifiers
 ) {
+  // 获取修饰符中的number属性和trim属性
   var ref = modifiers || {};
   var number = ref.number;
   var trim = ref.trim;
   /** 设置基本的表达式 */
   var baseValueExpression = '$$v';
   var valueExpression = baseValueExpression;
+  // 对于修饰符中存在trim属性的处理，即去掉首尾的空白符
   if (trim) {
+    // 定义参数值的表达式为根据基本表达式的值的类型是否为字符串
+    // 如果baseValueExpression的值为字符串返回baseValueExpression去掉首尾空格的值
+    // baseValueExpression如果baseValueExpression不是字符串返回baseValueExpression的值
     valueExpression =
       "(typeof " + baseValueExpression + " === 'string'" +
         "? " + baseValueExpression + ".trim()" +
         ": " + baseValueExpression + ")";
   }
+  // 对于修饰符中存在number属性的处理，即需要传入的数据为数值
   if (number) {
+    // 设置valueExpression 的值为_n(valueExpression的值)
     valueExpression = "_n(" + valueExpression + ")";
   }
+  // 设置 assignment的值为调用genAssignmentCode的返回值
+  // 返回的是赋值字符串或者是$set字符串
   var assignment = genAssignmentCode$1(value, valueExpression);
-
+  // 设置抽象节点的model属性，有value,expression,callback
   el.model = {
     value: ("(" + value + ")"),
     expression: ("\"" + value + "\""),
@@ -5276,39 +5269,32 @@ function genComponentModel$1 (
 
 /**
  * 根据传入的数值，设置其数值或是设置方法
- * @param {*} value 
- * @param {*} assignment 
+ * @param {*} value 传入的参数值
+ * @param {*} assignment 传入的处理代码
  */
 function genAssignmentCode$1 (
   value,
   assignment
 ) {
-  /** 返回进行模块化处理结束后的值 */
+  /** 返回进行模块化处理结束后的值，即区分属性值和属性名 */
   var res = parseModel$1(value);
-  /** 对于值不为空的处理设置value的值为assignment的值 */
+  // 对于结果中的属性名为null的处理，设置value=assignment
   if (res.key === null) {
     return (value + "=" + assignment)
   } else {
-    /** 对于值为空的处理 */
+    /** 结果的key属性不为Null的处理 设置返回的字符串为 */
     return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
   }
 }
-
 /**
- * Parse a v-model expression into a base path and a final key segment.
- * Handles both dot-path and possible square brackets.
- *
- * Possible cases:
- *
- * - test
- * - test[key]
- * - test[test1[key]]
- * - test["a"][key]
- * - xxx.test[a[a].test1[key]]
- * - test.xxx.a["asa"][test1[key]]
- *
+ * 定义变量
+ * len：传入字符串的长度
+ * str: 传入的字符串
+ * chr：当前获取的字符
+ * index：当前处理字符的位置
+ * expressionPos：表达式开始的位置号
+ * expressionEndPos：表达式解决的位置
  */
-
 var len$1;
 var str$1;
 var chr$1;
@@ -5319,25 +5305,28 @@ var expressionEndPos$1;
 
 /**
  * 模块分析
- * @param {*} val 
+ * @param {*} val 参数值
  */
 function parseModel$1 (val) {
   /** 获取字符串的长度 */
   len$1 = val.length;
-  /** 对于字符串中不存在方括号的处理 */
+  // 对于不存在'['但是存在']'的处理
   if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len$1 - 1) {
     /** 获取最后一个点号的位置 */
     index$1 = val.lastIndexOf('.');
-    /** 对于找到点号的处理
-     * 设置exp为属性key为值
-     */
+    // 对于存在'.'的处理
+    // 返回exp的值为字符串到.号的位置
+    // 返回key的值为从点号后面到字符串结束的值
     if (index$1 > -1) {
       return {
         exp: val.slice(0, index$1),
         key: '"' + val.slice(index$1 + 1) + '"'
       }
     } else {
-      /** 对于没有找到点号的处理 */
+      /** 对于没有找到点号的处理
+       * exp的值为传入的值
+       * key的值为null
+       */
       return {
         exp: val,
         key: null
@@ -5347,18 +5336,24 @@ function parseModel$1 (val) {
   /** 对于存在方括号的处理 */
   str$1 = val;
   index$1 = expressionPos$1 = expressionEndPos$1 = 0;
-
+  // 遍历字符串到结尾
   while (!eof$1()) {
     chr$1 = next$1();
-    /** 对于是头字符的处理 */
+    /** 对于是头字符的处理，调用parseString函数处理字符串
+     *  直到此字符再次出现
+     */
     if (isStringStart$1(chr$1)) {
       parseString$1(chr$1);
-    } 
-    /** 对于是方括号的处理 */
-    else if (chr$1 === 0x5B) {
+    } else if (chr$1 === 0x5B) {
+      /** 对于是方括号的处理，调用parseBracket函数处理
+       * 直到所有的方括号字符都被匹配上，返回被匹配的位置
+       */
       parseBracket$1(chr$1);
     }
   }
+  /** 返回参数值exp为从0到'['开始的位置
+   * key为重表达式开始到']'结束的位置
+   */
   return {
     exp: val.slice(0, expressionPos$1),
     key: val.slice(expressionPos$1 + 1, expressionEndPos$1)
@@ -5367,8 +5362,7 @@ function parseModel$1 (val) {
 /**
  * 获取字符串的下一个字符的编码值
  */
-function next$1 () 
-{
+function next$1 () {
   return str$1.charCodeAt(++index$1)
 }
 /**
@@ -5378,15 +5372,16 @@ function eof$1 () {
   return index$1 >= len$1
 }
 /**
- * 是否是字符串的开始，即判断传入的参数是否时单引号或者是双引号
- * @param {*} chr 
+ * 是否是字符串的开始，
+ * 即判断传入的参数是否时单引号或者是双引号
+ * @param {*} chr 传入的字符
  */
 function isStringStart$1 (chr) {
   return chr === 0x22 || chr === 0x27
 }
 /**
  * 方括号的处理，返回找到匹配的方括号结束位置
- * @param {*} chr 
+ * @param {*} chr 传入的字符
  */
 function parseBracket$1 (chr) {
   var inBracket = 1;
@@ -5397,14 +5392,15 @@ function parseBracket$1 (chr) {
       parseString$1(chr);
       continue
     }
-    /** 对于是方括号的处理 */
+    /** 对于是方括号开始字符的处理 */
     if (chr === 0x5B) {
       inBracket++;
     }
-    /** 对于是方括号结束的处理 */
+    /** 对于是方括号结束字符的处理 */
     if (chr === 0x5D) {
       inBracket--;
     }
+    // 对于开始方括号都被匹配的处理
     if (inBracket === 0) {
       expressionEndPos$1 = index$1;
       break
@@ -5414,9 +5410,10 @@ function parseBracket$1 (chr) {
 /**
  * 字符串分析
  * 在字符串中寻找是否还有此字符
- * @param {*} chr 
+ * @param {*} chr 传入的字符
  */
 function parseString$1 (chr) {
+  // 获取传入的字符
   var stringQuote = chr;
   /** 一直循环到字符串结束 */
   while (!eof$1()) {
@@ -5438,69 +5435,61 @@ var warn$2;
 var RANGE_TOKEN = '__r';
 /**
  * 根据el的对应的属性进行相关的模式化处理，返回成功或者是失败
- * @param {*} el 元素对象
- * @param {*} dir 
+ * @param {*} el 抽象元素
+ * @param {*} dir 抽象指令
  * @param {*} _warn 警告处理函数
  */
 function model$1 (
   el,
   dir,
   _warn
-) 
-{
+) {
+  // 设置警告为传入的警告函数
   warn$2 = _warn;
+  // 设置value的值为指令中的value
   var value = dir.value;
+  // 设置modifiers为指令中的modifiers
   var modifiers = dir.modifiers;
+  // 设置tag为元素中的tag
   var tag = el.tag;
+  // 设置type为元素中attrsmap的type值
   var type = el.attrsMap.type;
-
+  // 对于不是发布模式的处理
   {
-    // inputs with type="file" are read only and setting the input's
-    // value will throw an error.
-    if (tag === 'input' && type === 'file') 
-    {
+    // 不允许设置tag为input类型为file的value的值这个值为只读属性
+    if (tag === 'input' && type === 'file') {
       warn$2(
         "<" + (el.tag) + " v-model=\"" + value + "\" type=\"file\">:\n" +
         "File inputs are read only. Use a v-on:change listener instead."
       );
     }
   }
-  /**对于是组件的处理 */
-  if (el.component) 
-  {
+  // 对于元素节点是组件的处理
+  if (el.component) {
+    // 调用genComponentModel函数传入抽象节点，指令的值和修饰符
+    // 生成元素的模型函数
     genComponentModel$1(el, value, modifiers);
     // component v-model doesn't need extra runtime
     return false
-  } 
-  /**对于标签是select的处理 */
-  else if (tag === 'select') 
-  {
+  } else if (tag === 'select') {
+    /** 对于标签是select的处理 */
     genSelect(el, value, modifiers);
-  } 
-  /**对于标签是input且类型是复选框的处理 */
-  else if (tag === 'input' && type === 'checkbox') 
-  {
+  } else if (tag === 'input' && type === 'checkbox') {
+    /** 对于标签是input且类型是复选框的处理 */
     genCheckboxModel(el, value, modifiers);
-  } 
-  /**对于是单选框的处理 */
-  else if (tag === 'input' && type === 'radio') 
-  {
+  } else if (tag === 'input' && type === 'radio') {
+    /** 对于是单选框的处理 */
     genRadioModel(el, value, modifiers);
-  } 
-  /**对于是input或者是textarea的处理 */
-  else if (tag === 'input' || tag === 'textarea') 
-  {
+  } else if (tag === 'input' || tag === 'textarea') {
+    /** 对于是input或者是textarea的处理 */
     genDefaultModel(el, value, modifiers);
-  } 
-  /**对于不是预留标签的处理 */
-  else if (!config$1.isReservedTag(tag)) 
-  {
+  } else if (!config$1.isReservedTag(tag)) {
+    /** 对于不是预留标签的处理 */
     genComponentModel$1(el, value, modifiers);
     // component v-model doesn't need extra runtime
     return false
-  } 
-  /**其他的错误处理 */
-  else {
+  } else {
+    /** 其他的错误处理 */
     warn$2(
       "<" + (el.tag) + " v-model=\"" + value + "\">: " +
       "v-model is not supported on this element type. " +
@@ -5559,36 +5548,42 @@ function genRadioModel (
     value,
     modifiers
 ) {
+  // 获取修饰符
   var number = modifiers && modifiers.number;
+  // 获取此元素的value属性
   var valueBinding = getBindingAttr(el, 'value') || 'null';
   valueBinding = number ? ("_n(" + valueBinding + ")") : valueBinding;
   addProp(el, 'checked', ("_q(" + value + "," + valueBinding + ")"));
   addHandler(el, 'change', genAssignmentCode$1(value, valueBinding), null, true);
 }
 /**
- * 产生选择模式
- * @param {*} el 
- * @param {*} value 
- * @param {*} modifiers 
+ * 生成选择模型
+ * @param {*} el 元素对象
+ * @param {*} value 参数值
+ * @param {*} modifiers 修饰符
  */
 function genSelect (
     el,
     value,
     modifiers
 ) {
+  // 获取修饰符参数
   var number = modifiers && modifiers.number;
+  // 设置选择模型函数
   var selectedVal = "Array.prototype.filter" +
     ".call($event.target.options,function(o){return o.selected})" +
     ".map(function(o){var val = \"_value\" in o ? o._value : o.value;" +
     "return " + (number ? '_n(val)' : 'val') + "})";
-
+  // 设置任务
   var assignment = '$event.target.multiple ? $$selectedVal : $$selectedVal[0]';
+  // 设置代码
   var code = "var $$selectedVal = " + selectedVal + ";";
   code = code + " " + (genAssignmentCode$1(value, assignment));
+  // 对于select添加change处理函数
   addHandler(el, 'change', code, null, true);
 }
 /**
- * 产生默认模式
+ * 产生默认模型
  * @param {*} el 
  * @param {*} value 
  * @param {*} modifiers 
@@ -5597,8 +5592,7 @@ function genDefaultModel (
   el,
   value,
   modifiers
-) 
-{
+) {
   /** */
   var type = el.attrsMap.type;
   /** */
@@ -5613,27 +5607,23 @@ function genDefaultModel (
     : type === 'range'
       ? RANGE_TOKEN
       : 'input';
-  /**设置数值的表达式 */
+  /** 设置数值的表达式 */
   var valueExpression = '$event.target.value';
-  if (trim) 
-  {
+  if (trim) {
     valueExpression = "$event.target.value.trim()";
   }
-  if (number) 
-  {
+  if (number) {
     valueExpression = "_n(" + valueExpression + ")";
   }
 
   var code = genAssignmentCode$1(value, valueExpression);
-  if (needCompositionGuard) 
-  {
+  if (needCompositionGuard) {
     code = "if($event.target.composing)return;" + code;
   }
 
   addProp(el, 'value', ("(" + value + ")"));
   addHandler(el, event, code, null, true);
-  if (trim || number) 
-  {
+  if (trim || number) {
     addHandler(el, 'blur', '$forceUpdate()');
   }
 }
@@ -5643,12 +5633,10 @@ function genDefaultModel (
 /**
  * 向元素的props属性中添加textContent数据
  * @param {*} el 抽象元素
- * @param {*} dir 
+ * @param {*} dir 抽象指令
  */
-function text (el, dir) 
-{
-  if (dir.value) 
-  {
+function text (el, dir) {
+  if (dir.value) {
     addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
   }
 }
@@ -5657,21 +5645,21 @@ function text (el, dir)
 
 /**
  * 向属性中添加innerHTML属性
- * @param {*} el 元素对象
- * @param {*} dir 
+ * 向抽象属性中添加对象属性名为innerHTML属性值为_s(dir.value的值)
+ * @param {*} el 抽象元素
+ * @param {*} dir 抽象指令
  */
-function html (el, dir) 
-{
-  if (dir.value) 
-  {
+function html (el, dir) {
+  // 对于指令中有value属性，在
+  if (dir.value) {
     addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
   }
 }
 
 var directives = {
-  model: model$1,
-  text: text,
-  html: html
+  model: model$1,  // 对传入的抽象元素生成模型
+  text: text,   // 在抽象节点中添加 textContent属性及其属性值
+  html: html    // 在抽象节点中添加 innerHTML属性及其属性值
 };
 
 /*  */
@@ -5703,16 +5691,16 @@ var isNonPhrasingTag$1 = makeMap(
  * 定义基本的指令
  */
 var baseOptions = {
-  expectHTML: true,
-  modules: modules,
-  directives: directives,
-  isPreTag: isPreTag,
-  isUnaryTag: isUnaryTag$1,
-  mustUseProp: mustUseProp,
-  canBeLeftOpenTag: canBeLeftOpenTag$1,
-  isReservedTag: isReservedTag,
-  getTagNamespace: getTagNamespace,
-  staticKeys: genStaticKeys(modules)
+  expectHTML: true,   // 期待HTML属性值为真
+  modules: modules,            // 预转换节点函数
+  directives: directives,         //
+  isPreTag: isPreTag,           //
+  isUnaryTag: isUnaryTag$1,         //
+  mustUseProp: mustUseProp,        //
+  canBeLeftOpenTag: canBeLeftOpenTag$1,   //
+  isReservedTag: isReservedTag,      // 是否是
+  getTagNamespace: getTagNamespace,    //
+  staticKeys: genStaticKeys(modules)  //
 };
 
 /*  */
@@ -5751,8 +5739,7 @@ function createASTElement$1 (
   tag,
   attrs,
   parent
-) 
-{
+) {
   return {
     type: 1,
     tag: tag,
@@ -5775,8 +5762,7 @@ function createASTElement$1 (
 function parse$1 (
   template,
   options
-) 
-{
+) {
   warn$3 = options.warn || baseWarn$1;
 
   platformIsPreTag$1 = options.isPreTag || no;
@@ -5802,8 +5788,7 @@ function parse$1 (
    * @param {*} msg 
    */
   function warnOnce (msg) {
-    if (!warned) 
-    {
+    if (!warned) {
       warned = true;
       warn$3(msg);
     }
@@ -5812,15 +5797,12 @@ function parse$1 (
    * 
    * @param {*} element 
    */
-  function endPre (element) 
-  {
+  function endPre (element) {
     // check pre state
-    if (element.pre) 
-    {
+    if (element.pre) {
       inVPre = false;
     }
-    if (platformIsPreTag$1(element.tag)) 
-    {
+    if (platformIsPreTag$1(element.tag)) {
       inPre = false;
     }
   }
@@ -7526,7 +7508,9 @@ function checkExpression (exp, text, errors) {
 
 /*  */
 
+// 声明警告函数 空的程序执行体
 var warn$4 = noop;
+// 声明提示函数 空的程序执行体
 var tip$1 = noop;
 // 产生组件追踪
 var generateComponentTrace$1 = (noop); // work around flow check
@@ -7629,31 +7613,28 @@ var formatComponentName$1 = (noop);
 
 /*  */
 
-/**定义编译函数的结果 */
+/**  定义编译函数的结果 */
 
 /**
  * 创建函数
  * @param {*} code 函数的代码
  * @param {*} errors 错误信息
  */
-function createFunction (code, errors) 
-{
-  try 
-  {
+function createFunction (code, errors) {
+  try {
     return new Function(code)
-  } 
-  catch (err) 
-  {
+  } catch (err) {
     errors.push({ err: err, code: code });
     return noop
   }
 }
 /**
- * 
+ * 创建编译器转换为功能函数
  * @param {*} compile 
  */
-function createCompileToFunctionFn (compile) 
-{
+function createCompileToFunctionFn (compile) {
+  // 这里应该是说明cache的数据格式为string为键值属性为CompiledFunctionResult类型
+  // 这个是闭包的私有变量存储的是
   var cache = Object.create(null);
   /**
    * template：模板字符串
@@ -7664,23 +7645,21 @@ function createCompileToFunctionFn (compile)
     template,
     options,
     vm
-  ) 
-  {
+  ) {
+    // 将传入的参数和空对象进行扩展,返回新的参数
     options = extend({}, options);
+    // 获取传入参数的警告函数若不存在返回基本的警告函数
     var warn$$1 = options.warn || warn$4;
+    // 删除options对象中的警告函数
     delete options.warn;
 
-    /* istanbul ignore if */
+    /** 对于不是发布模式的处理 */
     {
-      // detect possible CSP restriction
-      try 
-      {
+      try {
+        // 创建一个新的函数 返回1
         new Function('return 1');
-      } 
-      catch (e) 
-      {
-        if (e.toString().match(/unsafe-eval|CSP/)) 
-        {
+      } catch (e) {
+        if (e.toString().match(/unsafe-eval|CSP/)) {
           warn$$1(
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
@@ -7691,50 +7670,46 @@ function createCompileToFunctionFn (compile)
         }
       }
     }
-
-    // check cache
+    // 获取参数中的分隔符，为分隔符转换为字符串加上模板如果没有分隔符直接返回模板字符串
     var key = options.delimiters
       ? String(options.delimiters) + template
       : template;
-    if (cache[key]) 
-    {
+    // 如果cache存在这个属性，返回这个内容
+    if (cache[key]) {
       return cache[key]
     }
-
-    // compile
+    // 使用模板和参数调用编译器函数
     var compiled = compile(template, options);
-
-    // check compilation errors/tips
+    // 对于不是发布模式的处理
     {
-      if (compiled.errors && compiled.errors.length) 
-      {
+      // 编辑器的错误属性存在且编译器的错误属性的长度大于0，即有错误存在的处理，进行警告
+      if (compiled.errors && compiled.errors.length) {
         warn$$1(
           "Error compiling template:\n\n" + template + "\n\n" +
           compiled.errors.map(function (e) { return ("- " + e); }).join('\n') + '\n',
           vm
         );
       }
-      if (compiled.tips && compiled.tips.length) 
-      {
+      // 对于编译器的存在提示内容的处理
+      if (compiled.tips && compiled.tips.length) {
+        // 遍历所有的提示，对这个组件条用tip函数
         compiled.tips.forEach(function (msg) { return tip$1(msg, vm); });
       }
     }
-
-    // turn code into functions
+    // 创建结果对象
     var res = {};
+    // 创建
     var fnGenErrors = [];
+    // 设置结果的渲染函数
     res.render = createFunction(compiled.render, fnGenErrors);
+    // 设置结果的静态
     res.staticRenderFns = compiled.staticRenderFns.map(function (code) {
       return createFunction(code, fnGenErrors)
     });
-
-    // check function generation errors.
-    // this should only happen if there is a bug in the compiler itself.
-    // mostly for codegen development use
-    /* istanbul ignore if */
+    // 如果不是发布模式的处理
     {
-      if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) 
-      {
+      // 对于没有编译错误属性或者编译错误长度值为0但是同时存在错误的处理
+      if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
         warn$$1(
           "Failed to generate render function:\n\n" +
           fnGenErrors.map(function (ref) {
@@ -7747,50 +7722,47 @@ function createCompileToFunctionFn (compile)
         );
       }
     }
-
+    // 返回结果
     return (cache[key] = res)
   }
 }
 
 /*  */
 
-function createCompilerCreator (baseCompile) 
-{
-  return function createCompiler (baseOptions)
-  {
+/**
+ * 创建编译器构造器，返回一个函数
+ * 
+ * @param {*} baseCompile 基本编译
+ */
+function createCompilerCreator (baseCompile) {
+  return function createCompiler (baseOptions) {
     function compile (
       template,
       options
-    ) 
-    {
+    ) {
       var finalOptions = Object.create(baseOptions);
       var errors = [];
       var tips = [];
       finalOptions.warn = function (msg, tip) {
         (tip ? tips : errors).push(msg);
       };
-      /**对于options的值不为空的处理 */
-      if (options) 
-      {
+      /** 对于options的值不为空的处理 */
+      if (options) {
         // merge custom modules
-        if (options.modules) 
-        {
+        if (options.modules) {
           finalOptions.modules =
             (baseOptions.modules || []).concat(options.modules);
         }
         // merge custom directives
-        if (options.directives) 
-        {
+        if (options.directives) {
           finalOptions.directives = extend(
             Object.create(baseOptions.directives),
             options.directives
           );
         }
         // copy other options
-        for (var key in options) 
-        {
-          if (key !== 'modules' && key !== 'directives') 
-          {
+        for (var key in options) {
+          if (key !== 'modules' && key !== 'directives') {
             finalOptions[key] = options[key];
           }
         }
@@ -7820,9 +7792,8 @@ function createCompilerCreator (baseCompile)
 var createCompiler = createCompilerCreator(function baseCompile (
   template,
   options
-) 
-{
-  /**将模板转换为DOM对象的抽象结构 */
+) {
+  /** 将模板转换为DOM对象的抽象结构 */
   var ast = parse$1(template.trim(), options);
   optimize(ast, options);
   var code = generate(ast, options);
@@ -8931,43 +8902,40 @@ function flattenSegments (segments) {
 
 /*  */
 
-function createCompilerCreator$1 (baseCompile) 
-{
-  return function createCompiler (baseOptions)
-  {
+/**
+ * 创建编译器构造器，返回一个函数
+ * 
+ * @param {*} baseCompile 基本编译
+ */
+function createCompilerCreator$1 (baseCompile) {
+  return function createCompiler (baseOptions) {
     function compile (
       template,
       options
-    ) 
-    {
+    ) {
       var finalOptions = Object.create(baseOptions);
       var errors = [];
       var tips = [];
       finalOptions.warn = function (msg, tip) {
         (tip ? tips : errors).push(msg);
       };
-      /**对于options的值不为空的处理 */
-      if (options) 
-      {
+      /** 对于options的值不为空的处理 */
+      if (options) {
         // merge custom modules
-        if (options.modules) 
-        {
+        if (options.modules) {
           finalOptions.modules =
             (baseOptions.modules || []).concat(options.modules);
         }
         // merge custom directives
-        if (options.directives) 
-        {
+        if (options.directives) {
           finalOptions.directives = extend(
             Object.create(baseOptions.directives),
             options.directives
           );
         }
         // copy other options
-        for (var key in options) 
-        {
-          if (key !== 'modules' && key !== 'directives') 
-          {
+        for (var key in options) {
+          if (key !== 'modules' && key !== 'directives') {
             finalOptions[key] = options[key];
           }
         }
