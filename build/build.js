@@ -13,32 +13,28 @@ const rollup = require('rollup')
 const uglify = require('uglify-js')
 
 /** 判断是否存在此路径对于不存在此路径的创建此目录，这个目录是用于存放生成的最终文件的路径 */
-if (!fs.existsSync('dist')) 
-{
+if (!fs.existsSync('dist')) {
   fs.mkdirSync('dist')
 }
 /** 定义 */
 let builds = require('./config').getAllBuilds()
-console.log("the process.arg is "+process.argv[0]);
+console.log('the process.arg is ' + process.argv[0])
 // filter builds via command line arg
-//过滤环境变量第一个环境变量是node的路径，第二个环境变量是当前脚本的路径，没有第三个变量
-if (process.argv[2]) 
-{
+// 过滤环境变量第一个环境变量是node的路径，第二个环境变量是当前脚本的路径，没有第三个变量
+if (process.argv[2]) {
   const filters = process.argv[2].split(',')
   builds = builds.filter(b => {
     return filters.some(f => b.output.file.indexOf(f) > -1 || b._name.indexOf(f) > -1)
   })
-}
-//所以当前的情况是这个执行的是没有weex的键名 
-else 
-{
+} else {
+  // 所以当前的情况是这个执行的是没有weex的键名
   // filter out weex builds by default
   builds = builds.filter(b => {
     return b.output.file.indexOf('weex') === -1
   })
 }
-console.log("process value is "+process.env.NODE_ENV);
-//构建相关的文件
+console.log('process value is ' + process.env.NODE_ENV)
+// 构建相关的文件
 build(builds)
 /**
  * 构建函数

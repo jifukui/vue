@@ -1,5 +1,5 @@
 /* @flow */
-
+// baseOptions为传入的默认参数
 import { baseOptions } from './options'
 import { createCompiler } from 'compiler/index'
 

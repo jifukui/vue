@@ -22,7 +22,7 @@ const idToTemplate = cached(id => {
 })
 /** 设置mount为Vue中的mount的实现 */
 const mount = Vue.prototype.$mount
-/**
+/** build生成的文件
  * 进行挂载操作，返回组件对象
  * @param {*} el 挂载对象的标记
  * @param {*} hydrating 

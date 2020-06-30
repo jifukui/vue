@@ -9,12 +9,15 @@ import { createCompileToFunctionFn } from './to-function'
  * @param {*} baseCompile 基本编译
  */
 export function createCompilerCreator (baseCompile: Function): Function {
+  // 返回一个函数
   return function createCompiler (baseOptions: CompilerOptions) {
     function compile (
       template: string,
       options?: CompilerOptions
     ): CompiledResult {
+      // 创建一个空的对象
       const finalOptions = Object.create(baseOptions)
+      //
       const errors = []
       const tips = []
       finalOptions.warn = (msg, tip) => {

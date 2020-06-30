@@ -16,15 +16,14 @@ const flow = require('rollup-plugin-flow-no-whitespace')
 const version = process.env.VERSION || require('../package.json').version
 /** */
 const weexVersion = process.env.WEEX_VERSION || require('../packages/weex-vue-framework/package.json').version
-console.log("The info is " )
-// Displayinfo(process)
-function Displayinfo(value){
+
+function Displayinfo(value) {
   for (let i in value) {
-    if(Object.prototype.toString.call(value[i]) === "[object Object]") {
-      console.log("The Object protoprotype")
+    if (Object.prototype.toString.call(value[i]) === '[object Object]') {
+      console.log('The Object protoprotype')
       Displayinfo(value[i])
     } else {
-      console.log(i +  " value is   " + value[i])
+      console.log(i + ' value is ' + value[i])
     }
   }
 }
@@ -37,12 +36,10 @@ const banner =
   ' */'
 /** 创建不可修改变量，weex工厂插件 */
 const weexFactoryPlugin = {
-  intro ()
-  {
+  intro () {
     return 'module.exports = function weexFactory (exports, document) {'
   },
-  outro ()
-  {
+  outro () {
     return '}'
   }
 }
@@ -55,28 +52,25 @@ const aliases = require('./alias')
 const resolve = p => {
   const base = p.split('/')[0]
   // 对于第一个/号前的在aliases的处理,将路径进行拼接
-  if (aliases[base] ) 
-  { 
+  if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))
-  } 
-  // 对于不存在于aliases的处理
-  else 
-  {
+  } else {
+    // 对于不存在于aliases的处理
     return path.resolve(__dirname, '../', p)
   }
 }
-/** 建立打包规则对象 */
+/** 建立打包规则对象,即创建创建实例 */
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'web-runtime-cjs': {
     entry: resolve('web/entry-runtime.js'),         // 入口JS文件地址
     dest: resolve('dist/vue.runtime.common.js'),    // 出口js文件地址
     format: 'cjs',                                  // 构建的格式
-    banner                                          //注释信息
+    banner                                          // 注释信息
   },
   // Runtime+compiler CommonJS build (CommonJS)
   'web-full-cjs': {
-    entry: resolve('web/entry-runtime-with-compiler.js'),
+    entry: resolve('web/entry-runtime-with-compiler.js'), 
     dest: resolve('dist/vue.common.js'),
     format: 'cjs',
     alias: { he: './entity-decoder' },
@@ -199,19 +193,18 @@ const builds = {
     external: Object.keys(require('../packages/weex-template-compiler/package.json').dependencies)
   }
 }
-/**创建配置文件，即根据builds进行处理
+/** 创建配置文件，即根据builds进行处理
  * name为获取的键值，生成rollup支持的格式
  */
-function genConfig (name) 
-{
-  //获取键内容
+function genConfig (name) {
+  // 获取键内容
   const opts = builds[name]
   const config = {
-    //设置输入文件
+    // 设置输入文件
     input: opts.entry,
-    //设置扩展文件
+    // 设置扩展文件
     external: opts.external,
-    //设置插件
+    // 设置插件
     plugins: [
       replace({
         __WEEX__: !!opts.weex,
@@ -222,41 +215,37 @@ function genConfig (name)
       buble(),
       alias(Object.assign({}, aliases, opts.alias))
     ].concat(opts.plugins || []),
-    //设置输出文件
+    // 设置输出文件
     output: {
-      //输出文件名
+      // 输出文件名
       file: opts.dest,
-      //输出文件格式
+      // 输出文件格式
       format: opts.format,
 
       banner: opts.banner,
-      //输出模块的名字
+      // 输出模块的名字
       name: opts.moduleName || 'Vue'
     }
   }
-  //对于定义环境的处理
-  if (opts.env) 
-  {
+  // 对于定义环境的处理
+  if (opts.env) {
     config.plugins.push(replace({
       'process.env.NODE_ENV': JSON.stringify(opts.env)
     }))
   }
-  //对于定义_name的处理
+  // 对于定义_name的处理
   Object.defineProperty(config, '_name', {
     enumerable: false,
     value: name
   })
-  //返回配置的对象
+  // 返回配置的对象
   return config
 }
 /** 如果过程环境设置存在 */
-if (process.env.TARGET)
-{
+if (process.env.TARGET) {
   module.exports = genConfig(process.env.TARGET)
-}
-//如果不存在设置getBuild的值为genConfig
-else 
-{
+} else {
+  // 如果不存在设置getBuild的值为genConfig
   // 创建创建文件
   exports.getBuild = genConfig
   // 获取所有的配置的build文件

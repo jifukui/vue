@@ -40,11 +40,16 @@ extend(Vue.options.components, platformComponents)
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
-// public mount method
+/**
+ * 组件挂载，当具有渲染函数时
+ * @param {*} el 挂载的元素
+ * @param {*} hydrating 
+ */
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  // 设置el的值
   el = el && inBrowser ? query(el) : undefined
   return mountComponent(this, el, hydrating)
 }

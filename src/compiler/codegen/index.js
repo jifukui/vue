@@ -63,46 +63,29 @@ export function generate (
   }
 }
 /**
- * 
- * @param {*} el 
+ * 产生元素
+ * @param {*} el 元素抽象树
  * @param {*} state 
  */
-export function genElement (el: ASTElement, state: CodegenState): string 
-{
-  if (el.staticRoot && !el.staticProcessed) 
-  {
+export function genElement (el: ASTElement, state: CodegenState): string {
+  if (el.staticRoot && !el.staticProcessed) {
     return genStatic(el, state)
-  } 
-  else if (el.once && !el.onceProcessed) 
-  {
+  } else if (el.once && !el.onceProcessed) {
     return genOnce(el, state)
-  } 
-  else if (el.for && !el.forProcessed) 
-  {
+  } else if (el.for && !el.forProcessed) {
     return genFor(el, state)
-  } 
-  else if (el.if && !el.ifProcessed) 
-  {
+  } else if (el.if && !el.ifProcessed) {
     return genIf(el, state)
-  } 
-  else if (el.tag === 'template' && !el.slotTarget) 
-  {
+  } else if (el.tag === 'template' && !el.slotTarget) {
     return genChildren(el, state) || 'void 0'
-  } 
-  else if (el.tag === 'slot') 
-  {
+  } else if (el.tag === 'slot') {
     return genSlot(el, state)
-  } 
-  else 
-  {
+  } else {
     // component or element
     let code
-    if (el.component) 
-    {
+    if (el.component) {
       code = genComponent(el.component, el, state)
-    } 
-    else 
-    {
+    } else {
       const data = el.plain ? undefined : genData(el, state)
 
       const children = el.inlineTemplate ? null : genChildren(el, state, true)
@@ -113,8 +96,7 @@ export function genElement (el: ASTElement, state: CodegenState): string
       })`
     }
     // module transforms
-    for (let i = 0; i < state.transforms.length; i++) 
-    {
+    for (let i = 0; i < state.transforms.length; i++) {
       code = state.transforms[i](el, code)
     }
     return code
@@ -122,12 +104,11 @@ export function genElement (el: ASTElement, state: CodegenState): string
 }
 
 /**
- * 
- * @param {*} el 
+ * 产生静态元素
+ * @param {*} el 元素抽象树 
  * @param {*} state 
  */
-function genStatic (el: ASTElement, state: CodegenState): string 
-{
+function genStatic (el: ASTElement, state: CodegenState): string {
   el.staticProcessed = true
   state.staticRenderFns.push(`with(this){return ${genElement(el, state)}}`)
   return `_m(${state.staticRenderFns.length - 1}${el.staticInFor ? ',true' : ''})`

@@ -2540,7 +2540,7 @@ var isSVG = makeMap(
   'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
   true
 );
-/**判断是否是预指令 */
+/** 判断是否是预指令 */
 var isPreTag = function (tag) { return tag === 'pre'; };
 /**
  * 判断是否是预留指令 
@@ -2554,14 +2554,12 @@ var isReservedTag = function (tag) {
  * @param {*} tag 
  */
 function getTagNamespace (tag) {
-  if (isSVG(tag)) 
-  {
+  if (isSVG(tag)) {
     return 'svg'
   }
   // basic support for MathML
   // note it doesn't support other MathML elements being component roots
-  if (tag === 'math') 
-  {
+  if (tag === 'math') {
     return 'math'
   }
 }
@@ -6902,54 +6900,36 @@ function generate (
   }
 }
 /**
- * 
- * @param {*} el 
+ * 产生元素
+ * @param {*} el 元素抽象树
  * @param {*} state 
  */
-function genElement (el, state) 
-{
-  if (el.staticRoot && !el.staticProcessed) 
-  {
+function genElement (el, state) {
+  if (el.staticRoot && !el.staticProcessed) {
     return genStatic(el, state)
-  } 
-  else if (el.once && !el.onceProcessed) 
-  {
+  } else if (el.once && !el.onceProcessed) {
     return genOnce(el, state)
-  } 
-  else if (el.for && !el.forProcessed) 
-  {
+  } else if (el.for && !el.forProcessed) {
     return genFor(el, state)
-  } 
-  else if (el.if && !el.ifProcessed) 
-  {
+  } else if (el.if && !el.ifProcessed) {
     return genIf(el, state)
-  } 
-  else if (el.tag === 'template' && !el.slotTarget) 
-  {
+  } else if (el.tag === 'template' && !el.slotTarget) {
     return genChildren(el, state) || 'void 0'
-  } 
-  else if (el.tag === 'slot') 
-  {
+  } else if (el.tag === 'slot') {
     return genSlot(el, state)
-  } 
-  else 
-  {
+  } else {
     // component or element
     var code;
-    if (el.component) 
-    {
+    if (el.component) {
       code = genComponent(el.component, el, state);
-    } 
-    else 
-    {
+    } else {
       var data = el.plain ? undefined : genData$2(el, state);
 
       var children = el.inlineTemplate ? null : genChildren(el, state, true);
       code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
     }
     // module transforms
-    for (var i = 0; i < state.transforms.length; i++) 
-    {
+    for (var i = 0; i < state.transforms.length; i++) {
       code = state.transforms[i](el, code);
     }
     return code
@@ -6957,12 +6937,11 @@ function genElement (el, state)
 }
 
 /**
- * 
- * @param {*} el 
+ * 产生静态元素
+ * @param {*} el 元素抽象树 
  * @param {*} state 
  */
-function genStatic (el, state) 
-{
+function genStatic (el, state) {
   el.staticProcessed = true;
   state.staticRenderFns.push(("with(this){return " + (genElement(el, state)) + "}"));
   return ("_m(" + (state.staticRenderFns.length - 1) + (el.staticInFor ? ',true' : '') + ")")
@@ -7735,12 +7714,15 @@ function createCompileToFunctionFn (compile) {
  * @param {*} baseCompile 基本编译
  */
 function createCompilerCreator (baseCompile) {
+  // 返回一个函数
   return function createCompiler (baseOptions) {
     function compile (
       template,
       options
     ) {
+      // 创建一个空的对象
       var finalOptions = Object.create(baseOptions);
+      //
       var errors = [];
       var tips = [];
       finalOptions.warn = function (msg, tip) {
@@ -7805,7 +7787,7 @@ var createCompiler = createCompilerCreator(function baseCompile (
 });
 
 /*  */
-
+// baseOptions为传入的默认参数
 var ref = createCompiler(baseOptions);
 var compile = ref.compile;
 var compileToFunctions = ref.compileToFunctions;
@@ -7851,54 +7833,36 @@ function generate$2 (
   }
 }
 /**
- * 
- * @param {*} el 
+ * 产生元素
+ * @param {*} el 元素抽象树
  * @param {*} state 
  */
-function genElement$1 (el, state) 
-{
-  if (el.staticRoot && !el.staticProcessed) 
-  {
+function genElement$1 (el, state) {
+  if (el.staticRoot && !el.staticProcessed) {
     return genStatic$1(el, state)
-  } 
-  else if (el.once && !el.onceProcessed) 
-  {
+  } else if (el.once && !el.onceProcessed) {
     return genOnce$1(el, state)
-  } 
-  else if (el.for && !el.forProcessed) 
-  {
+  } else if (el.for && !el.forProcessed) {
     return genFor$1(el, state)
-  } 
-  else if (el.if && !el.ifProcessed) 
-  {
+  } else if (el.if && !el.ifProcessed) {
     return genIf$1(el, state)
-  } 
-  else if (el.tag === 'template' && !el.slotTarget) 
-  {
+  } else if (el.tag === 'template' && !el.slotTarget) {
     return genChildren$1(el, state) || 'void 0'
-  } 
-  else if (el.tag === 'slot') 
-  {
+  } else if (el.tag === 'slot') {
     return genSlot$1(el, state)
-  } 
-  else 
-  {
+  } else {
     // component or element
     var code;
-    if (el.component) 
-    {
+    if (el.component) {
       code = genComponent$1(el.component, el, state);
-    } 
-    else 
-    {
+    } else {
       var data = el.plain ? undefined : genData$3(el, state);
 
       var children = el.inlineTemplate ? null : genChildren$1(el, state, true);
       code = "_c('" + (el.tag) + "'" + (data ? ("," + data) : '') + (children ? ("," + children) : '') + ")";
     }
     // module transforms
-    for (var i = 0; i < state.transforms.length; i++) 
-    {
+    for (var i = 0; i < state.transforms.length; i++) {
       code = state.transforms[i](el, code);
     }
     return code
@@ -7906,12 +7870,11 @@ function genElement$1 (el, state)
 }
 
 /**
- * 
- * @param {*} el 
+ * 产生静态元素
+ * @param {*} el 元素抽象树 
  * @param {*} state 
  */
-function genStatic$1 (el, state) 
-{
+function genStatic$1 (el, state) {
   el.staticProcessed = true;
   state.staticRenderFns.push(("with(this){return " + (genElement$1(el, state)) + "}"));
   return ("_m(" + (state.staticRenderFns.length - 1) + (el.staticInFor ? ',true' : '') + ")")
@@ -8908,12 +8871,15 @@ function flattenSegments (segments) {
  * @param {*} baseCompile 基本编译
  */
 function createCompilerCreator$1 (baseCompile) {
+  // 返回一个函数
   return function createCompiler (baseOptions) {
     function compile (
       template,
       options
     ) {
+      // 创建一个空的对象
       var finalOptions = Object.create(baseOptions);
+      //
       var errors = [];
       var tips = [];
       finalOptions.warn = function (msg, tip) {

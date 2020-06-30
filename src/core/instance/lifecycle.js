@@ -191,16 +191,16 @@ export function mountComponent (
   el: ?Element,
   hydrating?: boolean
 ): Component {
-  //获取挂载的节点
+  // 获取挂载的节点
   vm.$el = el
-  /**如果此节点的渲染属性的值为假的处理
+  /** 如果此节点的渲染属性的值为假的处理
    * 设置此渲染节点的值为空的虚拟节点
    */
   if (!vm.$options.render) {
     vm.$options.render = createEmptyVNode
     if (process.env.NODE_ENV !== 'production') {
       /* istanbul ignore if */
-      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') ||vm.$options.el || el) {
+      if ((vm.$options.template && vm.$options.template.charAt(0) !== '#') || vm.$options.el || el) {
         warn(
           'You are using the runtime-only build of Vue where the template ' +
           'compiler is not available. Either pre-compile the templates into ' +
@@ -246,9 +246,6 @@ export function mountComponent (
   // 设置此组件的监听器
   vm._watcher = new Watcher(vm, updateComponent, noop)
   hydrating = false
-
-  // manually mounted instance, call mounted on self
-  // mounted is called for render-created child components in its inserted hook
   if (vm.$vnode == null) {
     vm._isMounted = true
     callHook(vm, 'mounted')

@@ -30,14 +30,13 @@ export const isSVG = makeMap(
   'polygon,polyline,rect,switch,symbol,text,textpath,tspan,use,view',
   true
 )
-/**判断是否是预指令 */
+/** 判断是否是预指令 */
 export const isPreTag = (tag: ?string): boolean => tag === 'pre'
 /**
  * 判断是否是预留指令 
  * @param {*} tag 
  */
-export const isReservedTag = (tag: string): ?boolean => 
-{
+export const isReservedTag = (tag: string): ?boolean => {
   return isHTMLTag(tag) || isSVG(tag)
 }
 /**
@@ -45,14 +44,12 @@ export const isReservedTag = (tag: string): ?boolean =>
  * @param {*} tag 
  */
 export function getTagNamespace (tag: string): ?string {
-  if (isSVG(tag)) 
-  {
+  if (isSVG(tag)) {
     return 'svg'
   }
   // basic support for MathML
   // note it doesn't support other MathML elements being component roots
-  if (tag === 'math') 
-  {
+  if (tag === 'math') {
     return 'math'
   }
 }
@@ -62,8 +59,7 @@ const unknownElementCache = Object.create(null)
  * 
  * @param {*} tag 
  */
-export function isUnknownElement (tag: string): boolean 
-{
+export function isUnknownElement (tag: string): boolean {
   /**如果不是浏览器环境返回真 */
   if (!inBrowser) 
   {
