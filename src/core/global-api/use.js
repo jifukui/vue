@@ -12,13 +12,11 @@ export function initUse (Vue: GlobalAPI)
   {
     /**获取这个对象已经安装的插件 */
     const installedPlugins = (this._installedPlugins || (this._installedPlugins = []))
-    /**对于插件在安全的组件中找到返回这个全局API对象 */
+    /**对于插件在安装的组件中找到返回这个全局API对象 */
     if (installedPlugins.indexOf(plugin) > -1) 
     {
       return this
     }
-
-    // additional parameters
     /**如果没有找到这个插件
      * 设置args的值为传入参数的从第二个开始到最后
      * 

@@ -4397,27 +4397,23 @@ function parse (
      * @param {*} attrs 
      * @param {*} unary 
      */
-    start: function start (tag, attrs, unary) 
-    {
+    start: function start (tag, attrs, unary) {
       // check namespace.
       // inherit parent ns if there is one
       var ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag);
 
       // handle IE svg bug
       /* istanbul ignore if */
-      if (isIE$1 && ns === 'svg') 
-      {
+      if (isIE$1 && ns === 'svg') {
         attrs = guardIESVGBug(attrs);
       }
 
       var element = createASTElement(tag, attrs, currentParent);
-      if (ns) 
-      {
+      if (ns) {
         element.ns = ns;
       }
 
-      if (isForbiddenTag(element) && !isServerRendering$1()) 
-      {
+      if (isForbiddenTag(element) && !isServerRendering$1()) {
         element.forbidden = true;
         "development" !== 'production' && warn$1(
           'Templates should only be responsible for mapping the state to the ' +
@@ -4427,29 +4423,22 @@ function parse (
       }
 
       // apply pre-transforms
-      for (var i = 0; i < preTransforms.length; i++) 
-      {
+      for (var i = 0; i < preTransforms.length; i++) {
         element = preTransforms[i](element, options) || element;
       }
 
-      if (!inVPre) 
-      {
+      if (!inVPre) {
         processPre(element);
-        if (element.pre) 
-        {
+        if (element.pre) {
           inVPre = true;
         }
       }
-      if (platformIsPreTag(element.tag)) 
-      {
+      if (platformIsPreTag(element.tag)) {
         inPre = true;
       }
-      if (inVPre) 
-      {
+      if (inVPre) {
         processRawAttrs(element);
-      } 
-      else if (!element.processed) 
-      {
+      } else if (!element.processed) {
         // structural directives
         processFor(element);
         processIf(element);
@@ -4461,21 +4450,18 @@ function parse (
        * 检测根的约束条件
        * @param {*} el 
        */
-      function checkRootConstraints (el) 
-      {
+      function checkRootConstraints (el) {
         {
           /**
            * 获取el 对象的标签
            */
-          if (el.tag === 'slot' || el.tag === 'template') 
-          {
+          if (el.tag === 'slot' || el.tag === 'template') {
             warnOnce(
               "Cannot use <" + (el.tag) + "> as component root element because it may " +
               'contain multiple nodes.'
             );
           }
-          if (el.attrsMap.hasOwnProperty('v-for')) 
-          {
+          if (el.attrsMap.hasOwnProperty('v-for')) {
             warnOnce(
               'Cannot use v-for on stateful component root element because ' +
               'it renders multiple elements.'
@@ -4485,23 +4471,18 @@ function parse (
       }
 
       // tree management
-      if (!root) 
-      {
+      if (!root) {
         root = element;
         checkRootConstraints(root);
-      } 
-      else if (!stack.length) 
-      {
+      } else if (!stack.length) {
         // allow root elements with v-if, v-else-if and v-else
-        if (root.if && (element.elseif || element.else)) 
-        {
+        if (root.if && (element.elseif || element.else)) {
           checkRootConstraints(element);
           addIfCondition(root, {
             exp: element.elseif,
             block: element
           });
-        } 
-        else {
+        } else {
           warnOnce(
             "Component template should contain exactly one root element. " +
             "If you are using v-if on multiple elements, " +
@@ -4509,43 +4490,32 @@ function parse (
           );
         }
       }
-      if (currentParent && !element.forbidden) 
-      {
-        if (element.elseif || element.else) 
-        {
+      if (currentParent && !element.forbidden) {
+        if (element.elseif || element.else) {
           processIfConditions(element, currentParent);
-        } 
-        else if (element.slotScope) 
-        { // scoped slot
+        } else if (element.slotScope) { // scoped slot
           currentParent.plain = false;
           var name = element.slotTarget || '"default"';(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;
-        } 
-        else 
-        {
+        } else {
           currentParent.children.push(element);
           element.parent = currentParent;
         }
       }
-      if (!unary) 
-      {
+      if (!unary) {
         currentParent = element;
         stack.push(element);
-      } 
-      else 
-      {
+      } else {
         endPre(element);
       }
       // apply post-transforms
-      for (var i$1 = 0; i$1 < postTransforms.length; i$1++) 
-      {
+      for (var i$1 = 0; i$1 < postTransforms.length; i$1++) {
         postTransforms[i$1](element, options);
       }
     },
     /**
      * 
      */
-    end: function end () 
-    {
+    end: function end () {
       // remove trailing whitespace
       var element = stack[stack.length - 1];
       var lastNode = element.children[element.children.length - 1];
@@ -4561,19 +4531,14 @@ function parse (
      * 
      * @param {*} text 
      */
-    chars: function chars (text) 
-    {
-      if (!currentParent) 
-      {
+    chars: function chars (text) {
+      if (!currentParent) {
         {
-          if (text === template) 
-          {
+          if (text === template) {
             warnOnce(
               'Component template requires a root element, rather than just text.'
             );
-          } 
-          else if ((text = text.trim())) 
-          {
+          } else if ((text = text.trim())) {
             warnOnce(
               ("text \"" + text + "\" outside root element will be ignored.")
             );
@@ -4586,8 +4551,7 @@ function parse (
       if (isIE$1 &&
         currentParent.tag === 'textarea' &&
         currentParent.attrsMap.placeholder === text
-      ) 
-      {
+      ) {
         return
       }
       var children = currentParent.children;
@@ -4595,19 +4559,15 @@ function parse (
         ? isTextTag(currentParent) ? text : decodeHTMLCached(text)
         // only preserve whitespace if its not right after a starting tag
         : preserveWhitespace && children.length ? ' ' : '';
-      if (text) 
-      {
+      if (text) {
         var expression;
-        if (!inVPre && text !== ' ' && (expression = parseText$1(text, delimiters))) 
-        {
+        if (!inVPre && text !== ' ' && (expression = parseText$1(text, delimiters))) {
           children.push({
             type: 2,
             expression: expression,
             text: text
           });
-        } 
-        else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') 
-        {
+        } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
           children.push({
             type: 3,
             text: text
@@ -4619,8 +4579,7 @@ function parse (
      * 
      * @param {*} text 
      */
-    comment: function comment (text) 
-    {
+    comment: function comment (text) {
       currentParent.children.push({
         type: 3,
         text: text,
@@ -4773,8 +4732,7 @@ function processIf (el) {
 function processIfConditions (el, parent) {
   var prev = findPrevElement(parent.children);
   if (prev && prev.if) {
-    addIfCondition(prev, 
-      {
+    addIfCondition(prev, {
       exp: el.elseif,
       block: el
     });
@@ -5820,27 +5778,23 @@ function parse$1 (
      * @param {*} attrs 
      * @param {*} unary 
      */
-    start: function start (tag, attrs, unary) 
-    {
+    start: function start (tag, attrs, unary) {
       // check namespace.
       // inherit parent ns if there is one
       var ns = (currentParent && currentParent.ns) || platformGetTagNamespace$1(tag);
 
       // handle IE svg bug
       /* istanbul ignore if */
-      if (isIE$1 && ns === 'svg') 
-      {
+      if (isIE$1 && ns === 'svg') {
         attrs = guardIESVGBug$1(attrs);
       }
 
       var element = createASTElement$1(tag, attrs, currentParent);
-      if (ns) 
-      {
+      if (ns) {
         element.ns = ns;
       }
 
-      if (isForbiddenTag$1(element) && !isServerRendering$1()) 
-      {
+      if (isForbiddenTag$1(element) && !isServerRendering$1()) {
         element.forbidden = true;
         "development" !== 'production' && warn$3(
           'Templates should only be responsible for mapping the state to the ' +
@@ -5850,29 +5804,22 @@ function parse$1 (
       }
 
       // apply pre-transforms
-      for (var i = 0; i < preTransforms$1.length; i++) 
-      {
+      for (var i = 0; i < preTransforms$1.length; i++) {
         element = preTransforms$1[i](element, options) || element;
       }
 
-      if (!inVPre) 
-      {
+      if (!inVPre) {
         processPre$1(element);
-        if (element.pre) 
-        {
+        if (element.pre) {
           inVPre = true;
         }
       }
-      if (platformIsPreTag$1(element.tag)) 
-      {
+      if (platformIsPreTag$1(element.tag)) {
         inPre = true;
       }
-      if (inVPre) 
-      {
+      if (inVPre) {
         processRawAttrs$1(element);
-      } 
-      else if (!element.processed) 
-      {
+      } else if (!element.processed) {
         // structural directives
         processFor$1(element);
         processIf$1(element);
@@ -5884,21 +5831,18 @@ function parse$1 (
        * 检测根的约束条件
        * @param {*} el 
        */
-      function checkRootConstraints (el) 
-      {
+      function checkRootConstraints (el) {
         {
           /**
            * 获取el 对象的标签
            */
-          if (el.tag === 'slot' || el.tag === 'template') 
-          {
+          if (el.tag === 'slot' || el.tag === 'template') {
             warnOnce(
               "Cannot use <" + (el.tag) + "> as component root element because it may " +
               'contain multiple nodes.'
             );
           }
-          if (el.attrsMap.hasOwnProperty('v-for')) 
-          {
+          if (el.attrsMap.hasOwnProperty('v-for')) {
             warnOnce(
               'Cannot use v-for on stateful component root element because ' +
               'it renders multiple elements.'
@@ -5908,23 +5852,18 @@ function parse$1 (
       }
 
       // tree management
-      if (!root) 
-      {
+      if (!root) {
         root = element;
         checkRootConstraints(root);
-      } 
-      else if (!stack.length) 
-      {
+      } else if (!stack.length) {
         // allow root elements with v-if, v-else-if and v-else
-        if (root.if && (element.elseif || element.else)) 
-        {
+        if (root.if && (element.elseif || element.else)) {
           checkRootConstraints(element);
           addIfCondition$1(root, {
             exp: element.elseif,
             block: element
           });
-        } 
-        else {
+        } else {
           warnOnce(
             "Component template should contain exactly one root element. " +
             "If you are using v-if on multiple elements, " +
@@ -5932,43 +5871,32 @@ function parse$1 (
           );
         }
       }
-      if (currentParent && !element.forbidden) 
-      {
-        if (element.elseif || element.else) 
-        {
+      if (currentParent && !element.forbidden) {
+        if (element.elseif || element.else) {
           processIfConditions$1(element, currentParent);
-        } 
-        else if (element.slotScope) 
-        { // scoped slot
+        } else if (element.slotScope) { // scoped slot
           currentParent.plain = false;
           var name = element.slotTarget || '"default"';(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;
-        } 
-        else 
-        {
+        } else {
           currentParent.children.push(element);
           element.parent = currentParent;
         }
       }
-      if (!unary) 
-      {
+      if (!unary) {
         currentParent = element;
         stack.push(element);
-      } 
-      else 
-      {
+      } else {
         endPre(element);
       }
       // apply post-transforms
-      for (var i$1 = 0; i$1 < postTransforms$1.length; i$1++) 
-      {
+      for (var i$1 = 0; i$1 < postTransforms$1.length; i$1++) {
         postTransforms$1[i$1](element, options);
       }
     },
     /**
      * 
      */
-    end: function end () 
-    {
+    end: function end () {
       // remove trailing whitespace
       var element = stack[stack.length - 1];
       var lastNode = element.children[element.children.length - 1];
@@ -5984,19 +5912,14 @@ function parse$1 (
      * 
      * @param {*} text 
      */
-    chars: function chars (text) 
-    {
-      if (!currentParent) 
-      {
+    chars: function chars (text) {
+      if (!currentParent) {
         {
-          if (text === template) 
-          {
+          if (text === template) {
             warnOnce(
               'Component template requires a root element, rather than just text.'
             );
-          } 
-          else if ((text = text.trim())) 
-          {
+          } else if ((text = text.trim())) {
             warnOnce(
               ("text \"" + text + "\" outside root element will be ignored.")
             );
@@ -6009,8 +5932,7 @@ function parse$1 (
       if (isIE$1 &&
         currentParent.tag === 'textarea' &&
         currentParent.attrsMap.placeholder === text
-      ) 
-      {
+      ) {
         return
       }
       var children = currentParent.children;
@@ -6018,19 +5940,15 @@ function parse$1 (
         ? isTextTag$1(currentParent) ? text : decodeHTMLCached$1(text)
         // only preserve whitespace if its not right after a starting tag
         : preserveWhitespace && children.length ? ' ' : '';
-      if (text) 
-      {
+      if (text) {
         var expression;
-        if (!inVPre && text !== ' ' && (expression = parseText$1(text, delimiters$1))) 
-        {
+        if (!inVPre && text !== ' ' && (expression = parseText$1(text, delimiters$1))) {
           children.push({
             type: 2,
             expression: expression,
             text: text
           });
-        } 
-        else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') 
-        {
+        } else if (text !== ' ' || !children.length || children[children.length - 1].text !== ' ') {
           children.push({
             type: 3,
             text: text
@@ -6042,8 +5960,7 @@ function parse$1 (
      * 
      * @param {*} text 
      */
-    comment: function comment (text) 
-    {
+    comment: function comment (text) {
       currentParent.children.push({
         type: 3,
         text: text,
@@ -6196,8 +6113,7 @@ function processIf$1 (el) {
 function processIfConditions$1 (el, parent) {
   var prev = findPrevElement$1(parent.children);
   if (prev && prev.if) {
-    addIfCondition$1(prev, 
-      {
+    addIfCondition$1(prev, {
       exp: el.elseif,
       block: el
     });
@@ -6841,11 +6757,14 @@ function on (el, dir) {
 /*  */
 /**
  * 数据封装
- * @param {*} el 
- * @param {*} dir 
+ * @param {*} el 抽象的元素
+ * @param {*} dir 抽象的指令
  */
 function bind$1 (el, dir) 
 {
+  /**抽象的元素的封装数据为一个方法
+   * 
+   */
   el.wrapData = function (code) {
     return ("_b(" + code + ",'" + (el.tag) + "'," + (dir.value) + "," + (dir.modifiers && dir.modifiers.prop ? 'true' : 'false') + (dir.modifiers && dir.modifiers.sync ? ',true' : '') + ")")
   };
